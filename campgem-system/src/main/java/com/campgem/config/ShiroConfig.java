@@ -43,13 +43,14 @@ public class ShiroConfig {
 		// 拦截器
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 		// 配置不会被拦截的链接 顺序判断
-		filterChainDefinitionMap.put("/api/v1/user/registration/email/validityCode", "anon"); //邮箱验证码发送
-		filterChainDefinitionMap.put("/api/v1/user/registration", "anon"); //用户注册
+		filterChainDefinitionMap.put("/api/v1/register/email/validityCode", "anon"); //邮箱验证码发送
+		filterChainDefinitionMap.put("/api/v1/register", "anon"); //用户注册
 		filterChainDefinitionMap.put("/api/v1/oauth/login/**", "anon"); //第三方授权地址
 		filterChainDefinitionMap.put("/api/v1/oauth/**/callback", "anon"); //第三方回调地址
 		filterChainDefinitionMap.put("/api/v1/account/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/api/v1/account/thirdParty/login", "anon"); //第三方用户登录
 
+		filterChainDefinitionMap.put("/sys/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串
 		filterChainDefinitionMap.put("/sys/sms", "anon");//短信验证码
 		filterChainDefinitionMap.put("/sys/phoneLogin", "anon");//手机登录		
