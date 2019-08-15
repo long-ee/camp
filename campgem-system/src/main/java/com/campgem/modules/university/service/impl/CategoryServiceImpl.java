@@ -1,15 +1,18 @@
 package com.campgem.modules.university.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.modules.university.dto.CategoryQueryDto;
 import com.campgem.modules.university.entity.Category;
 import com.campgem.modules.university.mapper.CategoryMapper;
 import com.campgem.modules.university.service.ICategoryService;
 import com.campgem.modules.university.vo.CategoryVo;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
 
 /**
  * @Description: 分类信息
@@ -28,5 +31,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public CategoryVo queryDetails(String categoryId) {
         return null;
+    }
+    
+    @Override
+    public List<CategoryVo> queryByType(String type) {
+        List<Category> data = baseMapper.selectList(new LambdaQueryWrapper<Category>().eq(Category::getCategoryType, type));
+        return BeanConvertUtils.copyList(data, CategoryVo.class);
     }
 }

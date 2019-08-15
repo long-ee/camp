@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.trade.mapper.GoodsMapper">
+	
+	<select id="queryPageList" resultType="com.campgem.modules.trade.vo.GoodsListVo">
+		select
+		g.id,g.goods_name,g.identity,g.taxes,g.origin_price,g.category_id,
+		(select goods_image from goods_images where goods_id = g.id limit 1) as goods_icon,
+		if(g.identity = 1, (select specifications_price from goods_specifications where goods_id = g.id order by specifications_price asc limit 1), sale_price) as sale_price
+		from goods g
+		left join member m
+		on m.id = g.mid
+		where g.del_flag = 0
+		<if test="query.quality != 0">
+			and g.quality = #{query.quality}
+		</if>
+		<if test="query.categoryId != ''">
+			and g.category_id = #{query.categoryId}
+		</if>
+		<choose>
+			<when test="query.sort == 0">
+				order by g.create_time desc
+			</when>
+			<when test="query.sort == 1">
+				order by review_count desc
+			</when>
+			<when test="query.sort == 2">
+				order by sale_price asc
+			</when>
+			<when test="query.sort == 3">
+				order by sale_price desc
+			</when>
+		</choose>
+		limit #{start}, #{pageSize}
+	</select>
+</mapper>

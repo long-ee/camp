@@ -1,11 +1,7 @@
 package com.campgem.config;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.servlet.Filter;
-
+import com.campgem.modules.shiro.authc.ShiroRealm;
+import com.campgem.modules.shiro.authc.aop.JwtFilter;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
@@ -13,12 +9,15 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import com.campgem.modules.shiro.authc.ShiroRealm;
-import com.campgem.modules.shiro.authc.aop.JwtFilter;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+
+import javax.servlet.Filter;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @Author: campgem
@@ -49,6 +48,10 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/api/v1/oauth/**/callback", "anon"); //第三方回调地址
 		filterChainDefinitionMap.put("/api/v1/account/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/api/v1/account/thirdParty/login", "anon"); //第三方用户登录
+		
+		filterChainDefinitionMap.put("/api/v1/trade/category", "anon");
+		filterChainDefinitionMap.put("/api/v1/trade/goods", "anon");
+		filterChainDefinitionMap.put("/api/v1/trade/advertisement", "anon");
 
 		filterChainDefinitionMap.put("/sys/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串
