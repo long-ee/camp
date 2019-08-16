@@ -99,7 +99,7 @@ public class ShiroRealm extends AuthorizingRealm {
 	public LoginUserVo checkUserTokenIsEffect(String token) throws AuthenticationException {
 		// 解密获得username，用于和数据库进行对比
 		IdentifyInfo identifyInfo = JwtUtil.getIdentifierInfo(token);
-		if (StringUtils.isBlank(identifyInfo.getIdentityType())
+		if (null == identifyInfo || StringUtils.isBlank(identifyInfo.getIdentityType())
 				|| StringUtils.isBlank(identifyInfo.getIdentifier())) {
 			throw new AuthenticationException("token非法无效!");
 		}

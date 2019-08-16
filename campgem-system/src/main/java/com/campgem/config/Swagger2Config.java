@@ -65,8 +65,8 @@ public class Swagger2Config implements WebMvcConfigurer {
 	            .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
 				.paths(PathSelectors.any())
 				.build()
-				.securitySchemes(Collections.singletonList(securityScheme()));
-				//.globalOperationParameters(setHeaderToken());
+				.securitySchemes(Collections.singletonList(securityScheme()))
+				.globalOperationParameters(setHeaderToken());
 	}
 
 	/***
