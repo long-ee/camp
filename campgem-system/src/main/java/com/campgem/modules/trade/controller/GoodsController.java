@@ -10,7 +10,6 @@ import com.campgem.modules.common.vo.AdvertisementVo;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
-import com.campgem.modules.trade.service.ICartService;
 import com.campgem.modules.trade.service.IGoodsService;
 import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
@@ -44,8 +43,6 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	private IGoodsService goodsService;
 	@Resource
 	private IAdvertisementService advertisementService;
-	@Resource
-	private ICartService cartService;
 	
 	/**
 	 * 交易分类列表

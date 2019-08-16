@@ -33,7 +33,7 @@ public class Cart {
 	private String id;
 	
 	@ApiModelProperty(value = "会员ID", hidden = true)
-	private String mid;
+	private String uid;
 	
 	@ApiModelProperty(value = "卖家ID", hidden = true)
 	private String sellerId;

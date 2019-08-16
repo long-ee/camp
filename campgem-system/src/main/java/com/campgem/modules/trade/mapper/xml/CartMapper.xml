@@ -18,6 +18,6 @@
 		FROM cart c
 			     LEFT JOIN goods g ON g.id = c.goods_id
 			     LEFT JOIN goods_specifications gs ON gs.id = c.specifications_id
-		WHERE c.mid = #{uid};
+		WHERE c.uid = #{uid};
 	</select>
 </mapper>

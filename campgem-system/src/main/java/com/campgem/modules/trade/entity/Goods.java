@@ -38,7 +38,7 @@ public class Goods {
 	 * 分类图标
 	 */
 	@ApiModelProperty(value = "卖家ID", hidden = true)
-	private String mid;
+	private String uid;
 	
 	/**
 	 * 卖家名称

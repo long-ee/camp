@@ -36,14 +36,14 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 	@Override
 	public Boolean removeCart(String cartId) {
 		String uid = SecurityUtils.getCurrentUserUid();
-		return baseMapper.delete(new LambdaQueryWrapper<Cart>().eq(Cart::getMid, uid).eq(Cart::getId, cartId)) > 0;
+		return baseMapper.delete(new LambdaQueryWrapper<Cart>().eq(Cart::getUid, uid).eq(Cart::getId, cartId)) > 0;
 	}
 	
 	@Override
 	public Boolean addGoods(String goodsId, String specId, Integer quantity) {
 		String uid = SecurityUtils.getCurrentUserUid();
 		// 查询是否已添加了同样的商品
-		LambdaQueryWrapper<Cart> query = new LambdaQueryWrapper<Cart>().eq(Cart::getMid, uid).eq(Cart::getGoodsId, goodsId);
+		LambdaQueryWrapper<Cart> query = new LambdaQueryWrapper<Cart>().eq(Cart::getUid, uid).eq(Cart::getGoodsId, goodsId);
 		Integer count = baseMapper.selectCount(query);
 		
 		Goods goods = goodsService.getById(goodsId);
@@ -80,9 +80,9 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 		} else {
 			// 购物车没有此商品，添加
 			Cart cart = new Cart();
-			cart.setMid(uid);
+			cart.setUid(uid);
 			cart.setGoodsId(goodsId);
-			cart.setSellerId(goods.getMid());
+			cart.setSellerId(goods.getUid());
 			cart.setSpecificationsId(specId);
 			cart.setQuantity(quantity);
 			cart.setSellerName(goods.getSellerName());
