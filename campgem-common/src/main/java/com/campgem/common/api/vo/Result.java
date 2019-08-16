@@ -1,10 +1,11 @@
 package com.campgem.common.api.vo;
 
-import java.io.Serializable;
+import com.campgem.common.constant.CommonConstant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.campgem.common.constant.CommonConstant;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  *   接口返回数据格式
@@ -17,6 +18,9 @@ import lombok.Data;
 public class Result<T> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final Result succ = new Result().success("success");
+	public static final Result fail = new Result().error500("failure");
 
 	/**
 	 * 成功标志
@@ -62,6 +66,12 @@ public class Result<T> implements Serializable {
 	public Result<T> success(String message) {
 		this.message = message;
 		this.code = CommonConstant.SC_OK_200;
+		this.success = true;
+		return this;
+	}
+	
+	public Result<T> result(T result) {
+		this.result = result;
 		this.success = true;
 		return this;
 	}

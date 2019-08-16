@@ -49,9 +49,10 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/api/v1/account/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/api/v1/account/thirdParty/login", "anon"); //第三方用户登录
 		
-		filterChainDefinitionMap.put("/api/v1/trade/category", "anon");
-		filterChainDefinitionMap.put("/api/v1/trade/goods", "anon");
-		filterChainDefinitionMap.put("/api/v1/trade/advertisement", "anon");
+		filterChainDefinitionMap.put("/api/v1/goods/**", "anon");
+//		filterChainDefinitionMap.put("/api/v1/goods", "anon");
+//		filterChainDefinitionMap.put("/api/v1/goods/advertisement", "anon");
+//		filterChainDefinitionMap.put("/api/v1/goods/{goodsId}", "anon");
 
 		filterChainDefinitionMap.put("/sys/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串

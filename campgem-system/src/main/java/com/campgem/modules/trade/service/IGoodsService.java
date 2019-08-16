@@ -4,11 +4,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
 import com.campgem.modules.trade.entity.Goods;
+import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
 
 /**
  * @Description: 分类信息
- * @Author: campgem
+ * @Author: ling
  * @Date:   2019-08-05
  * @Version: V1.0
  */
@@ -19,4 +20,6 @@ public interface IGoodsService extends IService<Goods> {
 	 * @return
 	 */
 	IPage<GoodsListVo> queryPageList(Integer page, Integer pageSize, GoodsQueryDto queryDto);
+	
+	GoodsDetailVo queryGoodsDetail(String goodsId);
 }

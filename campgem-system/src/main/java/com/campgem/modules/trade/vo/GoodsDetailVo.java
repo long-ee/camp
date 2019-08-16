@@ -2,6 +2,7 @@ package com.campgem.modules.trade.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.campgem.modules.trade.entity.GoodsImages;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,10 +12,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
-@ApiModel(value = "商品显示数据模型")
-public class GoodsVo implements Serializable {
+@ApiModel(value = "商品详情显示数据模型")
+public class GoodsDetailVo implements Serializable {
 	@TableId(type = IdType.UUID)
 	@ApiModelProperty("id")
 	private String id;
@@ -25,8 +27,8 @@ public class GoodsVo implements Serializable {
 	@ApiModelProperty("身份类别，1Business，2Student/Individual")
 	private Integer identity;
 	
-	@ApiModelProperty("分类名")
-	private String categoryName;
+	@ApiModelProperty("留言数")
+	private Integer reviewCount;
 	
 	@ApiModelProperty("城市名，identity=1有效")
 	private String cityName;
@@ -35,7 +37,10 @@ public class GoodsVo implements Serializable {
 	private String universityName;
 	
 	@ApiModelProperty("商品图片")
-	private String goodsIcon;
+	private List<GoodsImages> goodsImages;
+	
+	@ApiModelProperty("商品规格")
+	private List<GoodsSpecificationsVo> goodsSpecifications;
 	
 	@ApiModelProperty("结束日期")
 	private Date endDate;

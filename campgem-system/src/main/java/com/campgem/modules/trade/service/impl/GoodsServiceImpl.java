@@ -4,22 +4,27 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.mapper.GoodsMapper;
 import com.campgem.modules.trade.service.IGoodsService;
+import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * @Description: 分类信息
- * @Author: campgem
+ * @Author: ling
  * @Date:   2019-08-05
  * @Version: V1.0
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements IGoodsService {
 	
 	@Override
@@ -41,5 +46,14 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		page.setRecords(list);
 		page.setTotal(count);
 		return page;
+	}
+	
+	@Override
+	public GoodsDetailVo queryGoodsDetail(String goodsId) {
+		GoodsDetailVo goods = baseMapper.queryGoodsDetail(goodsId);
+		if (goods == null) {
+			throw new JeecgBootException("商品不存在");
+		}
+		return goods;
 	}
 }

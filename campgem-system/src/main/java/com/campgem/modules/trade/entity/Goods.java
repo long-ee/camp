@@ -73,7 +73,7 @@ public class Goods {
 	/**
 	 * 结束日期
 	 */
-	@ApiModelProperty("结束日期，identity=1有效")
+	@ApiModelProperty("结束日期")
 	private Date end_date;
 	
 	/**

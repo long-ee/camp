@@ -6,7 +6,8 @@
 		select
 		g.id,g.goods_name,g.identity,g.taxes,g.origin_price,g.category_id,
 		(select goods_image from goods_images where goods_id = g.id limit 1) as goods_icon,
-		if(g.identity = 1, (select specifications_price from goods_specifications where goods_id = g.id order by specifications_price asc limit 1), sale_price) as sale_price
+		if(g.identity = 1, (select specifications_price from goods_specifications where goods_id = g.id order by
+		specifications_price asc limit 1), sale_price) as sale_price
 		from goods g
 		left join member m
 		on m.id = g.mid
@@ -32,5 +33,38 @@
 			</when>
 		</choose>
 		limit #{start}, #{pageSize}
+	</select>
+	
+	<resultMap id="goodsDetail" type="com.campgem.modules.trade.vo.GoodsDetailVo">
+		<id column="goodsId" property="id" />
+		<collection property="goodsImages" select="com.campgem.modules.trade.mapper.GoodsImagesMapper.queryGoodsImages"  ofType="com.campgem.modules.trade.entity.GoodsImages" column="goodsId" />
+		<collection property="goodsSpecifications" select="com.campgem.modules.trade.mapper.GoodsSpecificationsMapper.queryGoodsSpecifications"  ofType="com.campgem.modules.trade.vo.GoodsSpecificationsVo" column="goodsId" />
+	</resultMap>
+	<select id="queryGoodsDetail" resultMap="goodsDetail">
+		SELECT g.id as goodsId,
+		       g.seller_name,
+		       g.identity,
+		       g.review_count,
+		       c.city_name,
+		       u.university_name,
+		       g.end_date,
+		       g.quality,
+		       IF
+			       (g.identity = 1, (SELECT specifications_price
+			                         FROM goods_specifications
+			                         WHERE goods_id = g.id
+			                         ORDER BY specifications_price ASC
+			                         LIMIT 1), g.sale_price) AS sale_price,
+		       g.origin_price,
+		       g.goods_name,
+		       g.status,
+		       g.taxes,
+		       g.tags,
+		       g.description,
+		       g.create_time
+		FROM goods g
+			     left join city c on c.id = g.city_id
+			     left join university u on u.id = g.university_id
+		WHERE g.id = #{goodsId}
 	</select>
 </mapper>

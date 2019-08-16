@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.trade.mapper.GoodsSpecificationsMapper">
+	
+	<select id="queryGoodsSpecifications" resultType="com.campgem.modules.trade.vo.GoodsSpecificationsVo">
+		select id, specifications_name, specifications_price, specifications_stock
+		from goods_specifications
+		where goods_id = #{goodsId}
+	</select>
+</mapper>
