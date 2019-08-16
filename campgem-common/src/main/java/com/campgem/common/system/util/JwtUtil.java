@@ -60,6 +60,9 @@ public class JwtUtil {
 	 */
 	public static IdentifyInfo getIdentifierInfo(String token) {
 		try {
+			if(StringUtils.isBlank(token)){
+				return null;
+			}
 			DecodedJWT jwt = JWT.decode(token);
 			String identifier = jwt.getClaim("identifier").asString();
 			String identityType = jwt.getClaim("identityType").asString();
@@ -96,7 +99,7 @@ public class JwtUtil {
 	public static IdentifyInfo getIdentifierByToken(HttpServletRequest request) {
 		String accessToken = request.getHeader("X-Access-Token");
 		IdentifyInfo identifyInfo = getIdentifierInfo(accessToken);
-		if (StringUtils.isBlank(identifyInfo.getIdentifier()) || StringUtils.isBlank(identifyInfo.getIdentityType())) {
+		if (null == identifyInfo || StringUtils.isBlank(identifyInfo.getIdentifier()) || StringUtils.isBlank(identifyInfo.getIdentityType())) {
 			return null;
 		}
 		return identifyInfo;

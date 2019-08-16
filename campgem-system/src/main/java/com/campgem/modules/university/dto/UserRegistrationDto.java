@@ -61,9 +61,9 @@ public class UserRegistrationDto extends BaseDto implements Serializable {
     @ApiModelProperty(value = "营业日期")
     private String businessDate;
     @ApiModelProperty(value = "开始营业时间")
-    private Date openingTime;
+    private String openingTime;
     @ApiModelProperty(value = "结束营业时间")
-    private Date closingTime;
+    private String closingTime;
     @ApiModelProperty(value = "用户第三方认证信息", hidden = true)
     private IdentifyInfo identifyInfo;
 
