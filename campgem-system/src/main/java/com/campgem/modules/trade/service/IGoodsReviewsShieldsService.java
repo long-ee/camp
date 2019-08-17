@@ -15,5 +15,5 @@ public interface IGoodsReviewsShieldsService extends IService<GoodsReviewsShield
 	
 	Boolean addUserReviewShield(String targetId);
 	
-	List<String> queryUserShieldList();
+	List<String> queryUserShieldList(String uid);
 }

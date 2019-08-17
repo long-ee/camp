@@ -49,10 +49,15 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/api/v1/account/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/api/v1/account/thirdParty/login", "anon"); //第三方用户登录
 		
-		filterChainDefinitionMap.put("/api/v1/goods/**", "anon");
-//		filterChainDefinitionMap.put("/api/v1/goods", "anon");
-//		filterChainDefinitionMap.put("/api/v1/goods/advertisement", "anon");
-//		filterChainDefinitionMap.put("/api/v1/goods/{goodsId}", "anon");
+		filterChainDefinitionMap.put("/api/v1/goods", "anon"); // 商品列表
+		filterChainDefinitionMap.put("/api/v1/goods/category", "anon"); // 商品分类列表
+		filterChainDefinitionMap.put("/api/v1/goods/advertisement", "anon"); // 商品广告列表
+		filterChainDefinitionMap.put("/api/v1/goods/*/detail", "anon"); // 商品详情
+		filterChainDefinitionMap.put("/api/v1/goods/*/evaluation", "anon"); // 商品评价列表
+		filterChainDefinitionMap.put("/api/v1/goods/*/review", "anon"); // 商品留言列表
+		
+		filterChainDefinitionMap.put("/api/v1/requirements", "anon"); // 需求列表
+		filterChainDefinitionMap.put("/api/v1/requirements/category", "anon"); // 需求分类列表
 
 		filterChainDefinitionMap.put("/sys/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串

@@ -35,7 +35,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1")
-@Api(tags = "交易信息管理接口")
+@Api(tags = "商品信息管理接口")
 public class GoodsController extends JeecgController<SysMessage, ISysMessageService> {
 	@Resource
 	private ICategoryService categoryService;
@@ -75,7 +75,7 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	 * 商品详情
 	 */
 	@ApiOperation(value = "商品详情接口", notes = "C11 商品详情")
-	@GetMapping(value = "/goods/{goodsId}")
+	@GetMapping(value = "/goods/{goodsId}/detail")
 	@ApiImplicitParam(name = "goodsId", value = "商品ID", required = true, paramType = "path")
 	public Result<GoodsDetailVo> queryGoodsDetail(@PathVariable String goodsId) {
 		if (StringUtils.isEmpty(goodsId)) {

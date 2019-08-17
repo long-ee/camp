@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.trade.mapper.RequirementsMapper">
+	
+	<select id="queryPageList" resultType="com.campgem.modules.trade.vo.RequirementsVo">
+		SELECT
+			r.id,
+			r.uid,
+			ub.src_face,
+			ub.nick_name,
+			IF(m.member_type = 'BUSINESS', 1, 2),
+			r.requirement_name,
+			r.buying_price,
+			r.requirement_description,
+			r.create_time
+		FROM
+			requirements r
+				LEFT JOIN user_base ub ON ub.id = r.uid
+				LEFT JOIN member m ON m.user_base_id = r.uid
+		WHERE
+			r.del_flag = 0
+			<if test="query.categoryId != 'all'">
+				AND category_id = #{query.categoryId}
+			</if>
+		<choose>
+			<when test="query.sort == 0">
+				ORDER BY r.create_time desc
+			</when>
+			<when test="query.sort == 1">
+				ORDER BY r.review_count desc
+			</when>
+			<when test="query.sort == 2">
+				ORDER BY r.buying_price asc
+			</when>
+			<when test="query.sort == 3">
+				ORDER BY r.buying_price desc
+			</when>
+		</choose>
+		LIMIT #{start}, #{pageSize}
+	</select>
+</mapper>

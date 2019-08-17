@@ -11,6 +11,7 @@ import com.campgem.modules.trade.mapper.GoodsMapper;
 import com.campgem.modules.trade.service.IGoodsService;
 import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
+import com.campgem.modules.trade.vo.GoodsRelativeVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +55,11 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		if (goods == null) {
 			throw new JeecgBootException("商品不存在");
 		}
+		
+		// 关联商品查询
+		List<GoodsRelativeVo> relatives = baseMapper.queryGoodsRelative(goods.getCategoryId(), goodsId);
+		goods.setRelatives(relatives);
+		
 		return goods;
 	}
 }

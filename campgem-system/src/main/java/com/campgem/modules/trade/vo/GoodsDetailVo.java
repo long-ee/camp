@@ -24,6 +24,9 @@ public class GoodsDetailVo implements Serializable {
 	@ApiModelProperty("卖家名称")
 	private String sellerName;
 	
+	@ApiModelProperty("分类ID")
+	private String categoryId;
+	
 	@ApiModelProperty("身份类别，1Business，2Student/Individual")
 	private Integer identity;
 	
@@ -65,6 +68,9 @@ public class GoodsDetailVo implements Serializable {
 	
 	@ApiModelProperty("标签，多个以,分隔")
 	private String tags;
+	
+	@ApiModelProperty("关联商品")
+	private List<GoodsRelativeVo> relatives;
 	
 	@ApiModelProperty("商品描述")
 	private String description;

@@ -7,8 +7,11 @@ import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.trade.entity.GoodsReviewsShields;
 import com.campgem.modules.trade.mapper.GoodsReviewsShieldsMapper;
 import com.campgem.modules.trade.service.IGoodsReviewsShieldsService;
+import com.campgem.modules.university.entity.UserBase;
+import com.campgem.modules.university.service.IUserBaseService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +25,9 @@ import java.util.List;
 @Service
 public class GoodsReviewsShieldsServiceImpl extends ServiceImpl<GoodsReviewsShieldsMapper, GoodsReviewsShields> implements IGoodsReviewsShieldsService {
 	
+	@Resource
+	private IUserBaseService userBaseService;
+	
 	@Override
 	public Boolean addUserReviewShield(String targetId) {
 		String uid = SecurityUtils.getCurrentUserUid();
@@ -32,6 +38,12 @@ public class GoodsReviewsShieldsServiceImpl extends ServiceImpl<GoodsReviewsShie
 		if (count > 0) {
 			return true;
 		}
+		
+		UserBase user = userBaseService.getById(targetId);
+		if (user == null) {
+			throw new JeecgBootException("无效的用户ID");
+		}
+		
 		GoodsReviewsShields shields = new GoodsReviewsShields();
 		shields.setCreateTime(new Date());
 		shields.setUid(uid);
@@ -40,12 +52,11 @@ public class GoodsReviewsShieldsServiceImpl extends ServiceImpl<GoodsReviewsShie
 	}
 	
 	@Override
-	public List<String> queryUserShieldList() {
-		String uid = SecurityUtils.getCurrentUserUid();
+	public List<String> queryUserShieldList(String uid) {
 		List<GoodsReviewsShields> list = baseMapper.selectList(new LambdaQueryWrapper<GoodsReviewsShields>().eq(GoodsReviewsShields::getUid, uid));
 		List<String> result = new ArrayList<>();
 		for (GoodsReviewsShields shields : list) {
-			result.add(shields.getUid());
+			result.add(shields.getShieldUid());
 		}
 		return result;
 	}

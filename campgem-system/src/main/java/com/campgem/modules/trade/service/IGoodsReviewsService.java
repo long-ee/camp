@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.trade.entity.GoodsReviews;
 import com.campgem.modules.trade.vo.GoodsReviewsVo;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @Description: 商品留言
  * @Author: campgem
@@ -13,5 +15,5 @@ import com.campgem.modules.trade.vo.GoodsReviewsVo;
  */
 public interface IGoodsReviewsService extends IService<GoodsReviews> {
 	
-	IPage<GoodsReviewsVo> queryGoodsReviewsPageList(String goodsId, Integer pageNo, Integer pageSize);
+	IPage<GoodsReviewsVo> queryGoodsReviewsPageList(HttpServletRequest request, String goodsId, Integer pageNo, Integer pageSize);
 }

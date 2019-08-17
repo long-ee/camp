@@ -13,7 +13,7 @@
 		<if test="query.quality != 0">
 			and g.quality = #{query.quality}
 		</if>
-		<if test="query.categoryId != ''">
+		<if test="query.categoryId != 'all'">
 			and g.category_id = #{query.categoryId}
 		</if>
 		<choose>
@@ -34,14 +34,18 @@
 	</select>
 	
 	<resultMap id="goodsDetail" type="com.campgem.modules.trade.vo.GoodsDetailVo">
-		<id column="goodsId" property="id" />
-		<collection property="goodsImages" select="com.campgem.modules.trade.mapper.GoodsImagesMapper.queryGoodsImages"  ofType="com.campgem.modules.trade.entity.GoodsImages" column="goodsId" />
-		<collection property="goodsSpecifications" select="com.campgem.modules.trade.mapper.GoodsSpecificationsMapper.queryGoodsSpecifications"  ofType="com.campgem.modules.trade.vo.GoodsSpecificationsVo" column="goodsId" />
+		<id column="goodsId" property="id"/>
+		<collection property="goodsImages" select="com.campgem.modules.trade.mapper.GoodsImagesMapper.queryGoodsImages"
+		            ofType="com.campgem.modules.trade.entity.GoodsImages" column="goodsId"/>
+		<collection property="goodsSpecifications"
+		            select="com.campgem.modules.trade.mapper.GoodsSpecificationsMapper.queryGoodsSpecifications"
+		            ofType="com.campgem.modules.trade.vo.GoodsSpecificationsVo" column="goodsId"/>
 	</resultMap>
 	<select id="queryGoodsDetail" resultMap="goodsDetail">
-		SELECT g.id as goodsId,
+		SELECT g.id                                          as goodsId,
 		       g.seller_name,
 		       g.identity,
+		       g.category_id,
 		       g.review_count,
 		       c.city_name,
 		       u.university_name,
@@ -64,5 +68,23 @@
 			     left join city c on c.id = g.city_id
 			     left join university u on u.id = g.university_id
 		WHERE g.id = #{goodsId}
+	</select>
+	
+	<select id="queryGoodsRelative" resultType="com.campgem.modules.trade.vo.GoodsRelativeVo">
+		SELECT g.id,
+		       g.identity,
+		       g.goods_name,
+		       IF
+			       (g.identity = 1, (SELECT specifications_price
+			                         FROM goods_specifications
+			                         WHERE goods_id = g.id
+			                         ORDER BY specifications_price ASC
+			                         LIMIT 1), g.sale_price)                        AS sale_price,
+		       (SELECT goods_image FROM goods_images WHERE goods_id = g.id LIMIT 1) AS goods_icon
+		from goods g
+		WHERE category_id = #{categoryId}
+		  AND id != #{goodsId}
+		order by g.review_count desc
+		limit 5
 	</select>
 </mapper>
