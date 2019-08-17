@@ -15,4 +15,6 @@ import com.campgem.modules.trade.vo.RequirementsVo;
 public interface IRequirementsService extends IService<Requirements> {
 	
 	IPage<RequirementsVo> queryPageList(RequirementsQueryDto queryDto, Integer pageNo, Integer pageSize);
+	
+	void incrementReviewCount(String requirementId);
 }

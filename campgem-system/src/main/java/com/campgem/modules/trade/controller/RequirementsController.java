@@ -3,9 +3,13 @@ package com.campgem.modules.trade.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.system.base.controller.JeecgController;
+import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
+import com.campgem.modules.trade.dto.RequirementReviewDto;
 import com.campgem.modules.trade.dto.RequirementsQueryDto;
+import com.campgem.modules.trade.entity.RequirementsReviews;
+import com.campgem.modules.trade.service.IRequirementsReviewsService;
 import com.campgem.modules.trade.service.IRequirementsService;
 import com.campgem.modules.trade.vo.RequirementsVo;
 import com.campgem.modules.university.entity.enums.CategoryTypeEnum;
@@ -14,12 +18,10 @@ import com.campgem.modules.university.vo.CategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,6 +39,8 @@ public class RequirementsController extends JeecgController<SysMessage, ISysMess
 	private ICategoryService categoryService;
 	@Resource
 	private IRequirementsService requirementsService;
+	@Resource
+	private IRequirementsReviewsService requirementsReviewsService;
 	
 	@ApiOperation(value = "需求分类查询", notes = "C15 需求列表")
 	@GetMapping(value = "/requirements/category")
@@ -57,5 +61,22 @@ public class RequirementsController extends JeecgController<SysMessage, ISysMess
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;
+	}
+	
+	@ApiOperation(value = "新增需求留言", notes = "C16 留言窗口 (联系需求方)")
+	@PostMapping(value = "/requirements/review")
+	public Result addRequirementReview(RequirementReviewDto reviewDto) {
+		RequirementsReviews reviews = new RequirementsReviews();
+		reviews.setUid(SecurityUtils.getCurrentUserUid());
+		reviews.setCreateTime(new Date());
+		reviews.setRequirementId(reviewDto.getRequirementId());
+		reviews.setContent(reviewDto.getContent());
+		
+		boolean ok = requirementsReviewsService.save(reviews);
+		if (ok) {
+			// 添加需求留言次数
+			requirementsService.incrementReviewCount(reviewDto.getRequirementId());
+		}
+		return ok ? Result.succ : Result.fail;
 	}
 }

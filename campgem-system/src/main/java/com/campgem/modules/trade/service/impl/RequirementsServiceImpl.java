@@ -39,4 +39,9 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 		page.setTotal(count);
 		return page;
 	}
+	
+	@Override
+	public void incrementReviewCount(String requirementId) {
+		baseMapper.incrementReviewCount(requirementId);
+	}
 }

@@ -62,4 +62,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		
 		return goods;
 	}
+	
+	@Override
+	public void increment(String goodsId) {
+		baseMapper.incrementReviewCount(goodsId);
+	}
 }

@@ -2,13 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.campgem.modules.trade.mapper.RequirementsMapper">
 	
-	<select id="queryPageList" resultType="com.campgem.modules.trade.vo.RequirementsVo">
+	<resultMap id="requirementMap" type="com.campgem.modules.trade.vo.RequirementsVo">
+		<id column="requirementId" property="id"/>
+		<collection property="requirementsImages" select="com.campgem.modules.trade.mapper.RequirementsImagesMapper.queryRequirementsImages"
+		            ofType="com.campgem.modules.trade.entity.RequirementsImages" column="requirementId"/>
+	</resultMap>
+	
+	<update id="incrementReviewCount">
+		UPDATE requirements SET review_count = review_count + 1 WHERE id = #{requirementId}
+	</update>
+	
+	<select id="queryPageList" resultMap="requirementMap">
 		SELECT
-			r.id,
+			r.id as requirementId,
 			r.uid,
 			ub.src_face,
 			ub.nick_name,
-			IF(m.member_type = 'BUSINESS', 1, 2),
+			IF(m.member_type = 'BUSINESS', 1, 2) as identity,
 			r.requirement_name,
 			r.buying_price,
 			r.requirement_description,

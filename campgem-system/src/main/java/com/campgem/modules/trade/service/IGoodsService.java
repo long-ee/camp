@@ -22,4 +22,6 @@ public interface IGoodsService extends IService<Goods> {
 	IPage<GoodsListVo> queryPageList(Integer page, Integer pageSize, GoodsQueryDto queryDto);
 	
 	GoodsDetailVo queryGoodsDetail(String goodsId);
+	
+	void increment(String goodsId);
 }

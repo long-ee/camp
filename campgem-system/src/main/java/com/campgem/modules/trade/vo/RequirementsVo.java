@@ -2,6 +2,7 @@ package com.campgem.modules.trade.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.campgem.modules.trade.entity.RequirementsImages;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,6 +10,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description: 需求
@@ -38,6 +40,9 @@ public class RequirementsVo {
 	
 	@ApiModelProperty(value = "需求名")
 	private String requirementName;
+	
+	@ApiModelProperty("需求图片")
+	private List<RequirementsImages> requirementsImages;
 	
 	@ApiModelProperty(value = "购买价格")
 	private java.math.BigDecimal buyingPrice;

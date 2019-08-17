@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.trade.mapper.RequirementsImagesMapper">
+	
+	<select id="queryRequirementsImages" resultType="com.campgem.modules.trade.entity.RequirementsImages">
+		select * from requirements_images where requirement_id = #{requirementId}
+	</select>
+</mapper>

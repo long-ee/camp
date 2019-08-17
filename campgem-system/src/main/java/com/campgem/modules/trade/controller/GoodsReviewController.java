@@ -11,6 +11,7 @@ import com.campgem.modules.trade.dto.GoodsReviewDto;
 import com.campgem.modules.trade.entity.GoodsReviews;
 import com.campgem.modules.trade.service.IGoodsReviewsService;
 import com.campgem.modules.trade.service.IGoodsReviewsShieldsService;
+import com.campgem.modules.trade.service.IGoodsService;
 import com.campgem.modules.trade.vo.GoodsReviewsVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -35,6 +36,8 @@ import java.util.Date;
 @RequestMapping("/api/v1")
 @Api(tags = "交易消息留言管理接口")
 public class GoodsReviewController extends JeecgController<SysMessage, ISysMessageService> {
+	@Resource
+	private IGoodsService goodsService;
 	@Resource
 	private IGoodsReviewsService goodsReviewsService;
 	@Resource
@@ -81,6 +84,9 @@ public class GoodsReviewController extends JeecgController<SysMessage, ISysMessa
 		goodsReviews.setIsOpen(reviewDto.getIsOpen());
 		goodsReviews.setContent(reviewDto.getContent());
 		boolean ok = goodsReviewsService.save(goodsReviews);
+		if (ok) {
+			goodsService.increment(reviewDto.getGoodsId());
+		}
 		return ok ? Result.succ : Result.fail;
 	}
 }

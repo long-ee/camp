@@ -23,4 +23,6 @@ public interface GoodsMapper extends BaseMapper<Goods> {
 	GoodsDetailVo queryGoodsDetail(@Param("goodsId") String goodsId);
 	
 	List<GoodsRelativeVo> queryGoodsRelative(@Param("categoryId") String categoryId, @Param("goodsId") String goodsId);
+	
+	void incrementReviewCount(@Param("goodsId") String goodsId);
 }

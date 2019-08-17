@@ -19,4 +19,6 @@ public interface RequirementsMapper extends BaseMapper<Requirements> {
 	List<RequirementsVo> queryPageList(@Param("query") RequirementsQueryDto queryDto,
 	                                   @Param("start") Integer start,
 	                                   @Param("pageSize") Integer pageSize);
+	
+	void incrementReviewCount(@Param("requirementId") String requirementId);
 }
