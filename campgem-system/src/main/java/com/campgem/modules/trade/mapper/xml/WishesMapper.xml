@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.trade.mapper.WishesMapper">
+	
+	<select id="queryWishesPageList" resultType="com.campgem.modules.trade.vo.WishesVo">
+		SELECT
+			w.id,
+			w.goods_id,
+			g.goods_name,
+			(select gi.goods_image from goods_images gi where gi.goods_id = w.goods_id limit 1) as goods_icon,
+			if (w.specification_id is not null, (select gs.specifications_price from goods_specifications gs where gs.id = w.specification_id), g.sale_price) as sale_price,
+			g.origin_price,
+			g.taxes,
+			g.tags,
+			g.end_date,
+			w.specification_id,
+		    g.status,
+			w.create_time
+		FROM
+			wishes w
+				left join goods g on g.id = w.goods_id
+		WHERE
+			w.uid = #{uid}
+		  and w.del_flag = 0
+		ORDER BY
+			w.create_time DESC
+		LIMIT #{start}, #{pageSize}
+	</select>
+</mapper>
