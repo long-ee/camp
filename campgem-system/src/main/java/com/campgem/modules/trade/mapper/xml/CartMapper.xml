@@ -20,4 +20,28 @@
 			     LEFT JOIN goods_specifications gs ON gs.id = c.specifications_id
 		WHERE c.uid = #{uid};
 	</select>
+	<select id="queryOrderInfo" resultType="com.campgem.modules.trade.vo.GoodsOrderInfoVo">
+		SELECT
+			g.goods_name,
+			g.identity,
+			g.seller_name,
+			c.quantity,
+			(SELECT goods_image FROM goods_images gi WHERE gi.goods_id = c.goods_id LIMIT 1) AS goods_icon,
+			IF
+				(
+					c.specifications_id IS NULL,
+					g.sale_price,
+					( SELECT concat(specifications_price, ',', specifications_name) FROM goods_specifications gs where gs.id = c.specifications_id )) AS specification,
+			g.taxes
+		FROM
+			cart c
+				LEFT JOIN goods g ON g.id = c.goods_id
+		WHERE
+			c.uid = #{uid}
+		  AND c.id IN
+			<foreach item="item" index="index" collection="cartIds"
+			         open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	</select>
 </mapper>

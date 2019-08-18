@@ -6,17 +6,25 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
+import com.campgem.modules.trade.dto.OrderInfoDto;
 import com.campgem.modules.trade.entity.Goods;
+import com.campgem.modules.trade.entity.enums.IdentityEnum;
 import com.campgem.modules.trade.mapper.GoodsMapper;
 import com.campgem.modules.trade.service.IGoodsService;
 import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
+import com.campgem.modules.trade.vo.GoodsOrderInfoVo;
 import com.campgem.modules.trade.vo.GoodsRelativeVo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 分类信息
@@ -66,5 +74,36 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 	@Override
 	public void increment(String goodsId) {
 		baseMapper.incrementReviewCount(goodsId);
+	}
+	
+	@Override
+	public Map<String, List<GoodsOrderInfoVo>> queryOrderInfo(OrderInfoDto orderInfoDto) {
+		GoodsOrderInfoVo goodsVo = baseMapper.queryOrderInfo(orderInfoDto.getGoodsId(), orderInfoDto.getSpecificationId());
+		if (goodsVo == null) {
+			throw new JeecgBootException("商品不存在");
+		}
+		if (goodsVo.getIdentity().equals(IdentityEnum.BUSINESS.code())) {
+			// 商家，必须要有规格
+			if (orderInfoDto.getSpecificationId() == null) {
+				throw new JeecgBootException("缺少规格");
+			} else {
+				// 设置规格数据
+				if (StringUtils.isEmpty(goodsVo.getSpecification())) {
+					throw new JeecgBootException("规格错误");
+				}
+				String[] spec = goodsVo.getSpecification().split(",");
+				goodsVo.setSalePrice(new BigDecimal(spec[0]));
+				goodsVo.setSpecificationName(spec[1]);
+				goodsVo.setSpecification(null);
+			}
+		}
+		
+		goodsVo.setQuantity(orderInfoDto.getQuantity());
+		Map<String, List<GoodsOrderInfoVo>> map = new HashMap<>();
+		List<GoodsOrderInfoVo> list = new ArrayList<>();
+		list.add(goodsVo);
+		map.put(goodsVo.getSellerName(), list);
+		
+		return map;
 	}
 }

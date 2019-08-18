@@ -3,9 +3,14 @@ package com.campgem.modules.trade.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
+import com.campgem.modules.trade.dto.OrderInfoDto;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
+import com.campgem.modules.trade.vo.GoodsOrderInfoVo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 分类信息
@@ -24,4 +29,6 @@ public interface IGoodsService extends IService<Goods> {
 	GoodsDetailVo queryGoodsDetail(String goodsId);
 	
 	void increment(String goodsId);
+	
+	Map<String, List<GoodsOrderInfoVo>> queryOrderInfo(OrderInfoDto orderInfoDto);
 }

@@ -13,10 +13,12 @@ import com.campgem.modules.trade.service.ICartService;
 import com.campgem.modules.trade.service.IGoodsService;
 import com.campgem.modules.trade.service.IGoodsSpecificationsService;
 import com.campgem.modules.trade.vo.GoodsCartVo;
+import com.campgem.modules.trade.vo.GoodsOrderInfoVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -108,5 +110,32 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public Map<String, List<GoodsOrderInfoVo>> queryOrderInfo(String[] cartIds) {
+		List<GoodsOrderInfoVo> infos = baseMapper.queryOrderInfo(SecurityUtils.getCurrentUserUid(), cartIds);
+		Map<String, List<GoodsOrderInfoVo>> map = new HashMap<>();
+		for (GoodsOrderInfoVo info : infos) {
+			// 处理规格和价格
+			if (info.getSpecification().contains(",")) {
+				// 有规格数据
+				String[] spec = info.getSpecification().split(",");
+				info.setSalePrice(new BigDecimal(spec[0]));
+				info.setSpecificationName(spec[1]);
+			} else {
+				// 没有，直接设置价格
+				info.setSalePrice(new BigDecimal(info.getSpecification()));
+			}
+			info.setSpecification(null);
+			if (!map.containsKey(info.getSellerName())) {
+				List<GoodsOrderInfoVo> list = new ArrayList<>();
+				list.add(info);
+				map.put(info.getSellerName(), list);
+			} else {
+				map.get(info.getSellerName()).add(info);
+			}
+		}
+		return map;
 	}
 }

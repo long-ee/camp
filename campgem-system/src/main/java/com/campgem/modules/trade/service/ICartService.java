@@ -3,6 +3,7 @@ package com.campgem.modules.trade.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.trade.entity.Cart;
 import com.campgem.modules.trade.vo.GoodsCartVo;
+import com.campgem.modules.trade.vo.GoodsOrderInfoVo;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +30,6 @@ public interface ICartService extends IService<Cart> {
 	 * [返回商家名 -> 商家对应的商品列表]
 	 */
 	Map<String, List<GoodsCartVo>> queryCartList();
+	
+	Map<String, List<GoodsOrderInfoVo>> queryOrderInfo(String[] cartIds);
 }

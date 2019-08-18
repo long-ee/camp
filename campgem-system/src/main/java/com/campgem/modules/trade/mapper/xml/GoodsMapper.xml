@@ -90,4 +90,22 @@
 		order by g.review_count desc
 		limit 5
 	</select>
+	
+	<select id="queryOrderInfo" resultType="com.campgem.modules.trade.vo.GoodsOrderInfoVo">
+		SELECT
+			g.seller_name,
+			g.identity,
+			g.goods_name,
+			( SELECT goods_image FROM goods_images gi WHERE gi.goods_id = #{goodsId} LIMIT 1 ) AS goods_icon,
+			IF
+				(
+					#{specId} IS NULL or #{specId} = '',
+					g.sale_price,
+					( SELECT concat( specifications_price, ',', specifications_name ) FROM goods_specifications gs WHERE gs.id = #{specId}  AND gs.goods_id = #{goodsId} )) AS specification,
+			g.taxes
+		FROM
+			goods g
+		WHERE
+			g.id = #{goodsId}
+	</select>
 </mapper>
