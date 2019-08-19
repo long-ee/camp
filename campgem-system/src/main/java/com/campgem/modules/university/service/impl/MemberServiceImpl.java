@@ -1,12 +1,17 @@
 package com.campgem.modules.university.service.impl;
 
-import com.campgem.common.exception.JeecgBootException;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.api.vo.IdentifyInfo;
+import com.campgem.common.constant.CacheConstant;
+import com.campgem.common.enums.StatusEnum;
+import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.PasswordUtils;
 import com.campgem.common.util.RandomUtils;
 import com.campgem.common.util.RedisUtil;
-import com.campgem.modules.university.constant.CampgenConstant;
+import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
 import com.campgem.modules.university.dto.MemberQueryDto;
 import com.campgem.modules.university.dto.UserPasswordModifyDto;
 import com.campgem.modules.university.dto.UserRegistrationDto;
@@ -21,13 +26,8 @@ import com.campgem.modules.university.service.IUserAuthService;
 import com.campgem.modules.university.service.IUserBaseService;
 import com.campgem.modules.university.vo.MemberVo;
 import com.campgem.modules.university.vo.UserBaseVo;
-import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -64,18 +64,18 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     @Override
     public void getEmailValidityCode(String email) {
         if(StringUtils.isBlank(email)){
-            throw new JeecgBootException("邮箱不能为空");
+            throw new JeecgBootException(StatusEnum.BadRequest);
         }
         // 1、生成随机验证码
         String validityCode = RandomUtils.generateStr(4);
         // TODO 后优化为异步任务发送方式
         // 2、邮件发送
         String esReceiver = email;
-        String esTitle = "Campgen新用户注册";
+        String esTitle = "Campgem新用户注册";
         String esContent = "您的注册验证码为"+ validityCode+"，请在操作页面中输入此验证码后完成注册";
         emailSendMsgHandle.SendMsg(esReceiver, esTitle, esContent);
-        // 3、将验证码存入缓存(超时5分钟)
-        redisUtil.set(CampgenConstant.EMAIL_VALIDITY_CACHE_PRFIX + email, validityCode, 300);
+        // 3、将验证码存入缓存(超时10分钟)
+        redisUtil.set(CacheConstant.REGISTER_EMAIL_VALIDITY_CACHE_PRFIX + email, validityCode, 600);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
             throw new JeecgBootException("邮箱已经注册");
         }
         // 2、邮箱验证码校验
-        String validityCode = (String) redisUtil.get(CampgenConstant.EMAIL_VALIDITY_CACHE_PRFIX + email);
+        String validityCode = (String) redisUtil.get(CacheConstant.REGISTER_EMAIL_VALIDITY_CACHE_PRFIX + email);
         if(StringUtils.isBlank(validityCode) || !StringUtils.equals(userRegistrationDto.getEmailValidityCode(), validityCode)){
             throw new JeecgBootException("验证码错误或已过期");
         }

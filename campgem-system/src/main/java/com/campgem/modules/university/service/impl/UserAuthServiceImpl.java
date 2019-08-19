@@ -1,14 +1,20 @@
 package com.campgem.modules.university.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.api.vo.IdentifyInfo;
+import com.campgem.common.api.vo.LoginUserVo;
+import com.campgem.common.constant.CacheConstant;
 import com.campgem.common.constant.CommonConstant;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.system.query.QueryGenerator;
 import com.campgem.common.system.util.JwtUtil;
-import com.campgem.common.api.vo.IdentifyInfo;
-import com.campgem.common.api.vo.LoginUserVo;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.PasswordUtils;
+import com.campgem.common.util.RandomUtils;
 import com.campgem.common.util.RedisUtil;
+import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
 import com.campgem.modules.university.dto.LocalLoginDto;
 import com.campgem.modules.university.dto.ThirdPartyLoginDto;
 import com.campgem.modules.university.entity.UserAuth;
@@ -20,8 +26,8 @@ import com.campgem.modules.university.service.IUserAuthService;
 import com.campgem.modules.university.service.IUserBaseService;
 import com.campgem.modules.university.vo.LoginVo;
 import com.campgem.modules.university.vo.UserBaseVo;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.modules.user.dto.PasswordResetCodeVerifyDto;
+import com.campgem.modules.user.dto.PasswordResetDto;
 import com.xkcoding.justauth.AuthRequestFactory;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.config.AuthSource;
@@ -53,6 +59,8 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
     private AuthRequestFactory authRequestFactory;
     @Resource
     private RedisUtil redisUtil;
+    @Resource
+    private EmailSendMsgHandle emailSendMsgHandle;
 
     @Override
     @Transactional
@@ -152,5 +160,58 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         queryObj.setDelFlag(0);
         QueryWrapper<UserAuth> queryWrapper = QueryGenerator.initQueryWrapper(queryObj, null);
         return this.getOne(queryWrapper);
+    }
+
+    @Override
+    public void getPasswordResetValidityCode(String email) {
+        UserAuth userAuth = this.getUserAuthByIdentityType(email, IdentityTypeEnum.EMAIL.code());
+        if(null == userAuth){
+            throw new JeecgBootException(StatusEnum.NoSuchEmailExistError);
+        }
+        // 1、生成随机验证码
+        String validityCode = RandomUtils.generateStr(4);
+        // 2、邮件发送
+        String esReceiver = email;
+        String esTitle = "Campgem密码重置";
+        String esContent = "您的账户正在申请重置密码，验证码为"+ validityCode+"，请在操作页面中输入此验证码后，重新设置新密码.";
+        emailSendMsgHandle.SendMsg(esReceiver, esTitle, esContent);
+        // 3、将验证码存入缓存(超时5分钟)
+        redisUtil.set(CacheConstant.PASSWORD_RESET_EMAIL_VALIDITY_CACHE_PRFIX + email, validityCode, 600);
+
+        // 4、添加随机码，防止接口恶意调用
+        String randCode = RandomUtils.generateStr(8);
+        redisUtil.set(CacheConstant.PASSWORD_RESET_RAND_CODE_CACHE_PRFIX + email, randCode, 300);
+    }
+
+    @Override
+    public void passwordReset(PasswordResetDto passwordResetDto) {
+        UserAuth userAuth = this.getUserAuthByIdentityType(passwordResetDto.getEmail(), IdentityTypeEnum.EMAIL.code());
+        if(null == userAuth){
+            throw new JeecgBootException(StatusEnum.NoSuchEmailExistError);
+        }
+        String randCode = (String) redisUtil.get(CacheConstant.PASSWORD_RESET_RAND_CODE_CACHE_PRFIX + passwordResetDto.getEmail());
+        if(StringUtils.isBlank(randCode)){
+            throw new JeecgBootException(StatusEnum.InvalidResetPasswordTokenError);
+        }
+
+        if(!StringUtils.equals(passwordResetDto.getNewPassword(), passwordResetDto.getRepeatPassword())){
+            throw new JeecgBootException(StatusEnum.ResetPasswordBadError);
+        }
+
+        String newPassword = PasswordUtils.encryptPassword(passwordResetDto.getEmail(), passwordResetDto.getNewPassword(), 2);
+        if(StringUtils.equals(userAuth.getCertificate(), newPassword)){
+            throw new JeecgBootException(StatusEnum.ResetPasswordError);
+        }
+
+        userAuth.setCertificate(newPassword);
+        this.updateById(userAuth);
+    }
+
+    @Override
+    public void passwordResetCodeVerify(PasswordResetCodeVerifyDto verifyDto) {
+        String validityCode = (String) redisUtil.get(CacheConstant.PASSWORD_RESET_EMAIL_VALIDITY_CACHE_PRFIX + verifyDto.getEmail());
+        if(StringUtils.isBlank(validityCode) || !StringUtils.equals(verifyDto.getValidityCode(), validityCode)){
+            throw new JeecgBootException(StatusEnum.InvalidResetPasswordTokenError);
+        }
     }
 }
