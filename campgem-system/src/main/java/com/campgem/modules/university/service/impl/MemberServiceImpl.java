@@ -1,5 +1,7 @@
 package com.campgem.modules.university.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -7,10 +9,7 @@ import com.campgem.common.api.vo.IdentifyInfo;
 import com.campgem.common.constant.CacheConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
-import com.campgem.common.util.BeanConvertUtils;
-import com.campgem.common.util.PasswordUtils;
-import com.campgem.common.util.RandomUtils;
-import com.campgem.common.util.RedisUtil;
+import com.campgem.common.util.*;
 import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
 import com.campgem.modules.university.dto.MemberQueryDto;
 import com.campgem.modules.university.dto.UserPasswordModifyDto;
@@ -26,12 +25,14 @@ import com.campgem.modules.university.service.IUserAuthService;
 import com.campgem.modules.university.service.IUserBaseService;
 import com.campgem.modules.university.vo.MemberVo;
 import com.campgem.modules.university.vo.UserBaseVo;
+import com.campgem.modules.user.vo.ShippingMethodsVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description: 用户扩展信息
@@ -151,6 +152,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
         // 5、 插入Member,注册成功
         Member member = BeanConvertUtils.copy(userRegistrationDto, Member.class);
+        member.setDelFlag(0);
         member.setUserBaseId(userBaseId);
         member.setMemberName(userRegistrationDto.getUsername());
         this.save(member);
@@ -179,5 +181,16 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         userAuth.setCertificate(newEncryptPassword);
         userAuthService.updateById(userAuth);
         return this.getMemberByUserBaseId(userAuth.getUserBaseId());
+    }
+    
+    @Override
+    public List<ShippingMethodsVo> queryShoppingMethods() {
+        String methods = baseMapper.queryShoppingMethods(SecurityUtils.getCurrentUserUid());
+        return JSON.parseObject(methods, new TypeReference<List<ShippingMethodsVo>>() {});
+    }
+    
+    @Override
+    public boolean updateUserShoppingMethods(List<ShippingMethodsVo> vos) {
+        return baseMapper.updateUserShoppingMethods(vos, SecurityUtils.getCurrentUserUid());
     }
 }
