@@ -1,11 +1,13 @@
 package com.campgem.modules.trade.vo;
 
+import com.campgem.modules.user.vo.ShippingMethodsVo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @ApiModel(value = "购物车商品显示数据模型")
@@ -33,6 +35,9 @@ public class GoodsOrderInfoVo implements Serializable {
 	
 	@ApiModelProperty("规格名称")
 	private String specificationName;
+	
+	@ApiModelProperty("配送方式列表")
+	private List<ShippingMethodsVo> shippingMethods;
 	
 	@ApiModelProperty("税率")
 	private BigDecimal taxes;

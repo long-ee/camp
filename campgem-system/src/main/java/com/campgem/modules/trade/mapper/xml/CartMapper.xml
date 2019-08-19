@@ -20,7 +20,13 @@
 			     LEFT JOIN goods_specifications gs ON gs.id = c.specifications_id
 		WHERE c.uid = #{uid};
 	</select>
-	<select id="queryOrderInfo" resultType="com.campgem.modules.trade.vo.GoodsOrderInfoVo">
+	
+	<resultMap id="goodsOrderInfoMap" type="com.campgem.modules.trade.vo.GoodsOrderInfoVo">
+		<result property="shippingMethods" column="shipping_methods"
+		        javaType="java.util.List" typeHandler="com.campgem.common.typehandler.JsonTypeHandler" />
+	</resultMap>
+	
+	<select id="queryOrderInfo" resultMap="goodsOrderInfoMap">
 		SELECT
 			g.goods_name,
 			g.identity,
@@ -32,10 +38,12 @@
 					c.specifications_id IS NULL,
 					g.sale_price,
 					( SELECT concat(specifications_price, ',', specifications_name) FROM goods_specifications gs where gs.id = c.specifications_id )) AS specification,
-			g.taxes
+			g.taxes,
+		    m.shipping_methods
 		FROM
 			cart c
 				LEFT JOIN goods g ON g.id = c.goods_id
+				LEFT JOIN member m ON m.user_base_id = #{uid}
 		WHERE
 			c.uid = #{uid}
 		  AND c.id IN
