@@ -1,8 +1,5 @@
 package com.campgem.modules.university.service.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -12,15 +9,8 @@ import com.campgem.common.api.vo.IdentifyInfo;
 import com.campgem.common.constant.CacheConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
-import com.campgem.common.util.BeanConvertUtils;
-import com.campgem.common.util.PasswordUtils;
-import com.campgem.common.util.RandomUtils;
-import com.campgem.common.util.RedisUtil;
-import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
-import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.*;
 import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
-import com.campgem.modules.university.constant.CampgenConstant;
 import com.campgem.modules.university.dto.MemberQueryDto;
 import com.campgem.modules.university.dto.UserPasswordModifyDto;
 import com.campgem.modules.university.dto.UserRegistrationDto;
