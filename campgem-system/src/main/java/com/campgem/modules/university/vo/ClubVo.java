@@ -31,6 +31,9 @@ public class ClubVo {
 	/**社团创建人*/
     @ApiModelProperty(value = "社团创建人")
 	private String creatorId;
+	/**成员数量*/
+	@ApiModelProperty(value = "成员数量")
+	private Integer memberCount;
 	/**社团创建人名称*/
 	@ApiModelProperty(value = "社团创建人名称")
 	private String creatorName;
@@ -40,6 +43,9 @@ public class ClubVo {
 	/**所属大学名称*/
 	@ApiModelProperty(value = "所属大学名称")
 	private String universityName;
+	/**是否是社团成员*/
+	@ApiModelProperty(value = "是否是社团成员")
+	private boolean isClubMember;
 	/**createTime*/
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

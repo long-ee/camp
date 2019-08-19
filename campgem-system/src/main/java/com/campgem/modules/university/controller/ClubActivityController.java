@@ -1,19 +1,23 @@
 package com.campgem.modules.university.controller;
 
-import com.campgem.common.api.vo.Result;
-import com.campgem.modules.university.dto.ClubActivityQueryDto;
-import com.campgem.modules.university.entity.ClubActivity;
-import com.campgem.modules.university.service.IClubActivityService;
-import com.campgem.modules.university.vo.ClubActivityVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.campgem.common.api.vo.Result;
+import com.campgem.common.util.DateUtils;
+import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.university.dto.ClubActivityQueryDto;
+import com.campgem.modules.university.service.IClubActivityService;
+import com.campgem.modules.university.service.IClubService;
+import com.campgem.modules.university.vo.ClubActivityVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
 
 
 @Slf4j
@@ -21,106 +25,41 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/api/v1")
 public class ClubActivityController {
-	@Autowired
+	@Resource
+	private IClubService clubService;
+	@Resource
 	private IClubActivityService clubActivityService;
 	
-	/**
-	  * 分页列表查询
-	 * @param queryDto
-	 * @param pageNo
-	 * @param pageSize
-	 * @param req
-	 * @return
-	 */
-	@ApiOperation(value="社团活动信息-分页列表查询", notes="社团活动信息-分页列表查询")
-	@GetMapping(value = "/clubActivity/pageList")
-	public Result<IPage<ClubActivityVo>> queryPageList(ClubActivityQueryDto queryDto,
-													   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-													   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
-													   HttpServletRequest req) {
-		Result<IPage<ClubActivityVo>> result = new Result<>();
+
+	@ApiOperation(value="社团活动信息接口-今天活动列表查询", notes="默认查出条数小于等于10条")
+	@GetMapping(value = "/university/club/activity/list/today")
+	public Result<IPage<ClubActivityVo>> queryTodayActivities(ClubActivityQueryDto queryDto) {
+		Page<ClubActivityQueryDto> page = new Page<ClubActivityQueryDto>(1, 10);
+		queryDto.setStartDate(DateUtils.formatDate());
+		queryDto.setEndDate(DateUtils.formatDate());
+		IPage<ClubActivityVo> activityVos = clubActivityService.queryPageList(page, queryDto);
+		return new Result<IPage<ClubActivityVo>>().result(activityVos);
+	}
+	
+
+	@ApiOperation(value="社团活动信息-社团活动列表分页查询", notes="universityId 查询校园活动，clubId 查询俱乐部")
+	@GetMapping(value = "/university/club/activity/list")
+	public Result<IPage<ClubActivityVo>> queryActivities(ClubActivityQueryDto queryDto,
+												@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+												@RequestParam(name="pageSize", defaultValue="10") Integer pageSize) {
 		Page<ClubActivityQueryDto> page = new Page<ClubActivityQueryDto>(pageNo, pageSize);
-		IPage<ClubActivityVo> pageList = clubActivityService.queryPageList(page, queryDto);
-		result.setSuccess(true);
-		result.setResult(pageList);
-		return result;
+		IPage<ClubActivityVo> activityVos = clubActivityService.queryPageList(page, queryDto);
+		return new Result<IPage<ClubActivityVo>>().result(activityVos);
 	}
 	
-	/**
-	  *   添加
-	 * @param clubActivity
-	 * @return
-	 */
-	@ApiOperation(value="社团活动信息-添加", notes="社团活动信息-添加")
-	@PostMapping(value = "/clubActivity/add")
-	public Result<ClubActivity> add(@RequestBody ClubActivity clubActivity) {
-		Result<ClubActivity> result = new Result<ClubActivity>();
-		try {
-			clubActivityService.save(clubActivity);
-			result.success("添加成功！");
-		} catch (Exception e) {
-			log.error(e.getMessage(),e);
-			result.error500("操作失败");
-		}
-		return result;
-	}
-	
-	/**
-	  *  编辑
-	 * @param clubActivity
-	 * @return
-	 */
-	@ApiOperation(value="社团活动信息-编辑", notes="社团活动信息-编辑")
-	@PostMapping(value = "/clubActivity/edit")
-	public Result<ClubActivity> edit(@RequestBody ClubActivity clubActivity) {
-		Result<ClubActivity> result = new Result<ClubActivity>();
-		ClubActivity clubActivityEntity = clubActivityService.getById(clubActivity.getId());
-		if(clubActivityEntity==null) {
-			result.error500("未找到对应实体");
-		}else {
-			boolean ok = clubActivityService.updateById(clubActivity);
-			//TODO 返回false说明什么？
-			if(ok) {
-				result.success("修改成功!");
-			}
-		}
-		
-		return result;
-	}
-	
-	/**
-	  *   通过id删除
-	 * @param id
-	 * @return
-	 */
-	@ApiOperation(value="社团活动信息-通过id删除", notes="社团活动信息-通过id删除")
-	@PostMapping(value = "/clubActivity/delete")
-	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
-		try {
-			clubActivityService.removeById(id);
-		} catch (Exception e) {
-			log.error("删除失败",e.getMessage());
-			return Result.error("删除失败!");
-		}
-		return Result.ok("删除成功!");
-	}
-	
-	/**
-	  * 通过id查询
-	 * @param id
-	 * @return
-	 */
-	@ApiOperation(value="社团活动信息-详情查询", notes="社团活动信息-详情查询")
-	@GetMapping(value = "/clubActivity/details")
-	public Result<ClubActivityVo> queryById(@RequestParam(name="id",required=true) String id) {
-		Result<ClubActivityVo> result = new Result<ClubActivityVo>();
-		ClubActivityVo clubActivity = clubActivityService.queryDetails(id);
-		if(clubActivity==null) {
-			result.error500("未找到对应实体");
-		}else {
-			result.setResult(clubActivity);
-			result.setSuccess(true);
-		}
-		return result;
+
+	@ApiOperation(value="社团活动信息-活动详情查询", notes="社团活动信息-活动详情查询")
+	@GetMapping(value = "/university/club/activity/details")
+	public Result<ClubActivityVo> details(String activityId) {
+		ClubActivityVo clubActivity = clubActivityService.queryDetails(activityId);
+		String memberId = SecurityUtils.getCurrentUserMemberId();
+		boolean isClubMember = clubService.isClubMember(clubActivity.getClubId(), memberId);
+		clubActivity.setClubMember(isClubMember);
+		return new Result<ClubActivityVo>().result(clubActivity);
 	}
 }

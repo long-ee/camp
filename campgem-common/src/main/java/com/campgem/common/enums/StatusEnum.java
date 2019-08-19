@@ -30,6 +30,12 @@ public enum StatusEnum {
     UserStatusNotOkError(20608, "User status invalid", "用户状态异常"),
     InvalidResetPasswordTokenError(20609, "Invalid credential to reset password", "重置密码凭证无效"),
 
+
+    // for club
+    ClubNotExistError(30601,"The club is not exist", "该社团不存在"),
+    ClubExistUserError(30602, "The user is already a member of the club", "该用户已经是该社团成员"),
+    MemberIsAdminNotAllowDropOut(30603, "You are the administrator. Please transfer the club and then withdraw or disband the club at the personal center.", "你是管理员，请转让社团后再退出或至个人中心解散社团"),
+
     ;
 
 

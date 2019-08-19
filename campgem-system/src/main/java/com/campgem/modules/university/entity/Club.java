@@ -54,6 +54,9 @@ public class Club {
     @ApiModelProperty(value = "社团创建人")
 	@NotBlank(message = "请选择社团创建人")
 	private String creatorId;
+	@Excel(name = "成员数量", width = 15)
+	@ApiModelProperty(value = "成员数量")
+	private Integer memberCount;
 	/**所属大学*/
 	@Excel(name = "所属大学", width = 15)
     @ApiModelProperty(value = "所属大学")
