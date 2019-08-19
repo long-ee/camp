@@ -23,4 +23,21 @@ public interface CacheConstant {
     public static final String LOGIN_USER_RULES_CACHE = "loginUser_cacheRules";
 
 
+	/**
+	 * 邮箱注册验证码cache key prefix
+	 */
+	public static String REGISTER_EMAIL_VALIDITY_CACHE_PRFIX = "email_validity_";
+
+
+	/**
+	 * 重置密码cache key prefix
+	 */
+	public static String PASSWORD_RESET_EMAIL_VALIDITY_CACHE_PRFIX = "password_reset_validity_";
+
+
+	/**
+	 * 重置密码随机码（防止恶意重置）
+	 */
+	public static String PASSWORD_RESET_RAND_CODE_CACHE_PRFIX = "password_reset_rand_code_";
+
 }
