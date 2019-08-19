@@ -2,4 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.campgem.modules.university.mapper.UniversityMapper">
 
+
+    <sql id="queryConditions">
+        <where>
+            <if test="1 == 1">
+                <![CDATA[ u.enable = '1'  ]]>
+            </if>
+            <if test="null != queryDto.cityId and queryDto.cityId != ''">
+                <![CDATA[ AND u.city_id = #{queryDto.cityId}  ]]>
+            </if>
+
+            <if test="null != queryDto.cityName and queryDto.cityName != ''">
+                <![CDATA[ AND c.city_name = #{queryDto.cityName}  ]]>
+            </if>
+
+            <if test="null != queryDto.country and queryDto.country != ''">
+                <![CDATA[ AND c.country = #{queryDto.country}  ]]>
+            </if>
+
+            <if test="null != queryDto.state and queryDto.state != ''">
+                <![CDATA[ AND c.state = #{queryDto.state} ]]>
+            </if>
+
+            <if test="null != queryDto.universityName and queryDto.universityName != ''">
+                <bind name="uname" value="'%' + queryDto.universityName + '%'" />
+                <![CDATA[ AND u.university_name like #{uname}  ]]>
+            </if>
+
+            <if test="null != queryDto.universityId and queryDto.universityId != ''">
+                <![CDATA[ AND u.id = #{queryDto.universityId}  ]]>
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryList" resultType="com.campgem.modules.university.vo.UniversityVo">
+        <![CDATA[
+            select
+                u.*,
+                c.country,
+                c.city_name,
+                c.state,
+                c.post_code
+            from
+                university u left join city c on u.city_id = c.id
+        ]]>
+        <include refid="queryConditions"></include>
+        <![CDATA[
+            order by u.create_time desc
+        ]]>
+    </select>
 </mapper>

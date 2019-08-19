@@ -45,27 +45,31 @@ public class ClubActivityVo {
 	/**社团活动内容*/
     @ApiModelProperty(value = "社团活动内容")
 	private Object activityContent;
-	/**活动日期*/
+	/**活动开始日期*/
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    @ApiModelProperty(value = "活动日期")
-	private java.util.Date activityDate;
+    @ApiModelProperty(value = "活动开始日期")
+	private java.util.Date startDate;
+	/**活动结束日期*/
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@ApiModelProperty(value = "活动结束日期")
+	private java.util.Date endDate;
 	/**活动持续时间*/
     @ApiModelProperty(value = "活动持续时间")
 	private String activityDuration;
 	/**活动开始时间*/
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "活动开始时间")
-	private java.util.Date activityStartTime;
+	private java.lang.String startTime;
 	/**活动结束时间*/
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "活动结束时间")
-	private java.util.Date activityEndTime;
+	private java.lang.String endTime;
 	/**活动标题*/
     @ApiModelProperty(value = "活动标题")
 	private String activityTitle;
+	/**是否是社团成员*/
+	@ApiModelProperty(value = "是否是社团成员")
+	private boolean isClubMember;
 	/**createTime*/
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

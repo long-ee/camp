@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IClubActivityService extends IService<ClubActivity> {
     /**
      * 根据条件分页查询社团活动分页列表
+     * @param page
      * @param queryDto
      * @return
      */

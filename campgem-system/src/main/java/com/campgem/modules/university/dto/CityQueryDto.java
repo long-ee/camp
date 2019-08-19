@@ -12,4 +12,10 @@ public class CityQueryDto implements Serializable {
     /** 城市名称 **/
     @ApiModelProperty(value = "城市名称")
     private String cityName;
+    /**国家*/
+    @ApiModelProperty(value = "国家")
+    private String country;
+    /**区*/
+    @ApiModelProperty(value = "州")
+    private String state;
 }

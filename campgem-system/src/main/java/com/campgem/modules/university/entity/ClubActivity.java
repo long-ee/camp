@@ -35,12 +35,18 @@ public class ClubActivity {
 	@Excel(name = "社团活动内容", width = 15)
     @ApiModelProperty(value = "社团活动内容")
 	private Object activityContent;
-	/**活动日期*/
-	@Excel(name = "活动日期", width = 15, format = "yyyy-MM-dd")
+	/**活动开始日期*/
+	@Excel(name = "活动开始日期", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    @ApiModelProperty(value = "活动日期")
-	private java.util.Date activityDate;
+    @ApiModelProperty(value = "活动开始日期")
+	private java.util.Date startDate;
+	/**活动结束日期*/
+	@Excel(name = "活动结束日期", width = 15, format = "yyyy-MM-dd")
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@ApiModelProperty(value = "活动结束日期")
+	private java.util.Date endDate;
 	/**活动持续时间*/
 	@Excel(name = "活动持续时间", width = 15)
     @ApiModelProperty(value = "活动持续时间")
@@ -48,15 +54,15 @@ public class ClubActivity {
 	/**活动开始时间*/
 	@Excel(name = "活动开始时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "活动开始时间")
-	private java.util.Date activityStartTime;
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@ApiModelProperty(value = "活动开始时间")
+	private java.util.Date startTime;
 	/**活动结束时间*/
 	@Excel(name = "活动结束时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "活动结束时间")
-	private java.util.Date activityEndTime;
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@ApiModelProperty(value = "活动结束时间")
+	private java.util.Date endTime;
 	/**活动标题*/
 	@Excel(name = "活动标题", width = 15)
     @ApiModelProperty(value = "活动标题")

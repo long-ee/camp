@@ -1,11 +1,13 @@
 package com.campgem.modules.university.service;
 
-import com.campgem.modules.university.dto.UniversityQueryDto;
-import com.campgem.modules.university.entity.University;
-import com.campgem.modules.university.vo.UniversityVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.university.dto.UniversityQueryDto;
+import com.campgem.modules.university.entity.University;
+import com.campgem.modules.university.vo.UniversityVo;
+
+import java.util.List;
 
 /**
  * @Description: 校园信息
@@ -14,6 +16,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Version: V1.0
  */
 public interface IUniversityService extends IService<University> {
+
+
+    /**
+     * 根据条件查询学校列表
+     * @param queryDto
+     * @return
+     */
+    List<UniversityVo> queryList(UniversityQueryDto queryDto);
+
+
     /**
      * 根据条件分页查询学校分页列表
      * @param queryDto

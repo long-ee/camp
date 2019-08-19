@@ -2,4 +2,83 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.campgem.modules.university.mapper.ClubActivityMapper">
 
+    <sql id="queryConditions">
+        <where>
+            <if test="1 == 1">
+                <![CDATA[ activity.del_flag = 0  ]]>
+            </if>
+
+            <if test="null != queryDto.universityId and queryDto.universityId != ''">
+                <![CDATA[ AND club.university_id = #{queryDto.universityId}  ]]>
+            </if>
+
+            <if test="null != queryDto.clubName and queryDto.clubName != ''">
+                <bind name="cname" value="'%' + queryDto.clubName + '%'" />
+                <![CDATA[ AND club.club_name like #{cname}  ]]>
+            </if>
+
+            <if test="null != queryDto.universityName and queryDto.universityName != ''">
+                <bind name="uname" value="'%' + queryDto.universityName + '%'" />
+                <![CDATA[ AND u.university_name like #{uname}  ]]>
+            </if>
+
+            <if test="null != queryDto.activityTitle and queryDto.activityTitle != ''">
+                <bind name="tname" value="'%' + queryDto.activityTitle + '%'" />
+                <![CDATA[ AND activity.activity_title like #{tname}  ]]>
+            </if>
+
+            <if test="null != queryDto.clubId and queryDto.clubId != ''">
+                <![CDATA[ AND activity.clubId = #{queryDto.clubId}  ]]>
+            </if>
+
+            <if test="null != queryDto.startDate and queryDto.startDate != ''">
+                <![CDATA[ AND activity.start_date <= #{queryDto.startDate}  ]]>
+            </if>
+
+            <if test="null != queryDto.endDate and queryDto.endDate != ''">
+                <![CDATA[ AND activity.end_date >= #{queryDto.endDate}  ]]>
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryPageList" resultType="com.campgem.modules.university.vo.ClubActivityVo">
+        <![CDATA[
+            select
+                activity.*,
+                club.club_name,
+                u.university_name,
+                u.city_id,
+                c.city_name,
+                member.member_name as publisherName
+            from
+                club_activity activity
+            left join club club on activity.club_id = club.id
+            left join university u on club.university_id = u.id
+            left join city c on u.city_id = c.id
+            left join member member on activity.publisher_id = member.id
+        ]]>
+        <include refid="queryConditions"></include>
+        <![CDATA[
+            order by activity.create_time desc
+        ]]>
+    </select>
+
+    <select id="queryDetails" resultType="com.campgem.modules.university.vo.ClubActivityVo">
+        <![CDATA[
+            select
+                activity.*,
+                club.club_name,
+                u.university_name,
+                u.city_id,
+                c.city_name,
+                member.member_name as publisherName
+            from
+                club_activity activity
+            left join club club on activity.club_id = club.id
+            left join university u on club.university_id = u.id
+            left join city c on u.city_id = c.id
+            left join member member on activity.publisher_id = member.id
+            where activity.id = #{activityId}
+        ]]>
+    </select>
 </mapper>
