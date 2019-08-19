@@ -1,5 +1,8 @@
 package com.campgem.common.constant;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public interface CommonConstant {
 
 	/**
@@ -120,5 +123,13 @@ public interface CommonConstant {
     
     /**字典翻译文本后缀*/
     public static final String DICT_TEXT_SUFFIX = "_dictText";
+    
+    public static final List<String> shippingMethodNames = new ArrayList<String>() {{
+    	add("Pick up");
+    	add("Local delivery");
+    	add("USPS");
+    	add("UPS");
+    	add("FedEx");
+    }};
     
 }

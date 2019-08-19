@@ -1,14 +1,17 @@
 package com.campgem.modules.university.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.university.dto.MemberQueryDto;
 import com.campgem.modules.university.dto.UserPasswordModifyDto;
 import com.campgem.modules.university.dto.UserRegistrationDto;
 import com.campgem.modules.university.entity.Member;
 import com.campgem.modules.university.vo.MemberVo;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.user.vo.ShippingMethodsVo;
+
+import java.util.List;
 
 /**
  * @Description: 用户扩展信息
@@ -56,4 +59,8 @@ public interface IMemberService extends IService<Member> {
      * @return
      */
     public MemberVo modifyPassword(UserPasswordModifyDto passwordModifyDto);
+	
+	List<ShippingMethodsVo> queryShoppingMethods();
+    
+    boolean updateUserShoppingMethods(List<ShippingMethodsVo> toJSONString);
 }
