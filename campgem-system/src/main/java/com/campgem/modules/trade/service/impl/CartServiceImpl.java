@@ -88,6 +88,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 			cart.setUid(uid);
 			cart.setGoodsId(goodsId);
 			cart.setSellerId(goods.getUid());
+			cart.setSellerIdentity(goods.getIdentity());
 			cart.setSpecificationsId(specId);
 			cart.setQuantity(quantity);
 			cart.setSellerName(goods.getSellerName());
@@ -165,9 +166,5 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 		}
 		
 		return v2s;
-	}
-	
-	public OrderInfoVo queryOrderInfoV2(String[] cartIds) {
-		return null;
 	}
 }

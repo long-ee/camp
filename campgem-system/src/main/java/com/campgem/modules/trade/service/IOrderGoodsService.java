@@ -1,7 +1,7 @@
 package com.campgem.modules.trade.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.campgem.modules.trade.entity.OrderGoods;
+import com.campgem.modules.trade.entity.OrdersGoods;
 
 /**
  * @Description: 订单商品
@@ -9,6 +9,6 @@ import com.campgem.modules.trade.entity.OrderGoods;
  * @Date:   2019-08-19
  * @Version: V1.0
  */
-public interface IOrderGoodsService extends IService<OrderGoods> {
+public interface IOrderGoodsService extends IService<OrdersGoods> {
 
 }

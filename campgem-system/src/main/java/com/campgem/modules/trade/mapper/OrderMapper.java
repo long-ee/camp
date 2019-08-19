@@ -1,7 +1,7 @@
 package com.campgem.modules.trade.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.campgem.modules.trade.entity.Order;
+import com.campgem.modules.trade.entity.Orders;
 
 /**
  * @Description: 订单
@@ -9,6 +9,6 @@ import com.campgem.modules.trade.entity.Order;
  * @Date:   2019-08-19
  * @Version: V1.0
  */
-public interface OrderMapper extends BaseMapper<Order> {
+public interface OrderMapper extends BaseMapper<Orders> {
 
 }

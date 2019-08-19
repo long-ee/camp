@@ -25,7 +25,7 @@ public class PaypalServiceImpl implements IPaypalService {
 			PaypalPaymentIntent intent,
 			String description,
 			String cancelUrl,
-			String successUrl) throws PayPalRESTException {
+			String returnUrl) throws PayPalRESTException {
 		Amount amount = new Amount();
 		amount.setCurrency(currency);
 		amount.setTotal(String.format("%.2f", total));
@@ -46,7 +46,7 @@ public class PaypalServiceImpl implements IPaypalService {
 		payment.setTransactions(transactions);
 		RedirectUrls redirectUrls = new RedirectUrls();
 		redirectUrls.setCancelUrl(cancelUrl);
-		redirectUrls.setReturnUrl(successUrl);
+		redirectUrls.setReturnUrl(returnUrl);
 		payment.setRedirectUrls(redirectUrls);
 		
 		return payment.create(apiContext);

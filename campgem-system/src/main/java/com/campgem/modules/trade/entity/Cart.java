@@ -38,6 +38,9 @@ public class Cart {
 	@ApiModelProperty(value = "卖家ID", hidden = true)
 	private String sellerId;
 	
+	@ApiModelProperty("卖家身份")
+	private Integer sellerIdentity;
+	
 	@ApiModelProperty("卖家名称")
 	private String sellerName;
 	

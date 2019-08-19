@@ -8,7 +8,7 @@ import com.campgem.common.api.vo.Result;
 import com.campgem.common.aspect.annotation.AutoLog;
 import com.campgem.common.system.query.QueryGenerator;
 import com.campgem.common.util.oConvertUtils;
-import com.campgem.modules.trade.entity.OrderGoods;
+import com.campgem.modules.trade.entity.OrdersGoods;
 import com.campgem.modules.trade.service.IOrderGoodsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,7 +49,7 @@ public class OrderGoodsController {
 	
 	/**
 	  * 分页列表查询
-	 * @param orderGoods
+	 * @param ordersGoods
 	 * @param pageNo
 	 * @param pageSize
 	 * @param req
@@ -58,14 +58,14 @@ public class OrderGoodsController {
 	@AutoLog(value = "订单商品-分页列表查询")
 	@ApiOperation(value="订单商品-分页列表查询", notes="订单商品-分页列表查询")
 	@GetMapping(value = "/list")
-	public Result<IPage<OrderGoods>> queryPageList(OrderGoods orderGoods,
-									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
-									  HttpServletRequest req) {
-		Result<IPage<OrderGoods>> result = new Result<IPage<OrderGoods>>();
-		QueryWrapper<OrderGoods> queryWrapper = QueryGenerator.initQueryWrapper(orderGoods, req.getParameterMap());
-		Page<OrderGoods> page = new Page<OrderGoods>(pageNo, pageSize);
-		IPage<OrderGoods> pageList = orderGoodsService.page(page, queryWrapper);
+	public Result<IPage<OrdersGoods>> queryPageList(OrdersGoods ordersGoods,
+	                                                @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+	                                                @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+	                                                HttpServletRequest req) {
+		Result<IPage<OrdersGoods>> result = new Result<IPage<OrdersGoods>>();
+		QueryWrapper<OrdersGoods> queryWrapper = QueryGenerator.initQueryWrapper(ordersGoods, req.getParameterMap());
+		Page<OrdersGoods> page = new Page<OrdersGoods>(pageNo, pageSize);
+		IPage<OrdersGoods> pageList = orderGoodsService.page(page, queryWrapper);
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;
@@ -73,16 +73,16 @@ public class OrderGoodsController {
 	
 	/**
 	  *   添加
-	 * @param orderGoods
+	 * @param ordersGoods
 	 * @return
 	 */
 	@AutoLog(value = "订单商品-添加")
 	@ApiOperation(value="订单商品-添加", notes="订单商品-添加")
 	@PostMapping(value = "/add")
-	public Result<OrderGoods> add(@RequestBody OrderGoods orderGoods) {
-		Result<OrderGoods> result = new Result<OrderGoods>();
+	public Result<OrdersGoods> add(@RequestBody OrdersGoods ordersGoods) {
+		Result<OrdersGoods> result = new Result<OrdersGoods>();
 		try {
-			orderGoodsService.save(orderGoods);
+			orderGoodsService.save(ordersGoods);
 			result.success("添加成功！");
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
@@ -93,19 +93,19 @@ public class OrderGoodsController {
 	
 	/**
 	  *  编辑
-	 * @param orderGoods
+	 * @param ordersGoods
 	 * @return
 	 */
 	@AutoLog(value = "订单商品-编辑")
 	@ApiOperation(value="订单商品-编辑", notes="订单商品-编辑")
 	@PutMapping(value = "/edit")
-	public Result<OrderGoods> edit(@RequestBody OrderGoods orderGoods) {
-		Result<OrderGoods> result = new Result<OrderGoods>();
-		OrderGoods orderGoodsEntity = orderGoodsService.getById(orderGoods.getId());
-		if(orderGoodsEntity==null) {
+	public Result<OrdersGoods> edit(@RequestBody OrdersGoods ordersGoods) {
+		Result<OrdersGoods> result = new Result<OrdersGoods>();
+		OrdersGoods ordersGoodsEntity = orderGoodsService.getById(ordersGoods.getId());
+		if(ordersGoodsEntity ==null) {
 			result.error500("未找到对应实体");
 		}else {
-			boolean ok = orderGoodsService.updateById(orderGoods);
+			boolean ok = orderGoodsService.updateById(ordersGoods);
 			//TODO 返回false说明什么？
 			if(ok) {
 				result.success("修改成功!");
@@ -141,8 +141,8 @@ public class OrderGoodsController {
 	@AutoLog(value = "订单商品-批量删除")
 	@ApiOperation(value="订单商品-批量删除", notes="订单商品-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
-	public Result<OrderGoods> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
-		Result<OrderGoods> result = new Result<OrderGoods>();
+	public Result<OrdersGoods> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
+		Result<OrdersGoods> result = new Result<OrdersGoods>();
 		if(ids==null || "".equals(ids.trim())) {
 			result.error500("参数不识别！");
 		}else {
@@ -160,13 +160,13 @@ public class OrderGoodsController {
 	@AutoLog(value = "订单商品-通过id查询")
 	@ApiOperation(value="订单商品-通过id查询", notes="订单商品-通过id查询")
 	@GetMapping(value = "/queryById")
-	public Result<OrderGoods> queryById(@RequestParam(name="id",required=true) String id) {
-		Result<OrderGoods> result = new Result<OrderGoods>();
-		OrderGoods orderGoods = orderGoodsService.getById(id);
-		if(orderGoods==null) {
+	public Result<OrdersGoods> queryById(@RequestParam(name="id",required=true) String id) {
+		Result<OrdersGoods> result = new Result<OrdersGoods>();
+		OrdersGoods ordersGoods = orderGoodsService.getById(id);
+		if(ordersGoods ==null) {
 			result.error500("未找到对应实体");
 		}else {
-			result.setResult(orderGoods);
+			result.setResult(ordersGoods);
 			result.setSuccess(true);
 		}
 		return result;
@@ -181,13 +181,13 @@ public class OrderGoodsController {
   @RequestMapping(value = "/exportXls")
   public ModelAndView exportXls(HttpServletRequest request, HttpServletResponse response) {
       // Step.1 组装查询条件
-      QueryWrapper<OrderGoods> queryWrapper = null;
+      QueryWrapper<OrdersGoods> queryWrapper = null;
       try {
           String paramsStr = request.getParameter("paramsStr");
           if (oConvertUtils.isNotEmpty(paramsStr)) {
               String deString = URLDecoder.decode(paramsStr, "UTF-8");
-              OrderGoods orderGoods = JSON.parseObject(deString, OrderGoods.class);
-              queryWrapper = QueryGenerator.initQueryWrapper(orderGoods, request.getParameterMap());
+              OrdersGoods ordersGoods = JSON.parseObject(deString, OrdersGoods.class);
+              queryWrapper = QueryGenerator.initQueryWrapper(ordersGoods, request.getParameterMap());
           }
       } catch (UnsupportedEncodingException e) {
           e.printStackTrace();
@@ -195,10 +195,10 @@ public class OrderGoodsController {
 
       //Step.2 AutoPoi 导出Excel
       ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
-      List<OrderGoods> pageList = orderGoodsService.list(queryWrapper);
+      List<OrdersGoods> pageList = orderGoodsService.list(queryWrapper);
       //导出文件名称
       mv.addObject(NormalExcelConstants.FILE_NAME, "订单商品列表");
-      mv.addObject(NormalExcelConstants.CLASS, OrderGoods.class);
+      mv.addObject(NormalExcelConstants.CLASS, OrdersGoods.class);
       mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("订单商品列表数据", "导出人:Jeecg", "导出信息"));
       mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
       return mv;
@@ -222,9 +222,9 @@ public class OrderGoodsController {
           params.setHeadRows(1);
           params.setNeedSave(true);
           try {
-              List<OrderGoods> listOrderGoodss = ExcelImportUtil.importExcel(file.getInputStream(), OrderGoods.class, params);
-              orderGoodsService.saveBatch(listOrderGoodss);
-              return Result.ok("文件导入成功！数据行数:" + listOrderGoodss.size());
+              List<OrdersGoods> listOrdersGoodsses = ExcelImportUtil.importExcel(file.getInputStream(), OrdersGoods.class, params);
+              orderGoodsService.saveBatch(listOrdersGoodsses);
+              return Result.ok("文件导入成功！数据行数:" + listOrdersGoodsses.size());
           } catch (Exception e) {
               log.error(e.getMessage(),e);
               return Result.error("文件导入失败:"+e.getMessage());

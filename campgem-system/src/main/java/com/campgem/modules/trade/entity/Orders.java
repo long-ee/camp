@@ -19,11 +19,11 @@ import org.springframework.format.annotation.DateTimeFormat;
  * @Version: V1.0
  */
 @Data
-@TableName("order")
+@TableName("orders")
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value="order对象", description="订单")
-public class Order {
+public class Orders {
     
 	/**id*/
 	@TableId(type = IdType.UUID)

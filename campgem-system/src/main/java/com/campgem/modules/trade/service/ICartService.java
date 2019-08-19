@@ -29,10 +29,8 @@ public interface ICartService extends IService<Cart> {
 	 */
 	List<CartGoodsVo> queryCartList();
 	
-	List<OrderInfoVo> queryOrderInfo(String[] cartIds);
-	
 	/**
-	 * 查询购物车信息，所有的商品都是同一个商家
+	 * 订单信息
 	 */
-	OrderInfoVo queryOrderInfoV2(String[] cartIds);
+	List<OrderInfoVo> queryOrderInfo(String[] cartIds);
 }

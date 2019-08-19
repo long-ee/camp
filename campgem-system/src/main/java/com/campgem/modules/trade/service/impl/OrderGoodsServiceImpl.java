@@ -1,7 +1,7 @@
 package com.campgem.modules.trade.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.campgem.modules.trade.entity.OrderGoods;
+import com.campgem.modules.trade.entity.OrdersGoods;
 import com.campgem.modules.trade.mapper.OrderGoodsMapper;
 import com.campgem.modules.trade.service.IOrderGoodsService;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @Version: V1.0
  */
 @Service
-public class OrderGoodsServiceImpl extends ServiceImpl<OrderGoodsMapper, OrderGoods> implements IOrderGoodsService {
+public class OrderGoodsServiceImpl extends ServiceImpl<OrderGoodsMapper, OrdersGoods> implements IOrderGoodsService {
 
 }

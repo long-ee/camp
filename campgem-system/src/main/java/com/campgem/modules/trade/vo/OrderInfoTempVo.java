@@ -12,6 +12,9 @@ import java.util.List;
 @Data
 @ApiModel(value = "订单显示数据模型")
 public class OrderInfoTempVo implements Serializable {
+	@ApiModelProperty("购物车ID")
+	private String cartId;
+	
 	@ApiModelProperty("卖家ID")
 	private String sellerId;
 	

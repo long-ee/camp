@@ -10,6 +10,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
+import java.math.BigDecimal;
+
 /**
  * @Description: 订单商品
  * @Author: campgem
@@ -17,11 +19,11 @@ import org.jeecgframework.poi.excel.annotation.Excel;
  * @Version: V1.0
  */
 @Data
-@TableName("order_goods")
+@TableName("orders_goods")
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="order_goods对象", description="订单商品")
-public class OrderGoods {
+@ApiModel(value="订单商品", description="订单商品")
+public class OrdersGoods {
     
 	/**id*/
 	@TableId(type = IdType.UUID)
@@ -31,10 +33,6 @@ public class OrderGoods {
 	@Excel(name = "订单ID", width = 15)
     @ApiModelProperty(value = "订单ID")
 	private java.lang.String orderId;
-	/**订单商品第*/
-	@Excel(name = "订单商品第", width = 15)
-    @ApiModelProperty(value = "订单商品第")
-	private java.lang.String goodsId;
 	/**商品名称*/
 	@Excel(name = "商品名称", width = 15)
     @ApiModelProperty(value = "商品名称")
@@ -51,6 +49,8 @@ public class OrderGoods {
 	@Excel(name = "单价", width = 15)
     @ApiModelProperty(value = "单价")
 	private java.math.BigDecimal price;
+	@ApiModelProperty("税金")
+	private BigDecimal taxes;
 	/**商品数量*/
 	@Excel(name = "商品数量", width = 15)
     @ApiModelProperty(value = "商品数量")

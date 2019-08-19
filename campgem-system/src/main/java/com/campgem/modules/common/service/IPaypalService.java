@@ -13,7 +13,7 @@ public interface IPaypalService {
 			PaypalPaymentIntent intent,
 			String description,
 			String cancelUrl,
-			String successUrl) throws PayPalRESTException;
+			String returnUrl) throws PayPalRESTException;
 	
 	public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
 }

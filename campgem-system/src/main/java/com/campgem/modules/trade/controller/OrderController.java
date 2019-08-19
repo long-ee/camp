@@ -15,10 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -67,8 +64,11 @@ public class OrderController {
 			throw new JeecgBootException("支付方式错误");
 		}
 		
-		// 添加订单
+		// 创建订单
 		Payment payment = orderService.createPaymentByOrders(payDto);
+		if (payment == null) {
+			return new Result<String>().result("");
+		}
 		String url = null;
 		for(Links links : payment.getLinks()){
 			if(links.getRel().equals("approval_url")){
@@ -82,5 +82,12 @@ public class OrderController {
 		}
 		
 		return new Result<String>().result(url);
+	}
+	
+	@ApiOperation("PayPal支付回调")
+	@GetMapping("/order/paypal/notify")
+	public Result paypalNotify(String paymentId, String token, String PayerID) {
+		orderService.executePayment(paymentId, token, PayerID);
+		return null;
 	}
 }
