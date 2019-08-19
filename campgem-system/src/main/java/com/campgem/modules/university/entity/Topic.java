@@ -31,6 +31,10 @@ public class Topic {
 	@Excel(name = "所属版块", width = 15)
 	@ApiModelProperty(value = "所属版块")
 	private String postId;
+	/**话题类型*/
+	@Excel(name = "话题类型", width = 15)
+	@ApiModelProperty(value = "话题类型")
+	private String categoryId;
 	/**话题内容*/
 	@Excel(name = "话题内容", width = 15)
     @ApiModelProperty(value = "话题内容")
@@ -59,6 +63,10 @@ public class Topic {
 	@Excel(name = "是否置顶", width = 15)
     @ApiModelProperty(value = "是否置顶")
 	private String top;
+	/**发布者ID*/
+	@Excel(name = "发布者ID", width = 15)
+	@ApiModelProperty(value = "发布者ID")
+	private String publisherId;
 	/**删除状态*/
 	@Excel(name = "删除状态", width = 15)
     @ApiModelProperty(value = "删除状态")

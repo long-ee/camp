@@ -62,7 +62,7 @@ public class ClubController {
 
 
 	@ApiOperation(value="社团信息管理接口-退出社团", notes="社团信息管理接口-退出社团")
-	@PostMapping(value = "/university/club/join")
+	@PostMapping(value = "/university/club/dropOut")
 	public Result dropOut(String clubId) {
 		String memberId = SecurityUtils.getCurrentUserMemberId();
 		ClubDto clubDto = new ClubDto();

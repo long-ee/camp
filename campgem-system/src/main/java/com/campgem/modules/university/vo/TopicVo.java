@@ -49,9 +49,12 @@ public class TopicVo {
 	/**发布者*/
 	@ApiModelProperty(value = "发布者ID")
 	private String publisherId;
-	/**发布者*/
-	@ApiModelProperty(value = "发布者")
+	/**发布者名称*/
+	@ApiModelProperty(value = "发布者名称")
 	private String publisherName;
+	/**发布者头像*/
+	@ApiModelProperty(value = "发布者头像")
+	private String publisherFace;
 	/**createTime*/
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

@@ -619,4 +619,61 @@ public class DateUtils extends PropertyEditorSupport {
 		return calendar.get(Calendar.YEAR);
 	}
 
+	/*
+	 * 获取昨天的时间
+	 */
+	public static Date getYesterdayDate(){
+		Date date=new Date();//取时间
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		calendar.add(calendar.DATE,-1);//把日期往后增加一天.整数往后推,负数往前移动
+		return calendar.getTime();
+	}
+	public static Calendar getYesterdayCalendar(){
+		Date date=new Date();//取时间
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		calendar.add(calendar.DATE,-1);//把日期往后增加一天.整数往后推,负数往前移动
+		return calendar;
+	}
+	/*
+	 * 获取明天的时间
+	 */
+	public static Date getTomorrowDate(){
+		Date date=new Date();//取时间
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		calendar.add(calendar.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动
+		return calendar.getTime();
+	}
+	public static Calendar getTomorrowCalendar(){
+		Date date=new Date();//取时间
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		calendar.add(calendar.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动
+		return calendar;
+	}
+
+	/*
+	 * 获取当前天的起始时间
+	 */
+	public static Date getStartTime(Calendar day) {
+		day.set(Calendar.HOUR_OF_DAY, 0);
+		day.set(Calendar.MINUTE, 0);
+		day.set(Calendar.SECOND, 0);
+		day.set(Calendar.MILLISECOND, 0);
+		return day.getTime();
+	}
+	/*
+	 * 获取当前天的结束时间
+	 */
+	public static Date getEndTime(Calendar day) {
+		day.set(Calendar.HOUR_OF_DAY, 23);
+		day.set(Calendar.MINUTE, 59);
+		day.set(Calendar.SECOND, 59);
+		day.set(Calendar.MILLISECOND, 999);
+		return day.getTime();
+	}
+
+
 }

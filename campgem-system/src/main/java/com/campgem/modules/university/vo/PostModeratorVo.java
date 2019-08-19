@@ -11,4 +11,6 @@ public class PostModeratorVo {
     private String moderatorId;
     @ApiModelProperty(value = "管理员名称")
     private String moderatorName;
+    @ApiModelProperty(value = "是否是主管理")
+    private Integer isPrimaryAdmin;
 }

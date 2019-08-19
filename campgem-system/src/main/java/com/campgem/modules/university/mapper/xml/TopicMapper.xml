@@ -2,4 +2,56 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.campgem.modules.university.mapper.TopicMapper">
 
+    <sql id="queryConditions">
+        <where>
+            <if test="1 == 1">
+                <![CDATA[ topic.del_flag = 0  ]]>
+            </if>
+            <if test="null != queryDto.postId and queryDto.postId != ''">
+                <![CDATA[ AND topic.id = #{queryDto.postId}  ]]>
+            </if>
+            <if test="null != queryDto.categoryId and queryDto.categoryId != ''">
+                <![CDATA[ AND topic.category_id = #{queryDto.categoryId}  ]]>
+            </if>
+            <if test="null != queryDto.topicTitle and queryDto.topicTitle != ''">
+                <bind name="tname" value="'%' + queryDto.topicTitle + '%'" />
+                <![CDATA[ AND topic.topic_title like #{tname}  ]]>
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryPageList" resultType="com.campgem.modules.university.vo.TopicVo">
+        <![CDATA[
+             select
+                topic.*,
+                 post.post_name,
+                 member.member_name as publisherName,
+                 userBase.face as publisherFace
+             from
+                  topic topic
+             left join post post on topic.post_id = post.id
+             left join member member on topic.publisher_id = member.id
+             left join user_base userBase on member.user_base_id = userBase.id
+         ]]>
+        <include refid="queryConditions"></include>
+        <![CDATA[
+             order by post.create_time desc
+         ]]>
+    </select>
+
+    <select id="queryDetails" resultType="com.campgem.modules.university.vo.TopicVo">
+        <![CDATA[
+             select
+                topic.*,
+                 post.post_name,
+                 member.member_name as publisherName,
+                 userBase.face as publisherFace
+             from
+                  topic topic
+             left join post post on topic.post_id = post.id
+             left join member member on topic.publisher_id = member.id
+             left join user_base userBase on member.user_base_id = userBase.id
+             where topic.id = #{topicId}
+         ]]>
+    </select>
 </mapper>

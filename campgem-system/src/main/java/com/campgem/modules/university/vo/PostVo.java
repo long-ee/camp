@@ -1,5 +1,6 @@
 package com.campgem.modules.university.vo;
 
+import com.campgem.modules.university.entity.Topic;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,13 +29,22 @@ public class PostVo {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "createTime")
     private java.util.Date createTime;
+    /**今日话题数量*/
+    @ApiModelProperty(value = "今日话题数量")
+    private Integer todayTopicCount;
     /**话题数量*/
     @ApiModelProperty(value = "话题数量")
     private Integer topicCount;
     /**回复数量*/
     @ApiModelProperty(value = "回复数量")
     private Integer replyCount;
+    /**版块最新话题*/
+    @ApiModelProperty(value = "版块最新话题")
+    private Topic latestTopic;
     /**版块管理员列表*/
     @ApiModelProperty(value = "版块管理员列表")
     private List<PostModeratorVo> moderators;
+    /**主版块管理员*/
+    @ApiModelProperty(value = "主版块管理员")
+    private PostModeratorVo primaryModerator;
 }
