@@ -3,6 +3,7 @@ package com.campgem.modules.trade.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.exception.JeecgBootException;
+import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.trade.entity.Cart;
 import com.campgem.modules.trade.entity.Goods;
@@ -12,8 +13,10 @@ import com.campgem.modules.trade.mapper.CartMapper;
 import com.campgem.modules.trade.service.ICartService;
 import com.campgem.modules.trade.service.IGoodsService;
 import com.campgem.modules.trade.service.IGoodsSpecificationsService;
-import com.campgem.modules.trade.vo.GoodsCartVo;
-import com.campgem.modules.trade.vo.GoodsOrderInfoVo;
+import com.campgem.modules.trade.vo.CartGoodsTempVo;
+import com.campgem.modules.trade.vo.CartGoodsVo;
+import com.campgem.modules.trade.vo.OrderInfoTempVo;
+import com.campgem.modules.trade.vo.OrderInfoVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -94,29 +97,40 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 	}
 	
 	@Override
-	public Map<String, List<GoodsCartVo>> queryCartList() {
+	public List<CartGoodsVo> queryCartList() {
 		String uid = SecurityUtils.getCurrentUserUid();
-		List<GoodsCartVo> carts = baseMapper.queryCartList(uid);
+		List<CartGoodsTempVo> carts = baseMapper.queryCartList(uid);
 		
-		Map<String, List<GoodsCartVo>> result = new HashMap<>();
-		for (GoodsCartVo cart : carts) {
-			if (result.containsKey(cart.getSellerName())) {
-				result.get(cart.getSellerName()).add(cart);
+		Map<String, List<CartGoodsTempVo>> map = new HashMap<>();
+		for (CartGoodsTempVo cart : carts) {
+			if (map.containsKey(cart.getSellerName())) {
+				map.get(cart.getSellerName()).add(cart);
 			} else {
-				List<GoodsCartVo> list = new ArrayList<>();
+				List<CartGoodsTempVo> list = new ArrayList<>();
 				list.add(cart);
-				result.put(cart.getSellerName(), list);
+				map.put(cart.getSellerName(), list);
 			}
 		}
 		
-		return result;
+		List<CartGoodsVo> list = new ArrayList<>();
+		for (String key : map.keySet()) {
+			List<CartGoodsTempVo> tempVos = map.get(key);
+			
+			CartGoodsVo cartGoodsVo = new CartGoodsVo();
+			cartGoodsVo.setSellerName(tempVos.get(0).getSellerName());
+			cartGoodsVo.setGoods(BeanConvertUtils.copyList(tempVos, CartGoodsVo.Goods.class));
+			
+			list.add(cartGoodsVo);
+		}
+		
+		return list;
 	}
 	
 	@Override
-	public Map<String, List<GoodsOrderInfoVo>> queryOrderInfo(String[] cartIds) {
-		List<GoodsOrderInfoVo> infos = baseMapper.queryOrderInfo(SecurityUtils.getCurrentUserUid(), cartIds);
-		Map<String, List<GoodsOrderInfoVo>> map = new HashMap<>();
-		for (GoodsOrderInfoVo info : infos) {
+	public List<OrderInfoVo> queryOrderInfo(String[] cartIds) {
+		List<OrderInfoTempVo> infos = baseMapper.queryOrderInfo(SecurityUtils.getCurrentUserUid(), cartIds);
+		Map<String, List<OrderInfoTempVo>> map = new HashMap<>();
+		for (OrderInfoTempVo info : infos) {
 			// 处理规格和价格
 			if (info.getSpecification().contains(",")) {
 				// 有规格数据
@@ -129,13 +143,31 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 			}
 			info.setSpecification(null);
 			if (!map.containsKey(info.getSellerName())) {
-				List<GoodsOrderInfoVo> list = new ArrayList<>();
+				List<OrderInfoTempVo> list = new ArrayList<>();
 				list.add(info);
 				map.put(info.getSellerName(), list);
 			} else {
 				map.get(info.getSellerName()).add(info);
 			}
 		}
-		return map;
+		
+		List<OrderInfoVo> v2s = new ArrayList<>();
+		for (String key : map.keySet()) {
+			List<OrderInfoTempVo> tempVos = map.get(key);
+			OrderInfoVo v2 = new OrderInfoVo();
+			v2.setSellerId(tempVos.get(0).getSellerId());
+			v2.setSellerName(tempVos.get(0).getSellerName());
+			v2.setSellerIdentity(tempVos.get(0).getIdentity());
+			v2.setShippingMethods(tempVos.get(0).getShippingMethods());
+			v2.setGoods(BeanConvertUtils.copyList(tempVos, OrderInfoVo.SellerGoods.class));
+			
+			v2s.add(v2);
+		}
+		
+		return v2s;
+	}
+	
+	public OrderInfoVo queryOrderInfoV2(String[] cartIds) {
+		return null;
 	}
 }

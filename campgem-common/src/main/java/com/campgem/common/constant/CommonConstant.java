@@ -1,7 +1,9 @@
 package com.campgem.common.constant;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface CommonConstant {
 
@@ -132,4 +134,8 @@ public interface CommonConstant {
     	add("FedEx");
     }};
     
+    public static final Map<Integer, String> payments = new HashMap<Integer, String>() {{
+    	put(1, "PayPal");
+    	put(2, "Visa/Masterd Card");
+    }};
 }

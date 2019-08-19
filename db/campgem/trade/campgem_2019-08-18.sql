@@ -14,7 +14,7 @@
  Date: 18/08/2019 13:27:37
 */
 
-SET NAMES utf8mb4;
+SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
@@ -47,7 +47,7 @@ CREATE TABLE `address` (
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户地址';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户地址';
 
 -- ----------------------------
 -- Table structure for advertisement
@@ -65,7 +65,7 @@ CREATE TABLE `advertisement` (
   `update_by` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='广告';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='广告';
 
 -- ----------------------------
 -- Table structure for cart
@@ -86,7 +86,7 @@ CREATE TABLE `cart` (
   KEY `cart_specifications_ibfk_1` (`specifications_id`),
   CONSTRAINT `cart_goods_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `cart_specifications_ibfk_1` FOREIGN KEY (`specifications_id`) REFERENCES `goods_specifications` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='购物车';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='购物车';
 
 -- ----------------------------
 -- Table structure for goods
@@ -117,7 +117,7 @@ CREATE TABLE `goods` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `id` (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品表';
 
 -- ----------------------------
 -- Table structure for goods_evaluation
@@ -136,7 +136,7 @@ CREATE TABLE `goods_evaluation` (
   KEY `uid` (`uid`) USING BTREE,
   KEY `goods_evaluation_ibfk_1` (`goods_id`),
   CONSTRAINT `goods_evaluation_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品评价';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品评价';
 
 -- ----------------------------
 -- Table structure for goods_images
@@ -149,7 +149,7 @@ CREATE TABLE `goods_images` (
   PRIMARY KEY (`id`),
   KEY `goods_id` (`goods_id`) USING BTREE,
   CONSTRAINT `goods_images_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for goods_reviews
@@ -167,7 +167,7 @@ CREATE TABLE `goods_reviews` (
   KEY `goods_id` (`goods_id`) USING BTREE,
   KEY `uid` (`uid`) USING BTREE,
   CONSTRAINT `goods_review_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品留言';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品留言';
 
 -- ----------------------------
 -- Table structure for goods_reviews_shields
@@ -180,7 +180,7 @@ CREATE TABLE `goods_reviews_shields` (
   `create_time` datetime DEFAULT NULL COMMENT '屏蔽时间',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品留言屏蔽';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品留言屏蔽';
 
 -- ----------------------------
 -- Table structure for goods_specifications
@@ -195,7 +195,7 @@ CREATE TABLE `goods_specifications` (
   PRIMARY KEY (`id`),
   KEY `goods_id` (`goods_id`) USING BTREE,
   CONSTRAINT `goods_specifications_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品规格表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品规格表';
 
 -- ----------------------------
 -- Table structure for requirements
@@ -216,7 +216,7 @@ CREATE TABLE `requirements` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`,`uid`,`category_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='需求';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='需求';
 
 -- ----------------------------
 -- Table structure for requirements_images
@@ -229,7 +229,7 @@ CREATE TABLE `requirements_images` (
   PRIMARY KEY (`id`),
   KEY `requirement_id` (`requirement_id`) USING BTREE,
   CONSTRAINT `requirement_image_ibfk_1` FOREIGN KEY (`requirement_id`) REFERENCES `requirements` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='需求图片';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='需求图片';
 
 -- ----------------------------
 -- Table structure for requirements_reviews
@@ -245,7 +245,7 @@ CREATE TABLE `requirements_reviews` (
   PRIMARY KEY (`id`),
   KEY `requirement_id` (`requirement_id`) USING BTREE,
   CONSTRAINT `requirement_review_ibfk_1` FOREIGN KEY (`requirement_id`) REFERENCES `requirements` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='需求留言';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='需求留言';
 
 -- ----------------------------
 -- Table structure for wishes
@@ -261,6 +261,6 @@ CREATE TABLE `wishes` (
   PRIMARY KEY (`id`),
   KEY `wish_goods_ibfk_1` (`goods_id`),
   CONSTRAINT `wish_goods_ibfk_1` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='心愿表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='心愿表';
 
 SET FOREIGN_KEY_CHECKS = 1;

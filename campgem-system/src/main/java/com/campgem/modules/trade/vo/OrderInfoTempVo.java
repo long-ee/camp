@@ -10,12 +10,15 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-@ApiModel(value = "购物车商品显示数据模型")
-public class GoodsOrderInfoVo implements Serializable {
+@ApiModel(value = "订单显示数据模型")
+public class OrderInfoTempVo implements Serializable {
+	@ApiModelProperty("卖家ID")
+	private String sellerId;
+	
 	@ApiModelProperty("卖家名称")
 	private String sellerName;
 	
-	@ApiModelProperty("身份类别，1Business，2Student/Individual")
+	@ApiModelProperty("身份类别，1:Business，2:Student/Individual")
 	private Integer identity;
 	
 	@ApiModelProperty("商品图片")

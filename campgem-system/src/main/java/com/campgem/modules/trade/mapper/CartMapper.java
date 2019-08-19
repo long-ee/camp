@@ -2,8 +2,8 @@ package com.campgem.modules.trade.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.campgem.modules.trade.entity.Cart;
-import com.campgem.modules.trade.vo.GoodsCartVo;
-import com.campgem.modules.trade.vo.GoodsOrderInfoVo;
+import com.campgem.modules.trade.vo.CartGoodsTempVo;
+import com.campgem.modules.trade.vo.OrderInfoTempVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface CartMapper extends BaseMapper<Cart> {
 	
-	List<GoodsCartVo> queryCartList(@Param("uid") String uid);
+	List<CartGoodsTempVo> queryCartList(@Param("uid") String uid);
 	
-	List<GoodsOrderInfoVo> queryOrderInfo(@Param("uid") String uid, @Param("cartIds") String[] cartIds);
+	List<OrderInfoTempVo> queryOrderInfo(@Param("uid") String uid, @Param("cartIds") String[] cartIds);
 }

@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Data
 @ApiModel(value = "购物车商品显示数据模型")
-public class GoodsCartVo implements Serializable {
+public class CartGoodsTempVo implements Serializable {
 	@TableId(type = IdType.UUID)
 	@ApiModelProperty("id")
 	private String id;

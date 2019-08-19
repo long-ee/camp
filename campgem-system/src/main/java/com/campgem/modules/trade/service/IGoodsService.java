@@ -7,10 +7,9 @@ import com.campgem.modules.trade.dto.OrderInfoDto;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
-import com.campgem.modules.trade.vo.GoodsOrderInfoVo;
+import com.campgem.modules.trade.vo.OrderInfoVo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Description: 分类信息
@@ -30,5 +29,5 @@ public interface IGoodsService extends IService<Goods> {
 	
 	void increment(String goodsId);
 	
-	Map<String, List<GoodsOrderInfoVo>> queryOrderInfo(OrderInfoDto orderInfoDto);
+	List<OrderInfoVo> queryOrderInfo(OrderInfoDto orderInfoDto);
 }

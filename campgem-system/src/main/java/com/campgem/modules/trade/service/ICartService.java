@@ -2,11 +2,10 @@ package com.campgem.modules.trade.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.trade.entity.Cart;
-import com.campgem.modules.trade.vo.GoodsCartVo;
-import com.campgem.modules.trade.vo.GoodsOrderInfoVo;
+import com.campgem.modules.trade.vo.CartGoodsVo;
+import com.campgem.modules.trade.vo.OrderInfoVo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Description: 购物车
@@ -27,9 +26,13 @@ public interface ICartService extends IService<Cart> {
 	
 	/**
 	 * 购物车列表
-	 * [返回商家名 -> 商家对应的商品列表]
 	 */
-	Map<String, List<GoodsCartVo>> queryCartList();
+	List<CartGoodsVo> queryCartList();
 	
-	Map<String, List<GoodsOrderInfoVo>> queryOrderInfo(String[] cartIds);
+	List<OrderInfoVo> queryOrderInfo(String[] cartIds);
+	
+	/**
+	 * 查询购物车信息，所有的商品都是同一个商家
+	 */
+	OrderInfoVo queryOrderInfoV2(String[] cartIds);
 }

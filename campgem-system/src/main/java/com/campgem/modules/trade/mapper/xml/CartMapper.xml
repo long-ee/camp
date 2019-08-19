@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.campgem.modules.trade.mapper.CartMapper">
 	
-	<select id="queryCartList" resultType="com.campgem.modules.trade.vo.GoodsCartVo">
+	<select id="queryCartList" resultType="com.campgem.modules.trade.vo.CartGoodsTempVo">
 		SELECT c.id,
 		       c.seller_name,
 		       c.goods_id,
@@ -21,7 +21,7 @@
 		WHERE c.uid = #{uid};
 	</select>
 	
-	<resultMap id="goodsOrderInfoMap" type="com.campgem.modules.trade.vo.GoodsOrderInfoVo">
+	<resultMap id="goodsOrderInfoMap" type="com.campgem.modules.trade.vo.OrderInfoTempVo">
 		<result property="shippingMethods" column="shipping_methods"
 		        javaType="java.util.List" typeHandler="com.campgem.common.typehandler.JsonTypeHandler" />
 	</resultMap>
@@ -30,6 +30,7 @@
 		SELECT
 			g.goods_name,
 			g.identity,
+		    g.uid as seller_id,
 			g.seller_name,
 			c.quantity,
 			(SELECT goods_image FROM goods_images gi WHERE gi.goods_id = c.goods_id LIMIT 1) AS goods_icon,

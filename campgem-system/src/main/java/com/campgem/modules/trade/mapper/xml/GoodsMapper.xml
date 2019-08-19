@@ -91,9 +91,10 @@
 		limit 5
 	</select>
 	
-	<select id="queryOrderInfo" resultType="com.campgem.modules.trade.vo.GoodsOrderInfoVo">
+	<select id="queryOrderInfo" resultType="com.campgem.modules.trade.vo.OrderInfoTempVo">
 		SELECT
 			g.seller_name,
+		    g.uid AS seller_id,
 			g.identity,
 			g.goods_name,
 			( SELECT goods_image FROM goods_images gi WHERE gi.goods_id = #{goodsId} LIMIT 1 ) AS goods_icon,

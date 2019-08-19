@@ -5,16 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.exception.JeecgBootException;
+import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
 import com.campgem.modules.trade.dto.OrderInfoDto;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.entity.enums.IdentityEnum;
 import com.campgem.modules.trade.mapper.GoodsMapper;
 import com.campgem.modules.trade.service.IGoodsService;
-import com.campgem.modules.trade.vo.GoodsDetailVo;
-import com.campgem.modules.trade.vo.GoodsListVo;
-import com.campgem.modules.trade.vo.GoodsOrderInfoVo;
-import com.campgem.modules.trade.vo.GoodsRelativeVo;
+import com.campgem.modules.trade.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,9 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Description: 分类信息
@@ -77,8 +73,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 	}
 	
 	@Override
-	public Map<String, List<GoodsOrderInfoVo>> queryOrderInfo(OrderInfoDto orderInfoDto) {
-		GoodsOrderInfoVo goodsVo = baseMapper.queryOrderInfo(orderInfoDto.getGoodsId(), orderInfoDto.getSpecificationId());
+	public List<OrderInfoVo> queryOrderInfo(OrderInfoDto orderInfoDto) {
+		OrderInfoTempVo goodsVo = baseMapper.queryOrderInfo(orderInfoDto.getGoodsId(), orderInfoDto.getSpecificationId());
 		if (goodsVo == null) {
 			throw new JeecgBootException("商品不存在");
 		}
@@ -99,11 +95,18 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		}
 		
 		goodsVo.setQuantity(orderInfoDto.getQuantity());
-		Map<String, List<GoodsOrderInfoVo>> map = new HashMap<>();
-		List<GoodsOrderInfoVo> list = new ArrayList<>();
-		list.add(goodsVo);
-		map.put(goodsVo.getSellerName(), list);
 		
-		return map;
+		List<OrderInfoVo> list = new ArrayList<>();
+		OrderInfoVo infoVo = new OrderInfoVo();
+		infoVo.setSellerId(goodsVo.getSellerId());
+		infoVo.setSellerName(goodsVo.getSellerName());
+		infoVo.setSellerIdentity(goodsVo.getIdentity());
+		infoVo.setShippingMethods(goodsVo.getShippingMethods());
+		
+		infoVo.setGoods(new ArrayList<OrderInfoVo.SellerGoods> () {{
+			add(BeanConvertUtils.copy(goodsVo, OrderInfoVo.SellerGoods.class));
+		}});
+		
+		return list;
 	}
 }

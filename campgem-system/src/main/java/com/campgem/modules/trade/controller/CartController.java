@@ -7,7 +7,7 @@ import com.campgem.common.system.base.controller.JeecgController;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.trade.service.ICartService;
-import com.campgem.modules.trade.vo.GoodsCartVo;
+import com.campgem.modules.trade.vo.CartGoodsVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Description: 购物车
@@ -68,9 +67,9 @@ public class CartController extends JeecgController<SysMessage, ISysMessageServi
 	 */
 	@ApiOperation(value = "购物车列表", notes = "C18 购物车")
 	@GetMapping(value = "/cart")
-	public Result<Map<String, List<GoodsCartVo>>> queryCartList() {
-		Map<String, List<GoodsCartVo>> data = cartService.queryCartList();
-		Result<Map<String, List<GoodsCartVo>>> result = new Result<>();
+	public Result<List<CartGoodsVo>> queryCartList() {
+		List<CartGoodsVo> data = cartService.queryCartList();
+		Result<List<CartGoodsVo>> result = new Result<>();
 		result.setResult(data);
 		result.setSuccess(true);
 		result.setCode(CommonConstant.SC_OK_200);
