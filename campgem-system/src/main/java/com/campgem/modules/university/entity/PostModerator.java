@@ -35,4 +35,8 @@ public class PostModerator {
 	@Excel(name = "管理员会员ID", width = 15)
     @ApiModelProperty(value = "管理员会员ID")
 	private String moderatorId;
+	/**是否是主管理*/
+	@Excel(name = "是否是主管理", width = 15)
+	@ApiModelProperty(value = "是否是主管理")
+	private Integer isPrimaryAdmin;
 }

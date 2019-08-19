@@ -27,9 +27,13 @@ public class Reply {
 	@TableId(type = IdType.UUID)
     @ApiModelProperty(value = "id")
 	private String id;
+	/**版块ID*/
+	@Excel(name = "版块ID", width = 15)
+	@ApiModelProperty(value = "版块ID")
+	private String postId;
 	/**话题ID*/
 	@Excel(name = "话题ID", width = 15)
-    @ApiModelProperty(value = "话题ID")
+	@ApiModelProperty(value = "话题ID")
 	private String topicId;
 	/**楼层*/
 	@Excel(name = "楼层", width = 15)

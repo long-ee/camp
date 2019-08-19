@@ -12,4 +12,7 @@ public class PostQueryDto implements Serializable {
     /** 版块名称 **/
     @ApiModelProperty(value = "版块名称")
     private String postName;
+    /** 版块Id **/
+    @ApiModelProperty(value = "版块Id")
+    private String postId;
 }

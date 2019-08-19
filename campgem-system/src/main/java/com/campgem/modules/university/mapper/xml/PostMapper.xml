@@ -2,4 +2,54 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.campgem.modules.university.mapper.PostMapper">
 
+    <sql id="queryConditions">
+        <where>
+            <if test="1 == 1">
+                <![CDATA[ post.del_flag = 0  ]]>
+            </if>
+            <if test="null != queryDto.postId and queryDto.postId != ''">
+                <![CDATA[ AND post.id = #{queryDto.postId}  ]]>
+            </if>
+            <if test="null != queryDto.postName and queryDto.postName != ''">
+                <bind name="pname" value="'%' + queryDto.postName + '%'" />
+                <![CDATA[ AND post.post_name like #{pname}  ]]>
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryPageList" resultType="com.campgem.modules.university.vo.PostVo">
+        <![CDATA[
+             select
+               post.*
+             from
+             post post
+         ]]>
+        <include refid="queryConditions"></include>
+        <![CDATA[
+             order by post.create_time desc
+         ]]>
+    </select>
+
+    <select id="queryList" resultType="com.campgem.modules.university.vo.PostVo">
+        <![CDATA[
+             select
+               post.*
+             from
+             post post
+         ]]>
+        <include refid="queryConditions"></include>
+        <![CDATA[
+             order by post.create_time desc
+         ]]>
+    </select>
+
+    <select id="queryDetails" resultType="com.campgem.modules.university.vo.PostVo" parameterType="java.lang.String">
+        <![CDATA[
+             select
+               post.*
+             from
+             post post
+             where post.id =#{postId}
+         ]]>
+    </select>
 </mapper>

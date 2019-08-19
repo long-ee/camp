@@ -2,6 +2,10 @@ package com.campgem.modules.university.mapper;
 
 import com.campgem.modules.university.entity.PostModerator;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.campgem.modules.university.vo.PostModeratorVo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @Description: 版块管理员关系信息
@@ -10,5 +14,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version: V1.0
  */
 public interface PostModeratorMapper extends BaseMapper<PostModerator> {
-
+    /**
+     * 根据版块ID查询版块管理员信息
+     * @param postId
+     * @return
+     */
+    List<PostModeratorVo> queryList(@Param("postId") String postId);
 }
