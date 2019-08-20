@@ -32,16 +32,25 @@ public class ReplyVo {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "回复时间")
 	private java.util.Date replyTime;
+	/**回复者用户类型*/
+	@ApiModelProperty(value = "回复者用户类型")
+	private String memberType;
 	/**回复者ID*/
 	@ApiModelProperty(value = "回复者ID")
 	private String replierId;
 	/**回复者*/
 	@ApiModelProperty(value = "回复者")
-	private String replier;
+	private String replierName;
+	/**回复者*/
+	@ApiModelProperty(value = "回复者头像")
+	private String replierFace;
 	/**点赞数量*/
     @ApiModelProperty(value = "点赞数量")
 	private Integer dislikeCount;
 	/**踩一踩数量*/
     @ApiModelProperty(value = "踩一踩数量")
 	private Integer likeCount;
+	/**是否允许私信*/
+	@ApiModelProperty(value = "是否允许私信")
+    private boolean allowChat;
 }

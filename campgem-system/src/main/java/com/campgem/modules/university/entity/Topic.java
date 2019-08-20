@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
+import java.util.Date;
+
 /**
  * @Description: 话题信息
  * @Author: campgem
@@ -92,4 +94,12 @@ public class Topic {
 	@Excel(name = "updateBy", width = 15)
     @ApiModelProperty(value = "updateBy")
 	private String updateBy;
+	/**最后回复人名称*/
+	@ApiModelProperty(value = "最后回复人名称")
+	private String lastReplier;
+	/**最后回复时间*/
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@ApiModelProperty(value = "最后回复时间")
+	private Date lastReplyTime;
 }

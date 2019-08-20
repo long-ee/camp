@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,12 +56,20 @@ public class TopicVo {
 	/**发布者头像*/
 	@ApiModelProperty(value = "发布者头像")
 	private String publisherFace;
+	/**发布者用户类型*/
+	@ApiModelProperty(value = "发布者用户类型")
+	private String memberType;
 	/**createTime*/
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "createTime")
 	private java.util.Date createTime;
-	/**话题回复列表*/
-	@ApiModelProperty(value = "话题回复列表")
-	List<ReplyVo> replies;
+	/**最后回复人名称*/
+	@ApiModelProperty(value = "最后回复人名称")
+	private String lastReplier;
+	/**最后回复时间*/
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@ApiModelProperty(value = "最后回复时间")
+	private Date lastReplyTime;
 }
