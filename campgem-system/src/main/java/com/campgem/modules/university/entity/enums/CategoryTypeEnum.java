@@ -2,6 +2,7 @@ package com.campgem.modules.university.entity.enums;
 
 public enum CategoryTypeEnum {
     PRODUCT("PRODUCT"),
+    SERVICE("SERVICE"),
     CLUB("CLUB"),
     NEED("NEED"),
     ACTIVITY("ACTIVITY"),
