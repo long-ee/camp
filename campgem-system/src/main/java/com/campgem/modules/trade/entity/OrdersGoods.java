@@ -33,6 +33,8 @@ public class OrdersGoods {
 	@Excel(name = "订单ID", width = 15)
     @ApiModelProperty(value = "订单ID")
 	private java.lang.String orderId;
+	@ApiModelProperty("商品ID")
+	private String goodsId;
 	/**商品名称*/
 	@Excel(name = "商品名称", width = 15)
     @ApiModelProperty(value = "商品名称")

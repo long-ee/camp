@@ -3,7 +3,7 @@
 <mapper namespace="com.campgem.modules.university.mapper.MemberMapper">
 	<update id="updateUserShoppingMethods">
 		UPDATE member
-		SET shipping_methods = #{vos, typeHandler=com.campgem.common.typehandler.JsonTypeHandler}
+		SET shipping_methods = #{vos, typeHandler=com.campgem.common.typehandler.JsonListTypeHandler}
 		WHERE user_base_id = #{uid}
 		  AND del_flag = 0
 	</update>

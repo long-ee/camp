@@ -33,6 +33,8 @@ public class Orders {
 	@Excel(name = "用户ID", width = 15)
     @ApiModelProperty(value = "用户ID")
 	private java.lang.String uid;
+	@ApiModelProperty("PayPal支付标识")
+	private String payId;
 	/**收货地址ID*/
 	@Excel(name = "收货地址ID", width = 15)
     @ApiModelProperty(value = "收货地址ID")
@@ -72,7 +74,7 @@ public class Orders {
 	/**支付方式，1PayPal，2Visa/Masterd Card*/
 	@Excel(name = "支付方式，1PayPal，2Visa/Masterd Card", width = 15)
     @ApiModelProperty(value = "支付方式，1PayPal，2Visa/Masterd Card")
-	private java.lang.Integer paymentMethods;
+	private java.lang.Integer paymentMethod;
 	/**支付时间*/
 	@Excel(name = "支付时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")

@@ -139,11 +139,14 @@ jeecg:
     webapp: D://webapp
   paypal:
     mode: sandbox
+    redirect:
+      # PayPal取消地址，应填写前端URL
+      cancel: http://127.0.0.1:8080/paypal/cancel
+      # PayPal处理地址，应填写前端URL，前端收到参数后，调用接口
+      process: http://127.0.0.1:8080/paypal/process
     client:
       app: Ac6k6Dp-wLSz-pMzju29-prDH-PuVCBKagTroAW6gf5Xs8ARSo2KKvWK289IkygN9X09x9650X_0F1TU
       secret: EGkAIX3AkT1J6JY3IjA0WxBxtUUxYjFiJ6StlrAkEQxtT90d3z63IkBMbJYllWcSE4v4uPl5K9zezEe7
-
-
 
 justauth:
   enabled: true

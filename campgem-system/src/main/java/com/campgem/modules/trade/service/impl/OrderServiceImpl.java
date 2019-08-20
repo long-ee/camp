@@ -3,9 +3,6 @@ package com.campgem.modules.trade.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.SecurityUtils;
-import com.campgem.config.paypal.PaypalPaymentIntent;
-import com.campgem.config.paypal.PaypalPaymentMethod;
-import com.campgem.modules.common.service.IPaypalService;
 import com.campgem.modules.trade.dto.OrderPayDto;
 import com.campgem.modules.trade.entity.Orders;
 import com.campgem.modules.trade.entity.OrdersGoods;
@@ -17,8 +14,6 @@ import com.campgem.modules.trade.service.IOrderGoodsService;
 import com.campgem.modules.trade.service.IOrderService;
 import com.campgem.modules.trade.vo.OrderInfoVo;
 import com.campgem.modules.user.vo.ShippingMethodsVo;
-import com.paypal.api.payments.Payment;
-import com.paypal.base.rest.PayPalRESTException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,15 +32,13 @@ import java.util.*;
 @Slf4j
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implements IOrderService {
 	@Resource
-	private IPaypalService paypalService;
-	@Resource
 	private ICartService cartService;
 	@Resource
 	private IOrderGoodsService orderGoodsService;
 	
 	@Override
 	@Transactional
-	public Payment createPaymentByOrders(OrderPayDto payDto) {
+	public List<Orders> createOrders(OrderPayDto payDto) {
 		String uid = SecurityUtils.getCurrentUserUid();
 		Date createTime = new Date();
 		List<Orders> ordersList = new ArrayList<>();
@@ -60,7 +53,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 				orders.setId(orderId);
 				orders.setUid(uid);
 				orders.setAddressId(payDto.getAddressId());
-				orders.setPaymentMethods(payDto.getPaymentMethod());
+				orders.setPaymentMethod(payDto.getPaymentMethod());
 				orders.setOrderType(OrderTypeEnum.PRODUCT.code());
 				orders.setStatus(OrderStatusEnum.UNPAID.code());
 				orders.setCreateTime(createTime);
@@ -98,6 +91,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 					OrdersGoods ordersGoods = new OrdersGoods();
 					ordersGoods.setGoodsIcon(sellerGoods.getGoodsIcon());
 					ordersGoods.setGoodsName(sellerGoods.getGoodsName());
+					ordersGoods.setGoodsId(sellerGoods.getGoodsId());
 					ordersGoods.setTaxes(new BigDecimal(taxes));
 					ordersGoods.setPrice(sellerGoods.getSalePrice());
 					ordersGoods.setSpecificationName(sellerGoods.getSpecificationName());
@@ -105,6 +99,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 					ordersGoods.setOrderId(orderId);
 					
 					listOrdersGoods.add(ordersGoods);
+					
+					// TODO 减少库存
 				}
 				
 				orders.setTaxesAmount(new BigDecimal(totalTaxes));
@@ -122,36 +118,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 			}
 		}
 
-
-		Payment payment;
-		try {
-			payment = paypalService.createPayment(
-					12.33,
-					"USD",
-					PaypalPaymentMethod.paypal,
-					PaypalPaymentIntent.sale,
-					"",
-					"http://192.168.0.173:8080/order/paypal/cancel",
-					"http://192.168.0.173:8080/order/paypal/notify"
-					);
-		} catch (PayPalRESTException e) {
-			System.out.println(e.getMessage());
-			throw new JeecgBootException("订单支付失败");
-		}
-		return payment;
+		return ordersList;
 	}
 	
 	@Override
-	public void executePayment(String paymentId, String token, String payerID) {
-		try {
-			Payment payment = paypalService.executePayment(paymentId, payerID);
-			if(payment.getState().equals("approved")){
-				System.out.println("支付成功");
-			}
-			System.out.println(payment);
-		} catch (PayPalRESTException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
+	public void updatePayId(String payId, List<String> orderIds) {
+		baseMapper.updatePayId(payId, orderIds);
+	}
+	
+	@Override
+	public void paypalSuccess(String paymentId) {
+		baseMapper.paypalSuccess(paymentId);
 	}
 }

@@ -1,15 +1,14 @@
 package com.campgem.modules.trade.entity.enums;
 
-public enum OrderStatusEnum {
-	UNPAID(0),
-	PAID(1),
-	SHIPPING(2),
-	OFFLINE_TRADING(3),
+public enum GoodsStatusEnum {
+	IN_SALE(1),
+	OFF_SHELF(2),
+	SOLD(3),
 	EXPIRED(4);
 	
 	private Integer code;
 	
-	private OrderStatusEnum(Integer code) {
+	private GoodsStatusEnum(Integer code) {
 		this.code = code;
 	}
 	

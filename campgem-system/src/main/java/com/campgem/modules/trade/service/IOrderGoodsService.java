@@ -1,7 +1,10 @@
 package com.campgem.modules.trade.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.entity.OrdersGoods;
+
+import java.util.List;
 
 /**
  * @Description: 订单商品
@@ -10,5 +13,6 @@ import com.campgem.modules.trade.entity.OrdersGoods;
  * @Version: V1.0
  */
 public interface IOrderGoodsService extends IService<OrdersGoods> {
-
+	
+	List<Goods> getGoodsInfo(String orderId);
 }

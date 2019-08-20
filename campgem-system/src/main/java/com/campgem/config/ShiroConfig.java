@@ -59,8 +59,8 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/api/v1/requirements", "anon"); // 需求列表
 		filterChainDefinitionMap.put("/api/v1/requirements/category", "anon"); // 需求分类列表
 		
-		filterChainDefinitionMap.put("/order/paypal/process", "anon"); // PayPal支付处理回调
-		filterChainDefinitionMap.put("/order/paypal/cancel", "anon"); // PayPal支付取消回调
+		filterChainDefinitionMap.put("/paypal/process", "anon"); // PayPal支付处理回调
+		filterChainDefinitionMap.put("/paypal/cancel", "anon"); // PayPal支付取消回调
 		
 		filterChainDefinitionMap.put("/sys/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串

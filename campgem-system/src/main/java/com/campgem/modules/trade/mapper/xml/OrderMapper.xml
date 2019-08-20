@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.campgem.modules.trade.mapper.OrderMapper">
-
+	
+	<update id="updatePayId">
+		UPDATE orders o
+		SET o.pay_id = #{payId}
+		WHERE o.id IN
+		<foreach item="item" index="index" collection="ids"
+		         open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<update id="paypalSuccess">
+		UPDATE orders o
+		SET o.status       = 1,
+		    o.payment_time = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%m:%s')
+		WHERE pay_id = #{payId}
+	</update>
 </mapper>

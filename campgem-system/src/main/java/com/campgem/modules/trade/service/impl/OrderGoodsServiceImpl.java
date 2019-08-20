@@ -1,10 +1,13 @@
 package com.campgem.modules.trade.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.entity.OrdersGoods;
 import com.campgem.modules.trade.mapper.OrderGoodsMapper;
 import com.campgem.modules.trade.service.IOrderGoodsService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Description: 订单商品
@@ -14,5 +17,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OrderGoodsServiceImpl extends ServiceImpl<OrderGoodsMapper, OrdersGoods> implements IOrderGoodsService {
-
+	
+	@Override
+	public List<Goods> getGoodsInfo(String orderId) {
+		return baseMapper.getGoodsInfo(orderId);
+	}
 }

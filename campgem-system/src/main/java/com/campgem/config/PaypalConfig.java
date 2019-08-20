@@ -18,6 +18,10 @@ public class PaypalConfig {
 	private String clientSecret;
 	@Value("${jeecg.paypal.mode}")
 	private String mode;
+	@Value("${jeecg.paypal.redirect.cancel}")
+	private String cancelUrl;
+	@Value("${jeecg.paypal.redirect.process}")
+	private String processUrl;
 	
 	@Bean
 	public Map<String, String> paypalSdkConfig(){
@@ -33,8 +37,16 @@ public class PaypalConfig {
 	
 	@Bean
 	public APIContext apiContext() throws PayPalRESTException{
-		APIContext apiContext = new APIContext(authTokenCredential().getAccessToken());
+		APIContext apiContext = new APIContext(clientId, clientSecret, mode);
 		apiContext.setConfigurationMap(paypalSdkConfig());
 		return apiContext;
+	}
+	
+	public String getProcessUrl() {
+		return processUrl;
+	}
+	
+	public String getCancelUrl() {
+		return cancelUrl;
 	}
 }

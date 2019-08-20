@@ -29,6 +29,7 @@
 	<select id="queryOrderInfo" resultMap="goodsOrderInfoMap">
 		SELECT
 		    c.id AS cart_id,
+		    c.goods_id,
 			g.goods_name,
 			g.identity,
 		    g.uid as seller_id,

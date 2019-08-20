@@ -33,6 +33,9 @@ public class OrderInfoVo implements Serializable {
 		@ApiModelProperty("购物车ID")
 		private String cartId;
 		
+		@ApiModelProperty("商品ID")
+		private String goodsId;
+		
 		@ApiModelProperty("商品图片")
 		private String goodsIcon;
 		

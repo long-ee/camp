@@ -21,6 +21,9 @@ public class OrderInfoTempVo implements Serializable {
 	@ApiModelProperty("卖家名称")
 	private String sellerName;
 	
+	@ApiModelProperty("商品ID")
+	private String goodsId;
+	
 	@ApiModelProperty("身份类别，1:Business，2:Student/Individual")
 	private Integer identity;
 	

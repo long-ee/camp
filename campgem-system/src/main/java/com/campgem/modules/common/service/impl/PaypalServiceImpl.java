@@ -1,8 +1,10 @@
 package com.campgem.modules.common.service.impl;
 
+import com.campgem.config.PaypalConfig;
 import com.campgem.config.paypal.PaypalPaymentIntent;
 import com.campgem.config.paypal.PaypalPaymentMethod;
 import com.campgem.modules.common.service.IPaypalService;
+import com.campgem.modules.trade.entity.Orders;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
@@ -16,6 +18,8 @@ import java.util.List;
 public class PaypalServiceImpl implements IPaypalService {
 	@Resource
 	private APIContext apiContext;
+	@Resource
+	private PaypalConfig paypalConfig;
 	
 	@Override
 	public Payment createPayment(
@@ -25,7 +29,7 @@ public class PaypalServiceImpl implements IPaypalService {
 			PaypalPaymentIntent intent,
 			String description,
 			String cancelUrl,
-			String returnUrl) throws PayPalRESTException {
+			String processUrl) throws PayPalRESTException {
 		Amount amount = new Amount();
 		amount.setCurrency(currency);
 		amount.setTotal(String.format("%.2f", total));
@@ -46,10 +50,23 @@ public class PaypalServiceImpl implements IPaypalService {
 		payment.setTransactions(transactions);
 		RedirectUrls redirectUrls = new RedirectUrls();
 		redirectUrls.setCancelUrl(cancelUrl);
-		redirectUrls.setReturnUrl(returnUrl);
+		redirectUrls.setReturnUrl(processUrl);
 		payment.setRedirectUrls(redirectUrls);
 		
 		return payment.create(apiContext);
+	}
+	
+	@Override
+	public Payment createPayment(List<Orders> orders) throws PayPalRESTException {
+		return createPayment(
+				12.34,
+				"USD",
+				PaypalPaymentMethod.paypal,
+				PaypalPaymentIntent.sale,
+				"this is description",
+				paypalConfig.getCancelUrl(),
+				paypalConfig.getProcessUrl()
+		);
 	}
 	
 	@Override
