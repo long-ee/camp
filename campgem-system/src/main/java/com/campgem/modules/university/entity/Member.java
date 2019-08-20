@@ -113,6 +113,9 @@ public class Member {
 	private Integer delFlag;
 	@ApiModelProperty("配送方式")
 	private String shippingMethods;
+	/**是否允许私信*/
+	@ApiModelProperty(value = "是否允许私信")
+	private boolean allowChat;
 	/**createBy*/
 	@Excel(name = "createBy", width = 15)
     @ApiModelProperty(value = "createBy")

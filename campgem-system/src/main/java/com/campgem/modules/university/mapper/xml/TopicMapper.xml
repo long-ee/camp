@@ -26,6 +26,7 @@
                 topic.*,
                  post.post_name,
                  member.member_name as publisherName,
+                 member.member_type,
                  userBase.face as publisherFace
              from
                   topic topic
@@ -34,9 +35,21 @@
              left join user_base userBase on member.user_base_id = userBase.id
          ]]>
         <include refid="queryConditions"></include>
-        <![CDATA[
-             order by post.create_time desc
-         ]]>
+        <if test="null == queryDto.orderBy or queryDto.orderBy == '0' or queryDto.orderBy == ''">
+            <![CDATA[
+                order by topic.create_time desc, topic.top desc,
+            ]]>
+        </if>
+        <if test="null != queryDto.orderBy and queryDto.orderBy == '1' ">
+            <![CDATA[
+                order by topic.reply_count desc
+            ]]>
+        </if>
+        <if test="null != queryDto.orderBy and queryDto.orderBy == '2' ">
+            <![CDATA[
+                order by topic.view_count desc
+            ]]>
+        </if>
     </select>
 
     <select id="queryDetails" resultType="com.campgem.modules.university.vo.TopicVo">
@@ -45,6 +58,7 @@
                 topic.*,
                  post.post_name,
                  member.member_name as publisherName,
+                 member.member_type,
                  userBase.face as publisherFace
              from
                   topic topic

@@ -4,21 +4,21 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
+import com.campgem.modules.university.dto.TopicReplyStandDto;
 import com.campgem.modules.university.dto.TopicQueryDto;
 import com.campgem.modules.university.entity.Topic;
 import com.campgem.modules.university.service.IReplyService;
 import com.campgem.modules.university.service.ITopicService;
+import com.campgem.modules.university.vo.ReplyVo;
 import com.campgem.modules.university.vo.TopicVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -63,4 +63,32 @@ public class TopicController {
 		TopicVo topic = topicService.queryDetails(topicId);
 		return new Result<TopicVo>().result(topic);
 	}
+
+
+	@ApiOperation(value="话题信息管理-话题回复列表查询", notes="话题信息管理-话题回复列表查询")
+	@GetMapping(value = "/post/topic/reply/list")
+	public Result<IPage<ReplyVo>> queryTopicReplyList(String topicId,
+											   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+											   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize) {
+		Page<String> page = new Page<String>(pageNo, pageSize);
+		IPage<ReplyVo> replyVos = replyService.queryPageList(page, topicId);
+		return new Result<IPage<ReplyVo>>().result(replyVos);
+	}
+
+
+	@ApiOperation(value="话题信息管理-话题回复", notes="话题信息管理-话题回复")
+	@PostMapping(value = "/post/topic/reply")
+	public Result topicReply(@Valid TopicReplyStandDto replyStandDto) {
+		replyService.replyStand(replyStandDto);
+		return Result.ok();
+	}
+
+
+	@ApiOperation(value="话题信息管理-话题回复点踩/点赞", notes="0 点踩 1 点赞")
+	@PostMapping(value = "/post/topic/reply/stand")
+	public Result topicReplyStand(@Valid TopicReplyStandDto replyStandDto) {
+		replyService.replyStand(replyStandDto);
+		return Result.ok();
+	}
+
 }
