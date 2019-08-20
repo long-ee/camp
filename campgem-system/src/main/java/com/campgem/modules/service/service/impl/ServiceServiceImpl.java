@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.service.entity.Service;
 import com.campgem.modules.service.entity.enums.ServiceStatusEnum;
 import com.campgem.modules.service.mapper.ServiceMapper;
 import com.campgem.modules.service.service.IServiceService;
+import com.campgem.modules.service.vo.ServiceDetailVo;
 import com.campgem.modules.service.vo.ServiceVo;
 
 import java.util.List;
@@ -39,5 +41,14 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, Service> impl
 		page.setRecords(list);
 		page.setTotal(count);
 		return page;
+	}
+	
+	@Override
+	public ServiceDetailVo queryServiceDetail(String serviceId) {
+		ServiceDetailVo detail = baseMapper.queryServiceDetail(serviceId);
+		if (detail == null) {
+			throw new JeecgBootException("服务不存在");
+		}
+		return detail;
 	}
 }

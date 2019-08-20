@@ -65,6 +65,8 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/api/v1/service", "anon"); // 服务列表
 		filterChainDefinitionMap.put("/api/v1/service/category", "anon"); // 服务分类列表
 		filterChainDefinitionMap.put("/api/v1/service/advertisement", "anon"); // 服务广告列表
+		filterChainDefinitionMap.put("/api/v1/service/*/detail", "anon"); // 服务详情
+		filterChainDefinitionMap.put("/api/v1/service/*/evaluation", "anon"); // 服务详情
 		
 		filterChainDefinitionMap.put("/sys/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串

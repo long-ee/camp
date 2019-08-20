@@ -8,7 +8,10 @@ import com.campgem.modules.common.service.IAdvertisementService;
 import com.campgem.modules.common.vo.AdvertisementVo;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
+import com.campgem.modules.service.service.IServiceEvaluationService;
 import com.campgem.modules.service.service.IServiceService;
+import com.campgem.modules.service.vo.ServiceDetailVo;
+import com.campgem.modules.service.vo.ServiceEvaluationVo;
 import com.campgem.modules.service.vo.ServiceVo;
 import com.campgem.modules.university.entity.enums.CategoryTypeEnum;
 import com.campgem.modules.university.service.ICategoryService;
@@ -18,10 +21,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -44,6 +44,8 @@ public class ServiceController extends JeecgController<SysMessage, ISysMessageSe
 	
 	@Resource
 	private IServiceService serviceService;
+	@Resource
+	private IServiceEvaluationService serviceEvaluationService;
 	
 	/**
 	 * 服务分类列表
@@ -75,9 +77,6 @@ public class ServiceController extends JeecgController<SysMessage, ISysMessageSe
 		return result;
 	}
 	
-	/**
-	 * 服务分页
-	 */
 	@ApiOperation(value = "服务分页", notes = "D11 服务列表")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "categoryId", value = "分类ID，默认all", defaultValue = "all", paramType = "query"),
@@ -93,5 +92,24 @@ public class ServiceController extends JeecgController<SysMessage, ISysMessageSe
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;
+	}
+	
+	@ApiOperation(value = "服务详情", notes = "D12")
+	@GetMapping(value = "/service/{serviceId}/detail")
+	@ApiImplicitParam(name = "serviceId", value = "服务ID", required = true, paramType = "path")
+	public Result<ServiceDetailVo> queryServiceDetail(@PathVariable String serviceId) {
+		ServiceDetailVo detail = serviceService.queryServiceDetail(serviceId);
+		return new Result<ServiceDetailVo>().result(detail);
+	}
+	
+	@ApiOperation(value = "服务评价分页查询", notes = "D12")
+	@GetMapping(value = "/service/{serviceId}/evaluation")
+	@ApiImplicitParam(name = "serviceId", value = "服务ID", required = true, paramType = "path")
+	public Result<IPage<ServiceEvaluationVo>> queryServiceEvaluationPageList(@PathVariable String serviceId,
+	                                                                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+	                                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+		IPage<ServiceEvaluationVo> list = serviceEvaluationService.queryServiceEvaluationPageList(serviceId, pageNo, pageSize);
+		
+		return new Result<IPage<ServiceEvaluationVo>>().result(list);
 	}
 }

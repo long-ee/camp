@@ -10,18 +10,20 @@
 			s.identity,
 			s.category_id,
 			s.sale_price,
-			( SELECT SUM(( security_rating + environment_rating + service_rating + price_rating ) / 4 ) / COUNT(*) FROM service_evaluation se WHERE se.service_id = s.id ) AS stars,
+			( SELECT SUM(( security_rating + environment_rating + service_rating + price_rating ) / 4 ) / COUNT(*) FROM
+			service_evaluation se WHERE se.service_id = s.id ) AS stars,
 			s.service_name,
-			( SELECT si.service_image FROM service_images si WHERE si.service_id = s.id AND is_list_image = 1 LIMIT 1 ) AS list_image,
+			( SELECT si.service_image FROM service_images si WHERE si.service_id = s.id AND is_list_image = 1 LIMIT 1 ) AS
+			list_image,
 			s.tags,
 			s.view_count,
 			s.sale_count
 		FROM
-			service s
+		service s
 		WHERE s.del_flag = 0 AND s.status = 1
-			<if test="categoryId != 'all'">
-				AND s.category_id = #{categoryId}
-			</if>
+		<if test="categoryId != 'all'">
+			AND s.category_id = #{categoryId}
+		</if>
 		<choose>
 			<when test="sort == 0">
 				ORDER BY s.create_time DESC
@@ -37,5 +39,34 @@
 			</when>
 		</choose>
 		LIMIT #{start}, #{pageSize}
+	</select>
+	
+	<resultMap id="serviceDetailMap" type="com.campgem.modules.service.vo.ServiceDetailVo">
+		<id column="sid" property="id"/>
+		<collection property="images" select="com.campgem.modules.service.mapper.ServiceImagesMapper.queryServiceImages"
+		            ofType="com.campgem.modules.service.entity.ServiceImages" column="sid"/>
+	</resultMap>
+	<select id="queryServiceDetail" resultMap="serviceDetailMap">
+		SELECT s.id AS sid,
+		       s.uid,
+		       s.seller_name,
+		       s.identity,
+		       s.category_id,
+		       s.sale_price,
+		       (SELECT SUM((security_rating + environment_rating + service_rating + price_rating) / 4) / COUNT(*)
+		        FROM service_evaluation se
+		        WHERE se.service_id = s.id) AS stars,
+		       s.service_name,
+		       s.tags,
+		       s.view_count,
+		       s.sale_count,
+		       m.opening_time,
+		       m.closing_time,
+		       m.address
+		FROM service s
+			     LEFT JOIN member m ON m.id = s.uid
+		WHERE s.del_flag = 0
+		  AND s.status = 1
+		  AND s.id = #{serviceId}
 	</select>
 </mapper>
