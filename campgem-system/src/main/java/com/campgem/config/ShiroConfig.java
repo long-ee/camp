@@ -55,6 +55,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/api/v1/goods/*/detail", "anon"); // 商品详情
 		filterChainDefinitionMap.put("/api/v1/goods/*/evaluation", "anon"); // 商品评价列表
 		filterChainDefinitionMap.put("/api/v1/goods/*/review", "anon"); // 商品留言列表
+		filterChainDefinitionMap.put("/api/v1/goods/*/related", "anon"); // 关联商品列表
 		
 		filterChainDefinitionMap.put("/api/v1/requirements", "anon"); // 需求列表
 		filterChainDefinitionMap.put("/api/v1/requirements/category", "anon"); // 需求分类列表
@@ -64,9 +65,21 @@ public class ShiroConfig {
 		
 		filterChainDefinitionMap.put("/api/v1/service", "anon"); // 服务列表
 		filterChainDefinitionMap.put("/api/v1/service/category", "anon"); // 服务分类列表
+		filterChainDefinitionMap.put("/api/v1/service/category/list", "anon"); // 按照分类查询服务列表
 		filterChainDefinitionMap.put("/api/v1/service/advertisement", "anon"); // 服务广告列表
 		filterChainDefinitionMap.put("/api/v1/service/*/detail", "anon"); // 服务详情
 		filterChainDefinitionMap.put("/api/v1/service/*/evaluation", "anon"); // 服务详情
+		filterChainDefinitionMap.put("/api/v1/service/*/related", "anon"); // 关联服务列表
+		filterChainDefinitionMap.put("/api/v1/service/*/order", "anon"); // 服务下单
+		
+		filterChainDefinitionMap.put("/api/v1/business/*/index", "anon"); // 商家详情
+		filterChainDefinitionMap.put("/api/v1/business/*/service", "anon"); // 商家服务列表
+		
+		filterChainDefinitionMap.put("/api/v1/activity", "anon"); // 活动列表
+		filterChainDefinitionMap.put("/api/v1/activity/*/detail", "anon"); // 活动详情
+		filterChainDefinitionMap.put("/api/v1/activity/today", "anon"); // 今日活动列表
+		filterChainDefinitionMap.put("/api/v1/activity/calendar", "anon"); // 活动日历
+		filterChainDefinitionMap.put("/api/v1/activity/category", "anon"); // 活动分类
 		
 		filterChainDefinitionMap.put("/sys/login", "anon"); //系统用户登录
 		filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串

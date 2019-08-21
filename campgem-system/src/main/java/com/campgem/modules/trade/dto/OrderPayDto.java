@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -14,10 +16,11 @@ import java.util.List;
 @ApiModel(value = "商品信息查询数据模型", description = "商品信息查询数据模型")
 public class OrderPayDto extends BaseDto {
 	@ApiModelProperty("不同商家的订单")
+	@NotEmpty(message = "订单信息不能为空")
 	private List<OrderInfo> orders;
 	
 	@ApiModelProperty("支付方式，1PayPal，2Visa/Masterd Card")
-	@NotBlank(message = "支付方式不能为空")
+	@NotNull(message = "支付方式不能为空")
 	private Integer paymentMethod;
 	
 	@ApiModelProperty("选择的收货地址ID")

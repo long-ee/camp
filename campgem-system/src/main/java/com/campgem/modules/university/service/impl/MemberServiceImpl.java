@@ -11,6 +11,9 @@ import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.*;
 import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
+import com.campgem.modules.service.service.IBusinessActivityService;
+import com.campgem.modules.service.vo.BusinessActivityInProgressVo;
+import com.campgem.modules.service.vo.BusinessDetailVo;
 import com.campgem.modules.university.dto.MemberQueryDto;
 import com.campgem.modules.university.dto.UserPasswordModifyDto;
 import com.campgem.modules.university.dto.UserRegistrationDto;
@@ -51,6 +54,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     private IUserBaseService userBaseService;
     @Resource
     private IUserAuthService userAuthService;
+    @Resource
+    private IBusinessActivityService businessActivityService;
 
     @Override
     public IPage<MemberVo> queryPageList(Page page, MemberQueryDto queryDto) {
@@ -192,5 +197,19 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     @Override
     public boolean updateUserShoppingMethods(List<ShippingMethodsVo> vos) {
         return baseMapper.updateUserShoppingMethods(vos, SecurityUtils.getCurrentUserUid());
+    }
+    
+    @Override
+    public BusinessDetailVo queryBusinessDetail(String businessId) {
+        BusinessDetailVo detail = baseMapper.queryBusinessDetail(businessId);
+        if (detail == null) {
+            throw new JeecgBootException("商家不存在");
+        }
+        
+        // 查询商家活动
+        List<BusinessActivityInProgressVo> list = businessActivityService.queryBusinessActivityInProgress(businessId);
+        detail.setInProgressActivities(list);
+        
+        return detail;
     }
 }

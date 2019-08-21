@@ -15,7 +15,6 @@ import com.campgem.modules.trade.service.IGoodsService;
 import com.campgem.modules.trade.service.IOrderGoodsService;
 import com.campgem.modules.trade.service.IOrderService;
 import com.campgem.modules.trade.vo.OrderInfoVo;
-import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import io.swagger.annotations.Api;
@@ -27,8 +26,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,16 +74,16 @@ public class OrderController {
 	
 	@ApiOperation("订单支付，返回URL，需要跳转到这个地址")
 	@PostMapping("/order/pay")
-	public Result<String> pay(@RequestBody OrderPayDto payDto) {
-		if (!CommonConstant.payments.keySet().contains(payDto.getPaymentMethod())) {
+	public Result<String> pay(@Valid @RequestBody OrderPayDto payDto) {
+		if (!CommonConstant.payments.containsKey(payDto.getPaymentMethod())) {
 			throw new JeecgBootException("支付方式错误");
 		}
 		
 		// 创建订单
-		List<Orders> orders = orderService.createOrders(payDto);
+		List<Orders> orders = orderService.createGoodsOrders(payDto);
 		if (CommonConstant.payments.get(payDto.getPaymentMethod()).equals("PayPal")) {
 			// PayPal支付
-			String url = paypal(orders);
+			String url = paypalService.pay(orders);
 			return new Result<String>().result(url);
 		} else {
 			// Visa/Masterd Card 支付
@@ -115,46 +114,12 @@ public class OrderController {
 		
 		if (CommonConstant.payments.get(o.getPaymentMethod()).equals("PayPal")) {
 			// PayPal
-			String url = paypal(Arrays.asList(o));
+			String url = paypalService.pay(Collections.singletonList(o));
 			return new Result<String>().result(url);
 		} else {
 			// Visa/Masterd Card 支付
 			return null;
 		}
-	}
-	
-	private String paypal(List<Orders> orders) {
-		Payment payment = null;
-		try {
-			payment = paypalService.createPayment(orders);
-		} catch (PayPalRESTException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-		
-		if (payment == null) {
-			throw new JeecgBootException("订单支付失败");
-		}
-		
-		// 更新payID
-		List<String> orderIds = new ArrayList<>();
-		for (Orders o : orders) {
-			orderIds.add(o.getId());
-		}
-		orderService.updatePayId(payment.getId(), orderIds);
-		
-		String url = null;
-		for(Links links : payment.getLinks()){
-			if(links.getRel().equals("approval_url")){
-				url = links.getHref();
-				break;
-			}
-		}
-		
-		if (url == null) {
-			throw new JeecgBootException("订单支付失败");
-		}
-		return url;
 	}
 	
 	/**

@@ -73,7 +73,7 @@
 		WHERE g.id = #{goodsId}
 	</select>
 	
-	<select id="queryGoodsRelative" resultType="com.campgem.modules.trade.vo.GoodsRelativeVo">
+	<select id="queryGoodsRelated" resultType="com.campgem.modules.trade.vo.GoodsRelatedVo">
 		SELECT g.id,
 		       g.identity,
 		       g.goods_name,

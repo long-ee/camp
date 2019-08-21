@@ -88,9 +88,13 @@ public class Orders {
 	/**运送单号*/
 	@Excel(name = "运送单号", width = 15)
     @ApiModelProperty(value = "运送单号")
-	private java.lang.String trackingNumbere;
-	/**下单时间*/
-	@Excel(name = "下单时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")
+	private java.lang.String trackingNumber;
+	
+	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@ApiModelProperty(value = "预约时间，针对Service类型订单")
+	private java.util.Date appointment;
+	
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "下单时间")

@@ -5,7 +5,7 @@ import com.campgem.modules.trade.dto.GoodsQueryDto;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
-import com.campgem.modules.trade.vo.GoodsRelativeVo;
+import com.campgem.modules.trade.vo.GoodsRelatedVo;
 import com.campgem.modules.trade.vo.OrderInfoTempVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,7 +23,7 @@ public interface GoodsMapper extends BaseMapper<Goods> {
 	
 	GoodsDetailVo queryGoodsDetail(@Param("goodsId") String goodsId);
 	
-	List<GoodsRelativeVo> queryGoodsRelative(@Param("categoryId") String categoryId, @Param("goodsId") String goodsId);
+	List<GoodsRelatedVo> queryGoodsRelated(@Param("categoryId") String categoryId, @Param("goodsId") String goodsId);
 	
 	void incrementReviewCount(@Param("goodsId") String goodsId);
 	

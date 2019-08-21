@@ -38,16 +38,16 @@ public class Service {
 	@ApiModelProperty(value = "关联的会员ID")
 	private java.lang.String uid;
 	/**
-	 * 卖家名
+	 * 商家名
 	 */
-	@Excel(name = "卖家名", width = 15)
-	@ApiModelProperty(value = "卖家名")
-	private java.lang.String sellerName;
+	@Excel(name = "商家名", width = 15)
+	@ApiModelProperty(value = "商家名")
+	private java.lang.String businessName;
 	/**
-	 * 卖家会员类型
+	 * 商家会员类型
 	 */
-	@Excel(name = "卖家会员类型", width = 15)
-	@ApiModelProperty(value = "卖家会员类型")
+	@Excel(name = "商家会员类型", width = 15)
+	@ApiModelProperty(value = "商家会员类型")
 	private java.lang.String identity;
 	/**
 	 * 服务分类

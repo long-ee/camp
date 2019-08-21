@@ -4,15 +4,23 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.system.base.controller.JeecgController;
+import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.common.entity.enums.AdvertisementLocationEnum;
 import com.campgem.modules.common.service.IAdvertisementService;
 import com.campgem.modules.common.vo.AdvertisementVo;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
+import com.campgem.modules.trade.dto.GoodsReviewDto;
+import com.campgem.modules.trade.entity.GoodsReviews;
+import com.campgem.modules.trade.service.IGoodsEvaluationService;
+import com.campgem.modules.trade.service.IGoodsReviewsService;
+import com.campgem.modules.trade.service.IGoodsReviewsShieldsService;
 import com.campgem.modules.trade.service.IGoodsService;
 import com.campgem.modules.trade.vo.GoodsDetailVo;
+import com.campgem.modules.trade.vo.GoodsEvaluationVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
+import com.campgem.modules.trade.vo.GoodsReviewsVo;
 import com.campgem.modules.university.entity.enums.CategoryTypeEnum;
 import com.campgem.modules.university.service.ICategoryService;
 import com.campgem.modules.university.vo.CategoryVo;
@@ -24,6 +32,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +54,12 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	private IGoodsService goodsService;
 	@Resource
 	private IAdvertisementService advertisementService;
+	@Resource
+	private IGoodsEvaluationService goodsEvaluationService;
+	@Resource
+	private IGoodsReviewsService goodsReviewsService;
+	@Resource
+	private IGoodsReviewsShieldsService goodsReviewsShieldsService;
 	
 	/**
 	 * 交易分类列表
@@ -95,5 +112,70 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 		Result<List<AdvertisementVo>> result = new Result<>();
 		result.setResult(list);
 		return result;
+	}
+	
+	/**
+	 * 分页列表查询
+	 */
+	@ApiOperation(value = "商品评价分页列表查询", notes = "C13 商品评价")
+	@GetMapping(value = "/goods/{goodsId}/evaluation")
+	@ApiImplicitParam(name = "goodsId", value = "商品ID", paramType = "path")
+	public Result<IPage<GoodsEvaluationVo>> queryGoodsEvaluationPageList(@PathVariable String goodsId,
+	                                                                     @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+	                                                                     @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+		if (org.apache.commons.lang.StringUtils.isEmpty(goodsId)) {
+			throw new JeecgBootException("商品ID不能为空");
+		}
+		
+		IPage<GoodsEvaluationVo> list = goodsEvaluationService.queryGoodsEvaluationPageList(goodsId, pageNo, pageSize);
+		
+		return new Result<IPage<GoodsEvaluationVo>>().result(list);
+	}
+	
+	/**
+	 * 商品留言分页
+	 */
+	@ApiOperation(value = "商品留言分页查询接口", notes = "C11 商品详情")
+	@GetMapping(value = "/goods/{goodsId}/review")
+	@ApiImplicitParam(name = "goodsId", value = "商品ID", required = true, paramType = "path")
+	public Result<IPage<GoodsReviewsVo>> queryGoodsReviewsPageList(@PathVariable String goodsId,
+	                                                               @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+	                                                               @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+	                                                               HttpServletRequest request) {
+		if (StringUtils.isEmpty(goodsId)) {
+			throw new JeecgBootException("商品ID不能为空");
+		}
+		IPage<GoodsReviewsVo> pageList = goodsReviewsService.queryGoodsReviewsPageList(request, goodsId, pageNo, pageSize);
+		Result<IPage<GoodsReviewsVo>> result = new Result<>();
+		result.setSuccess(true);
+		result.setResult(pageList);
+		return result;
+	}
+	
+	@ApiOperation(value = "商品留言屏蔽接口", notes = "C12 商品详情")
+	@PostMapping(value = "/goods/review/shield")
+	@ApiImplicitParam(name = "targetId", value = "屏蔽的用户ID", required = true, paramType = "form")
+	public Result addUserReviewShield(String targetId) {
+		if (StringUtils.isEmpty(targetId)) {
+			throw new JeecgBootException("用户ID不能为空");
+		}
+		Boolean result = goodsReviewsShieldsService.addUserReviewShield(targetId);
+		return result ? Result.succ : Result.fail;
+	}
+	
+	@ApiOperation(value = "新增商品留言接口", notes = "C12 商品详情")
+	@PostMapping(value = "/goods/review")
+	public Result addGoodsReview(@Valid GoodsReviewDto reviewDto) {
+		GoodsReviews goodsReviews = new GoodsReviews();
+		goodsReviews.setCreateTime(new Date());
+		goodsReviews.setGoodsId(reviewDto.getGoodsId());
+		goodsReviews.setUid(SecurityUtils.getCurrentUserUid());
+		goodsReviews.setIsOpen(reviewDto.getIsOpen());
+		goodsReviews.setContent(reviewDto.getContent());
+		boolean ok = goodsReviewsService.save(goodsReviews);
+		if (ok) {
+			goodsService.increment(reviewDto.getGoodsId());
+		}
+		return ok ? Result.succ : Result.fail;
 	}
 }

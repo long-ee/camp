@@ -1,10 +1,12 @@
 package com.campgem.modules.common.service.impl;
 
+import com.campgem.common.exception.JeecgBootException;
 import com.campgem.config.PaypalConfig;
 import com.campgem.config.paypal.PaypalPaymentIntent;
 import com.campgem.config.paypal.PaypalPaymentMethod;
 import com.campgem.modules.common.service.IPaypalService;
 import com.campgem.modules.trade.entity.Orders;
+import com.campgem.modules.trade.service.IOrderService;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
@@ -20,6 +22,8 @@ public class PaypalServiceImpl implements IPaypalService {
 	private APIContext apiContext;
 	@Resource
 	private PaypalConfig paypalConfig;
+	@Resource
+	private IOrderService orderService;
 	
 	@Override
 	public Payment createPayment(
@@ -76,5 +80,40 @@ public class PaypalServiceImpl implements IPaypalService {
 		PaymentExecution paymentExecute = new PaymentExecution();
 		paymentExecute.setPayerId(payerId);
 		return payment.execute(apiContext, paymentExecute);
+	}
+	
+	@Override
+	public String pay(List<Orders> orders) {
+		Payment payment = null;
+		try {
+			payment = createPayment(orders);
+		} catch (PayPalRESTException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		if (payment == null) {
+			throw new JeecgBootException("订单支付失败");
+		}
+		
+		// 更新payID
+		List<String> orderIds = new ArrayList<>();
+		for (Orders o : orders) {
+			orderIds.add(o.getId());
+		}
+		orderService.updatePayId(payment.getId(), orderIds);
+		
+		String url = null;
+		for(Links links : payment.getLinks()){
+			if(links.getRel().equals("approval_url")){
+				url = links.getHref();
+				break;
+			}
+		}
+		
+		if (url == null) {
+			throw new JeecgBootException("订单支付失败");
+		}
+		return url;
 	}
 }

@@ -25,10 +25,10 @@ public class ServiceDetailVo {
 	@ApiModelProperty(value = "关联的会员ID")
 	private String uid;
 	
-	@ApiModelProperty(value = "卖家名")
-	private String sellerName;
+	@ApiModelProperty(value = "商家名")
+	private String businessName;
 	
-	@ApiModelProperty(value = "卖家会员类型")
+	@ApiModelProperty(value = "商家会员类型")
 	private String identity;
 	
 	@ApiModelProperty(value = "服务分类")
@@ -45,6 +45,9 @@ public class ServiceDetailVo {
 	
 	@ApiModelProperty("图片列表")
 	private List<ServiceImages> images;
+	
+	@ApiModelProperty("关联服务")
+	private List<ServiceRelatedVo> relatedServices;
 	
 	@ApiModelProperty("开门时间")
 	private String openingTime;

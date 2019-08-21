@@ -2,11 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.campgem.modules.service.mapper.ServiceMapper">
 	
-	<select id="queryPageList" resultType="com.campgem.modules.service.vo.ServiceVo">
+	<select id="queryServiceListByCategory" resultType="com.campgem.modules.service.vo.ServiceVo">
 		SELECT
 			s.id,
 			s.uid,
-			s.seller_name,
+			s.business_name,
+			s.identity,
+			s.category_id,
+			s.sale_price,
+			( SELECT SUM(( security_rating + environment_rating + service_rating + price_rating ) / 4 ) / COUNT(*) FROM
+				service_evaluation se WHERE se.service_id = s.id ) AS stars,
+			s.service_name,
+			( SELECT si.service_image FROM service_images si WHERE si.service_id = s.id AND is_list_image = 1 LIMIT 1 ) AS
+			                                                          list_image,
+			s.tags,
+			s.view_count,
+			s.sale_count
+		FROM
+			service s
+		WHERE s.del_flag = 0
+		  AND s.status = 1
+		  AND s.category_id = #{categoryId}
+	</select>
+	
+	<select id="queryServicePageList" resultType="com.campgem.modules.service.vo.ServiceVo">
+		SELECT
+			s.id,
+			s.uid,
+			s.business_name,
 			s.identity,
 			s.category_id,
 			s.sale_price,
@@ -49,7 +72,7 @@
 	<select id="queryServiceDetail" resultMap="serviceDetailMap">
 		SELECT s.id AS sid,
 		       s.uid,
-		       s.seller_name,
+		       s.business_name,
 		       s.identity,
 		       s.category_id,
 		       s.sale_price,
@@ -68,5 +91,54 @@
 		WHERE s.del_flag = 0
 		  AND s.status = 1
 		  AND s.id = #{serviceId}
+	</select>
+	
+	<select id="queryServiceRelated" resultType="com.campgem.modules.service.vo.ServiceRelatedVo">
+		SELECT s.id,
+		       s.service_name,
+		       s.sale_price,
+		       ( SELECT si.service_image FROM service_images si WHERE si.service_id = s.id AND is_list_image = 1 LIMIT 1 ) AS
+			       list_image
+		FROM service s
+		WHERE s.category_id = #{categoryId}
+			AND s.id != #{serviceId}
+			AND s.del_flag = 0
+			AND s.status = 1
+		ORDER BY s.sale_count DESC
+		LIMIT 5
+	</select>
+	
+	<select id="queryBusinessServicePageList" resultType="com.campgem.modules.service.vo.BusinessServiceVo">
+		SELECT
+			s.id,
+			s.sale_price,
+			( SELECT SUM(( security_rating + environment_rating + service_rating + price_rating ) / 4 ) / COUNT(*) FROM
+				service_evaluation se WHERE se.service_id = s.id ) AS stars,
+			s.service_name,
+			( SELECT si.service_image FROM service_images si WHERE si.service_id = s.id AND is_list_image = 1 LIMIT 1 ) AS
+			                                                          list_image,
+			s.view_count,
+			s.sale_count
+		FROM
+			service s
+		WHERE s.del_flag = 0 AND s.status = 1 AND s.uid = #{uid}
+		LIMIT #{start}, #{pageSize}
+	</select>
+	
+	<resultMap id="serviceOrder" type="com.campgem.modules.service.vo.ServiceOrderVo">
+		<id property="id" column="sid" />
+		<collection property="images" select="com.campgem.modules.service.mapper.ServiceImagesMapper.queryServiceImages"
+		            ofType="com.campgem.modules.service.entity.ServiceImages" column="sid"/>
+	</resultMap>
+	<select id="queryServiceOrder" resultMap="serviceOrder">
+		SELECT s.id             AS sid,
+		       s.business_name,
+		       s.sale_price,
+		       s.taxes,
+		       s.service_name
+		FROM service s
+		WHERE s.id = #{serviceId}
+		  AND s.del_flag = 0
+		  AND s.status = 1
 	</select>
 </mapper>

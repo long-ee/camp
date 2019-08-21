@@ -21,4 +21,6 @@ public interface IPaypalService {
 	Payment createPayment(List<Orders> orders) throws PayPalRESTException;
 	
 	Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
+	
+	String pay(List<Orders> orders);
 }

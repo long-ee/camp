@@ -94,7 +94,7 @@ spring:
         master:
           url: jdbc:mysql://118.31.226.196:3306/campgem?characterEncoding=UTF-8&useUnicode=true&useSSL=false
           username: root
-          password: Bxianyun2019#
+          password:
           driver-class-name: com.mysql.jdbc.Driver
           # 多数据源配置
           #multi-datasource1:

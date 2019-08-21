@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.service.mapper.BusinessActivityImagesMapper">
+	
+	<select id="queryActivityImages" resultType="com.campgem.modules.service.entity.BusinessActivityImages">
+		SELECT *
+		FROM business_activity_images bai
+		WHERE bai.business_activity_id = #{activityId}
+	</select>
+</mapper>

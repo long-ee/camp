@@ -1,6 +1,8 @@
 package com.campgem.modules.trade.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.service.dto.ServiceOrderPayDto;
+import com.campgem.modules.service.entity.Service;
 import com.campgem.modules.trade.dto.OrderPayDto;
 import com.campgem.modules.trade.entity.Orders;
 
@@ -14,9 +16,9 @@ import java.util.List;
  */
 public interface IOrderService extends IService<Orders> {
 	/**
-	 * 创建订单
+	 * 创建商品订单
 	 */
-	List<Orders> createOrders(OrderPayDto payDto);
+	List<Orders> createGoodsOrders(OrderPayDto payDto);
 	
 	/**
 	 * 更新支付ID
@@ -27,4 +29,9 @@ public interface IOrderService extends IService<Orders> {
 	 * 支付成功，修改订单数据
 	 */
 	void paypalSuccess(String paymentId);
+	
+	/**
+	 * 创建服务订单
+	 */
+	Orders createServiceOrder(Service service, ServiceOrderPayDto payDto);
 }

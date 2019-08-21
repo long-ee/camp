@@ -61,7 +61,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		}
 		
 		// 关联商品查询
-		List<GoodsRelativeVo> relatives = baseMapper.queryGoodsRelative(goods.getCategoryId(), goodsId);
+		List<GoodsRelatedVo> relatives = baseMapper.queryGoodsRelated(goods.getCategoryId(), goodsId);
 		goods.setRelatives(relatives);
 		
 		return goods;

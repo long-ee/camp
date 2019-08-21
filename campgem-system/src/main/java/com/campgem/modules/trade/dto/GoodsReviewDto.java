@@ -4,9 +4,11 @@ import com.campgem.common.api.dto.BaseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ApiModel(value = "商品留言数据模型", description = "商品留言数据模型")
 public class GoodsReviewDto extends BaseDto {

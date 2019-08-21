@@ -70,7 +70,7 @@ public class GoodsDetailVo implements Serializable {
 	private String tags;
 	
 	@ApiModelProperty("关联商品")
-	private List<GoodsRelativeVo> relatives;
+	private List<GoodsRelatedVo> relatives;
 	
 	@ApiModelProperty("商品描述")
 	private String description;

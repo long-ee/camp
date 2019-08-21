@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 @Data
 @ApiModel(value = "商品详情关联商品显示模型")
-public class GoodsRelativeVo implements Serializable {
+public class GoodsRelatedVo implements Serializable {
 	@TableId(type = IdType.UUID)
 	@ApiModelProperty("id")
 	private String id;

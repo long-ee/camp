@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.service.mapper.BusinessActivityMapper">
+	
+	<sql id="activity_list_image">
+		SELECT bai.business_activity_image
+		FROM business_activity_images bai
+		WHERE bai.business_activity_id = ${business_activity_id}
+		  AND bai.is_list_image = 1
+		LIMIT 1
+	</sql>
+	
+	<select id="queryActivityPageList" resultType="com.campgem.modules.service.vo.BusinessActivityListVo">
+		SELECT ba.id,
+			   ba.title,
+			   m.business_name,
+			   (<include refid="activity_list_image"><property name="business_activity_id" value="ba.id"/></include>) as list_image,
+			   ba.start_date,
+			   ba.end_date,
+			   ba.start_time,
+			   ba.end_time,
+			   ba.venue
+		FROM business_activity ba
+			LEFT JOIN member m ON m.user_base_id = ba.uid
+		WHERE ba.del_flag = 0
+			<if test="categoryId != 'all'">
+				AND ba.category_id = #{categoryId}
+			</if>
+		ORDER BY
+			<if test="date != null">
+				IF(ba.start_date = #{date}, 2, 1) DESC,
+			</if>
+			ba.create_time DESC
+		LIMIT #{start}, #{pageSize}
+	</select>
+	
+	<select id="getActivityCalendar" resultType="com.campgem.modules.service.vo.BusinessActivityCalendarVo">
+		SELECT ba.start_date        as `date`,
+		       count(ba.start_date) AS `count`
+		FROM business_activity ba
+		WHERE ba.start_date &gt;= #{first}
+		  AND ba.start_date &lt;= #{last}
+		GROUP BY ba.start_date
+	</select>
+	
+	<select id="queryTodayBusinessActivityList"
+	        resultType="com.campgem.modules.service.vo.BusinessActivityTodayListVo">
+		SELECT ba.id,
+		       ba.title,
+		       c.category_name,
+		       (<include refid="activity_list_image"><property name="business_activity_id" value="ba.id"/></include>) as list_image,
+		       ba.venue,
+		       ba.content
+		FROM business_activity ba
+		    LEFT JOIN category c on c.id = ba.category_id
+		WHERE ba.start_date = #{today}
+		  AND ba.del_flag = 0
+	</select>
+	<select id="queryBusinessActivityInProgress"
+	        resultType="com.campgem.modules.service.vo.BusinessActivityInProgressVo">
+		SELECT ba.id,
+		       ba.title,
+			   (<include refid="activity_list_image"><property name="business_activity_id" value="ba.id"/></include>) as list_image
+		FROM business_activity ba
+		WHERE ba.del_flag = 0
+		  AND ba.uid = #{businessId}
+		  AND ba.start_date &lt;= #{today}
+		  AND ba.end_date &gt;= #{today}
+		LIMIT 3
+	</select>
+	
+	<resultMap id="activityDetail" type="com.campgem.modules.service.vo.BusinessActivityDetailVo">
+		<id property="id" column="aid" />
+		<collection property="images"
+		            select="com.campgem.modules.service.mapper.BusinessActivityImagesMapper.queryActivityImages"
+		            ofType="com.campgem.modules.service.entity.BusinessActivityImages"
+		            column="aid"/>
+	</resultMap>
+	<select id="queryActivityDetail" resultMap="activityDetail">
+		SELECT ba.id            AS aid,
+		       ba.uid,
+		       ba.title,
+		       ba.category_id,
+		       m.business_name,
+		       ba.start_date,
+		       ba.end_date,
+		       ba.start_time,
+		       ba.end_time,
+		       ba.content,
+		       ba.venue,
+		       ba.website,
+		       ba.price
+		FROM business_activity ba
+			LEFT JOIN member m on m.user_base_id = ba.uid
+		WHERE ba.del_flag = 0
+		  AND ba.id = #{activityId}
+	</select>
+	<select id="querySimilarActivity"
+	        resultType="com.campgem.modules.service.vo.BusinessActivityMoreOrSimilarListVo">
+		SELECT ba.id,
+		       ba.title,
+			   (<include refid="activity_list_image"><property name="business_activity_id" value="ba.id"/></include>) as list_image
+		FROM business_activity ba
+		WHERE ba.category_id = #{categoryId}
+		  AND ba.del_flag = 0
+		  AND ba.id != #{activityId}
+		LIMIT 4
+	</select>
+	<select id="queryMoreActivity"
+	        resultType="com.campgem.modules.service.vo.BusinessActivityMoreOrSimilarListVo">
+		SELECT ba.id,
+		       ba.title,
+			   (<include refid="activity_list_image"><property name="business_activity_id" value="ba.id"/></include>) as list_image
+		FROM business_activity ba
+		WHERE ba.uid = #{businessId}
+		  AND ba.del_flag = 0
+		  AND ba.id != #{activityId}
+		LIMIT 4
+	</select>
+</mapper>

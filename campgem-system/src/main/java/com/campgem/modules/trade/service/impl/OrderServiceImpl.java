@@ -3,6 +3,7 @@ package com.campgem.modules.trade.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.service.dto.ServiceOrderPayDto;
 import com.campgem.modules.trade.dto.OrderPayDto;
 import com.campgem.modules.trade.entity.Orders;
 import com.campgem.modules.trade.entity.OrdersGoods;
@@ -38,7 +39,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	
 	@Override
 	@Transactional
-	public List<Orders> createOrders(OrderPayDto payDto) {
+	public List<Orders> createGoodsOrders(OrderPayDto payDto) {
 		String uid = SecurityUtils.getCurrentUserUid();
 		Date createTime = new Date();
 		List<Orders> ordersList = new ArrayList<>();
@@ -129,5 +130,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	@Override
 	public void paypalSuccess(String paymentId) {
 		baseMapper.paypalSuccess(paymentId);
+	}
+	
+	@Override
+	public Orders createServiceOrder(com.campgem.modules.service.entity.Service service, ServiceOrderPayDto payDto) {
+		String uid = SecurityUtils.getCurrentUserUid();
+		Date createTime = new Date();
+		String orderId = UUID.randomUUID().toString().replaceAll("-", "");
+		
+		Orders orders = new Orders();
+		// 设置公共属性
+		orders.setId(orderId);
+		orders.setUid(uid);
+		orders.setPaymentMethod(payDto.getPaymentMethod());
+		orders.setOrderType(OrderTypeEnum.SERVICE.code());
+		orders.setStatus(OrderStatusEnum.UNPAID.code());
+		orders.setCreateTime(createTime);
+		orders.setAppointment(payDto.getAppointment());
+		
+		// 设置价格
+		orders.setAmount(service.getSalePrice());
+		orders.setTaxesAmount(new BigDecimal(service.getSalePrice().doubleValue() * service.getTaxes().doubleValue() / 100.00));
+		orders.setPayAmount(service.getSalePrice().add(orders.getTaxesAmount()));
+		
+		// 设置商家属性
+		orders.setSellerName(service.getBusinessName());
+		orders.setSellerId(service.getUid());
+		
+		if (!save(orders)) {
+			// 添加失败
+			throw new JeecgBootException("订单创建失败");
+		}
+		
+		return orders;
 	}
 }
