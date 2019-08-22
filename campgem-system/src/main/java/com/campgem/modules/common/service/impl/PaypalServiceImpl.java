@@ -13,6 +13,7 @@ import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +26,12 @@ public class PaypalServiceImpl implements IPaypalService {
 	@Resource
 	private IOrderService orderService;
 	
+	private static DecimalFormat df = new DecimalFormat("#.00");
+	
 	@Override
 	public Payment createPayment(
 			Double total,
+			Details details,
 			String currency,
 			PaypalPaymentMethod method,
 			PaypalPaymentIntent intent,
@@ -37,6 +41,7 @@ public class PaypalServiceImpl implements IPaypalService {
 		Amount amount = new Amount();
 		amount.setCurrency(currency);
 		amount.setTotal(String.format("%.2f", total));
+		amount.setDetails(details);
 		
 		Transaction transaction = new Transaction();
 		transaction.setDescription(description);
@@ -61,9 +66,30 @@ public class PaypalServiceImpl implements IPaypalService {
 	}
 	
 	@Override
-	public Payment createPayment(List<Orders> orders) throws PayPalRESTException {
+	public Payment createPayment(List<Orders> ordersList) throws PayPalRESTException {
+		// 总运费
+		double freight = 0;
+		// 总税金
+		double taxes = 0;
+		// 总商品金额
+		double subTotal = 0;
+		for (Orders orders : ordersList) {
+			if (orders.getFreightAmount() != null) {
+				freight += orders.getFreightAmount().doubleValue();
+			}
+			taxes += orders.getTaxesAmount().doubleValue();
+			subTotal += orders.getAmount().doubleValue();
+		}
+		
+		Details details = new Details();
+		details.setSubtotal(df.format(subTotal));
+		details.setShipping(df.format(freight));
+		details.setTax(df.format(taxes));
+		
+		double total = freight + taxes + subTotal;
 		return createPayment(
-				12.34,
+				total,
+				details,
 				"USD",
 				PaypalPaymentMethod.paypal,
 				PaypalPaymentIntent.sale,

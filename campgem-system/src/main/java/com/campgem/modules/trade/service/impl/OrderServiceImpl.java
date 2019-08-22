@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -36,6 +38,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	private ICartService cartService;
 	@Resource
 	private IOrderGoodsService orderGoodsService;
+	
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	
 	@Override
 	@Transactional
@@ -146,7 +150,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		orders.setOrderType(OrderTypeEnum.SERVICE.code());
 		orders.setStatus(OrderStatusEnum.UNPAID.code());
 		orders.setCreateTime(createTime);
-		orders.setAppointment(payDto.getAppointment());
+		
+		try {
+			Date appointment = sdf.parse(payDto.getDate() + " " + payDto.getTime());
+			orders.setAppointment(appointment);
+		} catch (ParseException ignore) {
+			throw new JeecgBootException("预约时间格式错误");
+		}
 		
 		// 设置价格
 		orders.setAmount(service.getSalePrice());

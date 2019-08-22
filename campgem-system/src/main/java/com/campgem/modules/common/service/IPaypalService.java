@@ -3,6 +3,7 @@ package com.campgem.modules.common.service;
 import com.campgem.config.paypal.PaypalPaymentIntent;
 import com.campgem.config.paypal.PaypalPaymentMethod;
 import com.campgem.modules.trade.entity.Orders;
+import com.paypal.api.payments.Details;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public interface IPaypalService {
 	Payment createPayment(
 			Double total,
+			Details details,
 			String currency,
 			PaypalPaymentMethod method,
 			PaypalPaymentIntent intent,
@@ -18,7 +20,7 @@ public interface IPaypalService {
 			String cancelUrl,
 			String processUrl) throws PayPalRESTException;
 	
-	Payment createPayment(List<Orders> orders) throws PayPalRESTException;
+	Payment createPayment(List<Orders> ordersList) throws PayPalRESTException;
 	
 	Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
 	
