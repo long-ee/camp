@@ -140,4 +140,54 @@
 		  AND s.del_flag = 0
 		  AND s.status = 1
 	</select>
+	
+	<sql id="queryConditions">
+		<where>
+			<if test="1 == 1">
+				s.del_flag = 0
+			</if>
+			
+			<if test="null != queryDto.serviceName and queryDto.serviceName != ''">
+				<bind name="cname" value="'%' + queryDto.serviceName + '%'" />
+				AND s.service_name like #{cname}
+			</if>
+			
+			<if test="null != queryDto.memberName and queryDto.memberName != ''">
+				AND m.member_name = #{queryDto.memberName}
+			</if>
+		</where>
+	</sql>
+	<select id="queryManagePageList" resultType="com.campgem.modules.service.vo.manage.MServiceListVo">
+		SELECT s.id,
+		       m.member_name,
+		       c.category_name,
+		       city.city_name,
+		       s.service_name,
+		       s.status,
+		       s.create_time
+		FROM service s
+			LEFT JOIN member m on m.user_base_id = s.uid
+			LEFT JOIN category c on c.id = s.category_id
+			LEFT JOIN city on city.id = m.city_id
+		<include refid="queryConditions" />
+		ORDER BY s.create_time DESC
+	</select>
+	
+	<resultMap id="mangeServiceDetail" type="com.campgem.modules.service.vo.manage.MServiceDetailVo">
+		<id property="id" column="sid" />
+		<collection property="images" select="com.campgem.modules.service.mapper.ServiceImagesMapper.queryServiceImages"
+		            ofType="com.campgem.modules.service.entity.ServiceImages" column="sid"/>
+	</resultMap>
+	<select id="queryManageServiceDetail" resultMap="mangeServiceDetail">
+		SELECT s.id                 AS sid,
+		       s.uid,
+		       s.category_id,
+		       s.sale_price,
+		       s.service_name,
+		       s.tags,
+		       s.taxes,
+		       s.description
+		FROM service s
+		WHERE s.id = #{serviceId}
+	</select>
 </mapper>

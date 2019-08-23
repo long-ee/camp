@@ -164,7 +164,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		orders.setPayAmount(service.getSalePrice().add(orders.getTaxesAmount()));
 		
 		// 设置商家属性
-		orders.setSellerName(service.getBusinessName());
+		orders.setSellerName(service.getMemberName());
 		orders.setSellerId(service.getUid());
 		
 		if (!save(orders)) {

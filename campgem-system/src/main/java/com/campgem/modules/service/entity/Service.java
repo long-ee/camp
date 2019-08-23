@@ -42,13 +42,13 @@ public class Service {
 	 */
 	@Excel(name = "商家名", width = 15)
 	@ApiModelProperty(value = "商家名")
-	private java.lang.String businessName;
+	private java.lang.String memberName;
 	/**
 	 * 商家会员类型
 	 */
 	@Excel(name = "商家会员类型", width = 15)
 	@ApiModelProperty(value = "商家会员类型")
-	private java.lang.String identity;
+	private java.lang.String memberType;
 	/**
 	 * 服务分类
 	 */
@@ -67,11 +67,9 @@ public class Service {
 	@Excel(name = "服务名称", width = 15)
 	@ApiModelProperty(value = "服务名称")
 	private java.lang.String serviceName;
-	/**
-	 * 状态，0:Disable 1:Enable
-	 */
+	
 	@Excel(name = "状态，0:Disable 1:Enable", width = 15)
-	@ApiModelProperty(value = "状态，0:Disable 1:Enable")
+	@ApiModelProperty(value = "状态，0:Enable -1:Disable")
 	private java.lang.Integer status;
 	/**
 	 * 浏览次数
