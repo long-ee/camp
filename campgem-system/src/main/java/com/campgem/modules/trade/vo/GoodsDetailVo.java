@@ -22,21 +22,21 @@ public class GoodsDetailVo implements Serializable {
 	private String id;
 	
 	@ApiModelProperty("卖家名称")
-	private String sellerName;
+	private String memberName;
 	
 	@ApiModelProperty("分类ID")
 	private String categoryId;
 	
-	@ApiModelProperty("身份类别，1Business，2Student/Individual")
-	private Integer identity;
+	@ApiModelProperty("身份类别")
+	private String memberType;
 	
 	@ApiModelProperty("留言数")
 	private Integer reviewCount;
 	
-	@ApiModelProperty("城市名，identity=1有效")
+	@ApiModelProperty("城市名")
 	private String cityName;
 	
-	@ApiModelProperty("大学名，identity=2有效")
+	@ApiModelProperty("大学名")
 	private String universityName;
 	
 	@ApiModelProperty("商品图片")
@@ -51,10 +51,10 @@ public class GoodsDetailVo implements Serializable {
 	@ApiModelProperty("新旧程度 identity是2有效 1:Brand new 2:Almost new 3:Gently used")
 	private Integer quality;
 	
-	@ApiModelProperty("原价，identity=2有效")
+	@ApiModelProperty("原价")
 	private BigDecimal originPrice;
 	
-	@ApiModelProperty("现价，identity=2有效")
+	@ApiModelProperty("现价")
 	private BigDecimal salePrice;
 	
 	@ApiModelProperty("商品名")

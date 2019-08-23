@@ -7,9 +7,9 @@
 	
 	<select id="queryPageList" resultType="com.campgem.modules.trade.vo.GoodsListVo">
 		select
-		g.id,g.goods_name,g.identity,g.taxes,g.origin_price,g.category_id,
-		(select goods_image from goods_images where goods_id = g.id limit 1) as goods_icon,
-		if(g.identity = 1, (select specifications_price from goods_specifications where goods_id = g.id order by
+		g.id,g.goods_name,g.member_type,g.taxes,g.origin_price,g.category_id,
+		(select goods_image from goods_images where goods_id = g.id and is_list_image = 1 limit 1) as goods_icon,
+		if(g.member_type = 'ONLINE_BUSINESS' or g.member_type = 'LOCAL_BUSINESS', (select specifications_price from goods_specifications where goods_id = g.id order by
 		specifications_price asc limit 1), sale_price) as sale_price
 		from goods g
 		where g.del_flag = 0
@@ -34,7 +34,6 @@
 				order by sale_price desc
 			</when>
 		</choose>
-		limit #{start}, #{pageSize}
 	</select>
 	
 	<resultMap id="goodsDetail" type="com.campgem.modules.trade.vo.GoodsDetailVo">
@@ -47,8 +46,8 @@
 	</resultMap>
 	<select id="queryGoodsDetail" resultMap="goodsDetail">
 		SELECT g.id                                          as goodsId,
-		       g.seller_name,
-		       g.identity,
+		       g.member_name,
+		       g.member_type,
 		       g.category_id,
 		       g.review_count,
 		       c.city_name,
@@ -56,7 +55,7 @@
 		       g.end_date,
 		       g.quality,
 		       IF
-			       (g.identity = 1, (SELECT specifications_price
+			       (g.member_type = 'ONLINE_BUSINESS' or g.member_type = 'LOCAL_BUSINESS', (SELECT specifications_price
 			                         FROM goods_specifications
 			                         WHERE goods_id = g.id
 			                         ORDER BY specifications_price ASC
@@ -78,10 +77,10 @@
 	
 	<select id="queryGoodsRelated" resultType="com.campgem.modules.trade.vo.GoodsRelatedVo">
 		SELECT g.id,
-		       g.identity,
+		       g.member_type,
 		       g.goods_name,
 		       IF
-			       (g.identity = 1, (SELECT specifications_price
+			       (g.member_type = 'ONLINE_BUSINESS' or g.member_type = 'LOCAL_BUSINESS', (SELECT specifications_price
 			                         FROM goods_specifications
 			                         WHERE goods_id = g.id
 			                         ORDER BY specifications_price ASC
@@ -98,9 +97,9 @@
 	
 	<select id="queryOrderInfo" resultType="com.campgem.modules.trade.vo.OrderInfoTempVo">
 		SELECT
-			g.seller_name,
+			g.member_name,
 		    g.uid AS seller_id,
-			g.identity,
+			g.member_type,
 			g.goods_name,
 			( SELECT goods_image FROM goods_images gi WHERE gi.goods_id = #{goodsId} LIMIT 1 ) AS goods_icon,
 			IF
@@ -127,8 +126,8 @@
 				AND g.goods_name like #{cname}
 			</if>
 			
-			<if test="null != queryDto.businessName and queryDto.businessName != ''">
-				AND g.seller_name = #{queryDto.businessName}
+			<if test="null != queryDto.memberName and queryDto.memberName != ''">
+				AND g.member_name = #{queryDto.memberName}
 			</if>
 		</where>
 	</sql>
@@ -137,8 +136,8 @@
             SELECT
                    g.id,
                    g.goods_name,
-                   g.identity,
-                   g.seller_name,
+                   g.member_type,
+                   g.member_name,
                    c.category_name,
                    city.city_name,
                    g.status,

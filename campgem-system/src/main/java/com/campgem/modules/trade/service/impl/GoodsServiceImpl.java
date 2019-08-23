@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
+import com.campgem.modules.common.utils.CommonUtils;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
 import com.campgem.modules.trade.dto.OrderInfoDto;
 import com.campgem.modules.trade.dto.manage.MGoodsQueryDto;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.entity.GoodsImages;
 import com.campgem.modules.trade.entity.GoodsSpecifications;
-import com.campgem.modules.trade.entity.enums.IdentityEnum;
 import com.campgem.modules.trade.mapper.GoodsMapper;
 import com.campgem.modules.trade.service.IGoodsImagesService;
 import com.campgem.modules.trade.service.IGoodsService;
@@ -30,10 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @Description: 分类信息
@@ -54,24 +51,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 	private IGoodsImagesService goodsImagesService;
 	
 	@Override
-	public IPage<GoodsListVo> queryPageList(Integer pageNo, Integer pageSize, GoodsQueryDto queryDto) {
-		LambdaQueryWrapper<Goods> query = new LambdaQueryWrapper<>();
-		query.eq(Goods::getDelFlag, 0);
-		if (!"all".equals(queryDto.getCategoryId())) {
-			query.eq(Goods::getCategoryId, queryDto.getCategoryId());
-		}
-		if (queryDto.getQuality() != 0) {
-			query.eq(Goods::getQuality, queryDto.getQuality());
-		}
-		Integer count = baseMapper.selectCount(query);
-		
-		Integer start = (pageNo - 1) * pageSize;
-		List<GoodsListVo> list = baseMapper.queryPageList(start, pageSize, queryDto);
-		
-		Page<GoodsListVo> page = new Page<>(pageNo, pageSize);
-		page.setRecords(list);
-		page.setTotal(count);
-		return page;
+	public IPage<GoodsListVo> queryPageList(Page<GoodsQueryDto> page, GoodsQueryDto queryDto) {
+		return baseMapper.queryPageList(page, queryDto);
 	}
 	
 	@Override
@@ -106,7 +87,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		if (goodsVo == null) {
 			throw new JeecgBootException("商品不存在");
 		}
-		if (goodsVo.getIdentity().equals(IdentityEnum.BUSINESS.code())) {
+		if (CommonUtils.isBusiness(goodsVo.getMemberType())) {
 			// 商家，必须要有规格
 			if (orderInfoDto.getSpecificationId() == null) {
 				throw new JeecgBootException("缺少规格");
@@ -127,8 +108,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		List<OrderInfoVo> list = new ArrayList<>();
 		OrderInfoVo infoVo = new OrderInfoVo();
 		infoVo.setSellerId(goodsVo.getSellerId());
-		infoVo.setSellerName(goodsVo.getSellerName());
-		infoVo.setSellerIdentity(goodsVo.getIdentity());
+		infoVo.setMemberName(goodsVo.getMemberName());
+		infoVo.setMemberType(goodsVo.getMemberType());
 		infoVo.setShippingMethods(goodsVo.getShippingMethods());
 		
 		infoVo.setGoods(new ArrayList<OrderInfoVo.SellerGoods> () {{
@@ -149,17 +130,16 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		String goodsId = UUID.randomUUID().toString().replace("-", "");
 		Goods goods = BeanConvertUtils.copy(saveGoods, Goods.class);
 		goods.setId(goodsId);
+		goods.setCreateTime(new Date());
 		
 		MemberVo member = memberService.getMemberByUserBaseId(goods.getUid());
 		// 设置卖家名为商家名
-		goods.setSellerName(member.getBusinessName());
+		goods.setMemberName(member.getBusinessName());
+		goods.setMemberType(member.getMemberType());
 		if (isBusiness(member.getMemberType())) {
-			goods.setIdentity(1);
 			if (saveGoods.getSpecs() == null || saveGoods.getSpecs().length == 0) {
 				throw new JeecgBootException("规格不能为空");
 			}
-		} else {
-			goods.setIdentity(2);
 		}
 		
 		save(goods);
@@ -197,14 +177,12 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		
 		MemberVo memberVo = memberService.getMemberByUserBaseId(goods.getUid());
 		// 设置卖家名为商家名
-		goods.setSellerName(memberVo.getBusinessName());
+		goods.setMemberName(memberVo.getBusinessName());
+		goods.setMemberType(memberVo.getMemberType());
 		if (isBusiness(memberVo.getMemberType())) {
-			goods.setIdentity(1);
 			if (updateGoods.getSpecs() == null || updateGoods.getSpecs().length == 0) {
 				throw new JeecgBootException("规格不能为空");
 			}
-		} else {
-			goods.setIdentity(2);
 		}
 		
 		if (!updateById(goods)) {

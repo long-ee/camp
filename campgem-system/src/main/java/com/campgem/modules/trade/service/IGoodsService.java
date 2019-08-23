@@ -27,7 +27,7 @@ public interface IGoodsService extends IService<Goods> {
 	 * @param queryDto
 	 * @return
 	 */
-	IPage<GoodsListVo> queryPageList(Integer page, Integer pageSize, GoodsQueryDto queryDto);
+	IPage<GoodsListVo> queryPageList(Page<GoodsQueryDto> page, GoodsQueryDto queryDto);
 	
 	GoodsDetailVo queryGoodsDetail(String goodsId);
 	

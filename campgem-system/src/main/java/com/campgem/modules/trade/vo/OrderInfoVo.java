@@ -16,10 +16,10 @@ public class OrderInfoVo implements Serializable {
 	private String sellerId;
 	
 	@ApiModelProperty("卖家名称")
-	private String sellerName;
+	private String memberName;
 	
-	@ApiModelProperty("卖家身份类别，1:Business，2:Student/Individual")
-	private Integer sellerIdentity;
+	@ApiModelProperty("卖家身份类别")
+	private String memberType;
 	
 	@ApiModelProperty("卖家商品列表")
 	private List<SellerGoods> goods;

@@ -10,6 +10,7 @@ import com.campgem.common.util.oConvertUtils;
 import com.campgem.modules.trade.dto.manage.MRequirementsQueryDto;
 import com.campgem.modules.trade.entity.Requirements;
 import com.campgem.modules.trade.service.IRequirementsService;
+import com.campgem.modules.trade.vo.manage.MRequirementsDetailVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsListVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsVo;
 import io.swagger.annotations.Api;
@@ -64,7 +65,7 @@ public class ManageRequirementsController {
 		Result<IPage<MRequirementsListVo>> result = new Result<>();
 		
 		Page<MRequirementsListVo> page = new Page<>(pageNo, pageSize);
-		IPage<MRequirementsListVo> pageList = requirementsService.queryPageList(page, queryDto);
+		IPage<MRequirementsListVo> pageList = requirementsService.queryManagePageList(page, queryDto);
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;
@@ -157,16 +158,9 @@ public class ManageRequirementsController {
 	 */
 	@ApiOperation(value = "需求-通过id查询", notes = "需求-通过id查询")
 	@GetMapping(value = "/requirement/queryById")
-	public Result<MRequirementsVo> queryById(@RequestParam(name = "id", required = true) String id) {
-		Result<Requirements> result = new Result<>();
-		Requirements requirements = requirementsService.getById(id);
-		if (requirements == null) {
-			result.error500("未找到对应实体");
-		} else {
-			result.setResult(requirements);
-			result.setSuccess(true);
-		}
-		return null;
+	public Result<MRequirementsDetailVo> queryById(@RequestParam(name = "id", required = true) String id) {
+		MRequirementsDetailVo detail = requirementsService.queryManageRequirementDetail(id);
+		return new Result<MRequirementsDetailVo>().result(detail);
 	}
 	
 	/**

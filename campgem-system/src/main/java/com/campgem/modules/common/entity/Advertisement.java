@@ -44,7 +44,7 @@ public class Advertisement {
 	@ApiModelProperty("图片或视频URL地址")
 	private String advertisementUrl;
 	
-	@ApiModelProperty("城市ID，identity=1有效")
+	@ApiModelProperty("城市ID")
 	private String playOrder;
 	
 	@ApiModelProperty(value = "createBy", hidden = true)

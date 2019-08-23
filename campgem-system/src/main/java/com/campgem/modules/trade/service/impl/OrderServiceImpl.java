@@ -72,7 +72,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 					throw new JeecgBootException("购物车ID数据有误");
 				}
 				// 设置卖家名称，这种情况下，返回的一定会有个key，并且是卖家名称
-				orders.setSellerName(orderInfoVos.get(0).getSellerName());
+				orders.setSellerName(orderInfoVos.get(0).getMemberName());
 				orders.setSellerId(orderInfoVos.get(0).getSellerId());
 				
 				// 计算金额，包括运费和税金

@@ -41,7 +41,7 @@ public class AdvertisementVo {
 	@ApiModelProperty("图片或视频URL地址")
 	private String advertisementUrl;
 	
-	@ApiModelProperty("城市ID，identity=1有效")
+	@ApiModelProperty("城市ID")
 	private String playOrder;
 	
 	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

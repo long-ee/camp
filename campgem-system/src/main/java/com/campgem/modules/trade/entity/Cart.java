@@ -39,7 +39,7 @@ public class Cart {
 	private String sellerId;
 	
 	@ApiModelProperty("卖家身份")
-	private Integer sellerIdentity;
+	private String sellerIdentity;
 	
 	@ApiModelProperty("卖家名称")
 	private String sellerName;

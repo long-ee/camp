@@ -63,13 +63,13 @@ public class MGoodsVo {
 	/**
 	 * 原价
 	 */
-	@ApiModelProperty("原价，identity=2有效")
+	@ApiModelProperty("原价")
 	private BigDecimal originPrice;
 	
 	/**
 	 * 现价
 	 */
-	@ApiModelProperty("现价，identity=2有效")
+	@ApiModelProperty("现价")
 	@NotNull(message = "现价不能为空")
 	private BigDecimal salePrice;
 	

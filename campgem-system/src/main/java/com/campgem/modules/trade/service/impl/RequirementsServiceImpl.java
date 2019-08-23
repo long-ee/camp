@@ -1,6 +1,5 @@
 package com.campgem.modules.trade.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,6 +14,7 @@ import com.campgem.modules.trade.service.IRequirementsImagesService;
 import com.campgem.modules.trade.service.IRequirementsService;
 import com.campgem.modules.trade.vo.RequirementsDetailVo;
 import com.campgem.modules.trade.vo.RequirementsVo;
+import com.campgem.modules.trade.vo.manage.MRequirementsDetailVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsListVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsVo;
 import com.campgem.modules.university.service.IMemberService;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -42,21 +42,8 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 	private IMemberService memberService;
 	
 	@Override
-	public IPage<RequirementsVo> queryPageList(RequirementsQueryDto queryDto, Integer pageNo, Integer pageSize) {
-		LambdaQueryWrapper<Requirements> query = new LambdaQueryWrapper<>();
-		if (!queryDto.getCategoryId().equals("all")) {
-			query.eq(Requirements::getCategoryId, queryDto.getCategoryId());
-		}
-		query.eq(Requirements::getDelFlag, 0);
-		int count = baseMapper.selectCount(query);
-		
-		Integer start = (pageNo - 1) * pageSize;
-		List<RequirementsVo> list = baseMapper.queryPageList(queryDto, start, pageSize);
-		
-		Page<RequirementsVo> page = new Page<>(pageNo, pageSize);
-		page.setRecords(list);
-		page.setTotal(count);
-		return page;
+	public IPage<RequirementsVo> queryPageList(Page<RequirementsQueryDto> page, RequirementsQueryDto queryDto) {
+		return baseMapper.queryPageList(page, queryDto);
 	}
 	
 	@Override
@@ -65,7 +52,7 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 	}
 	
 	@Override
-	public IPage<MRequirementsListVo> queryPageList(Page<MRequirementsListVo> page, MRequirementsQueryDto queryDto) {
+	public IPage<MRequirementsListVo> queryManagePageList(Page<MRequirementsListVo> page, MRequirementsQueryDto queryDto) {
 		return baseMapper.queryManagePageList(page, queryDto);
 	}
 	
@@ -79,11 +66,12 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 		Requirements requirements = BeanConvertUtils.copy(saveRequirements, Requirements.class);
 		
 		MemberVo member = memberService.getMemberByUserBaseId(requirements.getUid());
-		requirements.setSellerName(member.getBusinessName());
+		requirements.setBusinessName(member.getBusinessName());
 		
 		
 		String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 		requirements.setId(uuid);
+		requirements.setCreateTime(new Date());
 		save(requirements);
 		
 		for (RequirementsImages image : saveRequirements.getImages()) {
@@ -123,5 +111,10 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 		}
 		
 		return detail;
+	}
+	
+	@Override
+	public MRequirementsDetailVo queryManageRequirementDetail(String id) {
+		return baseMapper.queryManageRequirementDetail(id);
 	}
 }

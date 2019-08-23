@@ -44,13 +44,13 @@ public class Goods {
 	 * 卖家名称
 	 */
 	@ApiModelProperty("卖家名称")
-	private String sellerName;
+	private String memberName;
 	
 	/**
 	 * 分类名称
 	 */
-	@ApiModelProperty("身份类别，1Business，2Student/Individual")
-	private Integer identity;
+	@ApiModelProperty("身份类别")
+	private String memberType;
 	
 	/**
 	 * 分类ID
@@ -61,13 +61,13 @@ public class Goods {
 	/**
 	 * 城市ID
 	 */
-	@ApiModelProperty("城市ID，identity=1有效")
+	@ApiModelProperty("城市ID")
 	private String cityId;
 	
 	/**
 	 * 大学ID
 	 */
-	@ApiModelProperty("大学ID，identity=2有效")
+	@ApiModelProperty("大学ID")
 	private String universityId;
 	
 	/**
@@ -87,13 +87,13 @@ public class Goods {
 	/**
 	 * 原价
 	 */
-	@ApiModelProperty("原价，identity=2有效")
+	@ApiModelProperty("原价")
 	private BigDecimal originPrice;
 	
 	/**
 	 * 现价
 	 */
-	@ApiModelProperty("现价，identity=2有效")
+	@ApiModelProperty("现价")
 	private BigDecimal salePrice;
 	
 	/**

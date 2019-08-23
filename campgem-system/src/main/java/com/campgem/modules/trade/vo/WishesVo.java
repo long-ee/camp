@@ -33,10 +33,10 @@ public class WishesVo {
 	@ApiModelProperty("商品图片")
 	private String goodsIcon;
 	
-	@ApiModelProperty("原价，identity=2有效")
+	@ApiModelProperty("原价")
 	private BigDecimal originPrice;
 	
-	@ApiModelProperty("现价，identity=2有效")
+	@ApiModelProperty("现价")
 	private BigDecimal salePrice;
 	
 	@ApiModelProperty("商品名")

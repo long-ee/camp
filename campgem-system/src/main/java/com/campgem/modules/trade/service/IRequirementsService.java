@@ -8,6 +8,7 @@ import com.campgem.modules.trade.dto.manage.MRequirementsQueryDto;
 import com.campgem.modules.trade.entity.Requirements;
 import com.campgem.modules.trade.vo.RequirementsDetailVo;
 import com.campgem.modules.trade.vo.RequirementsVo;
+import com.campgem.modules.trade.vo.manage.MRequirementsDetailVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsListVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsVo;
 
@@ -19,15 +20,17 @@ import com.campgem.modules.trade.vo.manage.MRequirementsVo;
  */
 public interface IRequirementsService extends IService<Requirements> {
 	
-	IPage<RequirementsVo> queryPageList(RequirementsQueryDto queryDto, Integer pageNo, Integer pageSize);
+	IPage<RequirementsVo> queryPageList(Page<RequirementsQueryDto> page, RequirementsQueryDto queryDto);
 	
 	void incrementReviewCount(String requirementId);
 	
-	IPage<MRequirementsListVo> queryPageList(Page<MRequirementsListVo> page, MRequirementsQueryDto queryDto);
+	IPage<MRequirementsListVo> queryManagePageList(Page<MRequirementsListVo> page, MRequirementsQueryDto queryDto);
 	
 	boolean save(MRequirementsVo requirements);
 	
 	boolean update(MRequirementsVo updateRequirements);
 	
 	RequirementsDetailVo queryRequirementDetail(String requirementId);
+	
+	MRequirementsDetailVo queryManageRequirementDetail(String id);
 }

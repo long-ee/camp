@@ -90,7 +90,8 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	                                                     @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
 	                                                     @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 		Result<IPage<GoodsListVo>> result = new Result<>();
-		IPage<GoodsListVo> pageList = goodsService.queryPageList(pageNo, pageSize, queryDto);
+		Page<GoodsQueryDto> page = new Page<>(pageNo, pageSize);
+		IPage<GoodsListVo> pageList = goodsService.queryPageList(page, queryDto);
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;

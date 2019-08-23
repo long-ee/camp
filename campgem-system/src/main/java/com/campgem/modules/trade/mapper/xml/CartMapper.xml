@@ -9,12 +9,12 @@
 		       (SELECT goods_image FROM goods_images WHERE goods_id = g.id LIMIT 1) AS goods_icon,
 		       g.end_date,
 		       IF
-			       (g.identity = 1, gs.specifications_price, g.sale_price)          AS sale_price,
+			       (g.member_type = 'ONLINE_BUSINESS' or g.member_type = 'LOCAL_BUSINESS', gs.specifications_price, g.sale_price) AS sale_price,
 		       g.origin_price,
 		       g.goods_name,
 		       g.status,
 		       g.taxes,
-		       g.identity
+		       g.member_type
 		FROM cart c
 			     LEFT JOIN goods g ON g.id = c.goods_id
 			     LEFT JOIN goods_specifications gs ON gs.id = c.specifications_id
@@ -31,9 +31,9 @@
 		    c.id AS cart_id,
 		    c.goods_id,
 			g.goods_name,
-			g.identity,
+			g.member_type,
 		    g.uid as seller_id,
-			g.seller_name,
+			g.member_name,
 			c.quantity,
 			(SELECT goods_image FROM goods_images gi WHERE gi.goods_id = c.goods_id LIMIT 1) AS goods_icon,
 			IF

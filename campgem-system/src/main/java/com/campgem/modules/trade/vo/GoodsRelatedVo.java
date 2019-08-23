@@ -16,8 +16,8 @@ public class GoodsRelatedVo implements Serializable {
 	@ApiModelProperty("id")
 	private String id;
 	
-	@ApiModelProperty("身份类别，1Business，2Student/Individual")
-	private Integer identity;
+	@ApiModelProperty("商家/卖家类型")
+	private String memberType;
 	
 	@ApiModelProperty("商品图片")
 	private String goodsIcon;

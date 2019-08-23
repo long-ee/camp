@@ -8,22 +8,20 @@ import com.campgem.modules.trade.dto.manage.MRequirementsQueryDto;
 import com.campgem.modules.trade.entity.Requirements;
 import com.campgem.modules.trade.vo.RequirementsDetailVo;
 import com.campgem.modules.trade.vo.RequirementsVo;
+import com.campgem.modules.trade.vo.manage.MRequirementsDetailVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsListVo;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 /**
  * @Description: 需求
- * @Author: campgem
- * @Date:   2019-08-17
+ * @Author: ling
+ * @Date: 2019-08-17
  * @Version: V1.0
  */
 public interface RequirementsMapper extends BaseMapper<Requirements> {
 	
-	List<RequirementsVo> queryPageList(@Param("query") RequirementsQueryDto queryDto,
-	                                   @Param("start") Integer start,
-	                                   @Param("pageSize") Integer pageSize);
+	IPage<RequirementsVo> queryPageList(Page page,
+	                                    @Param("query") RequirementsQueryDto queryDto);
 	
 	void incrementReviewCount(@Param("requirementId") String requirementId);
 	
@@ -36,4 +34,6 @@ public interface RequirementsMapper extends BaseMapper<Requirements> {
 	 * 需求详情
 	 */
 	RequirementsDetailVo queryRequirementDetail(@Param("requirementId") String requirementId);
+	
+	MRequirementsDetailVo queryManageRequirementDetail(@Param("requirementId") String requirementId);
 }

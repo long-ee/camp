@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.common.utils.CommonUtils;
 import com.campgem.modules.trade.entity.Cart;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.entity.GoodsSpecifications;
-import com.campgem.modules.trade.entity.enums.IdentityEnum;
 import com.campgem.modules.trade.mapper.CartMapper;
 import com.campgem.modules.trade.service.ICartService;
 import com.campgem.modules.trade.service.IGoodsService;
@@ -56,7 +56,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 			throw new JeecgBootException("商品不存在");
 		}
 		
-		if (goods.getIdentity().equals(IdentityEnum.BUSINESS.code())) {
+		if (CommonUtils.isBusiness(goods.getMemberType())) {
 			// 商家，必须要有规格
 			if (StringUtils.isEmpty(specId)) {
 				throw new JeecgBootException("规格不能为空");
@@ -73,7 +73,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 		}
 		
 		if (count > 0) {
-			if (goods.getIdentity().equals(IdentityEnum.STUDENT_INDIVIDUAL.code())) {
+			if (!CommonUtils.isBusiness(goods.getMemberType())) {
 				// 对于Identity=“Student”/"Individual"的商品，购买数量最多为1，重复添加同一商品不增加购买数量；此处直接返回
 				return true;
 			} else {
@@ -88,10 +88,10 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 			cart.setUid(uid);
 			cart.setGoodsId(goodsId);
 			cart.setSellerId(goods.getUid());
-			cart.setSellerIdentity(goods.getIdentity());
+			cart.setSellerIdentity(goods.getMemberType());
 			cart.setSpecificationsId(specId);
 			cart.setQuantity(quantity);
-			cart.setSellerName(goods.getSellerName());
+			cart.setSellerName(goods.getMemberName());
 			cart.setCreateTime(new Date());
 			return baseMapper.insert(cart) > 0;
 		}
@@ -143,12 +143,12 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 				info.setSalePrice(new BigDecimal(info.getSpecification()));
 			}
 			info.setSpecification(null);
-			if (!map.containsKey(info.getSellerName())) {
+			if (!map.containsKey(info.getMemberName())) {
 				List<OrderInfoTempVo> list = new ArrayList<>();
 				list.add(info);
-				map.put(info.getSellerName(), list);
+				map.put(info.getMemberName(), list);
 			} else {
-				map.get(info.getSellerName()).add(info);
+				map.get(info.getMemberName()).add(info);
 			}
 		}
 		
@@ -157,8 +157,8 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 			List<OrderInfoTempVo> tempVos = map.get(key);
 			OrderInfoVo v2 = new OrderInfoVo();
 			v2.setSellerId(tempVos.get(0).getSellerId());
-			v2.setSellerName(tempVos.get(0).getSellerName());
-			v2.setSellerIdentity(tempVos.get(0).getIdentity());
+			v2.setMemberName(tempVos.get(0).getMemberName());
+			v2.setMemberType(tempVos.get(0).getMemberType());
 			v2.setShippingMethods(tempVos.get(0).getShippingMethods());
 			v2.setGoods(BeanConvertUtils.copyList(tempVos, OrderInfoVo.SellerGoods.class));
 			

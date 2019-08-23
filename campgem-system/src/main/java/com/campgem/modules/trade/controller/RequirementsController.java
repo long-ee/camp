@@ -72,7 +72,8 @@ public class RequirementsController extends JeecgController<SysMessage, ISysMess
 	                                                              @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
 	                                                              @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 		Result<IPage<RequirementsVo>> result = new Result<>();
-		IPage<RequirementsVo> pageList = requirementsService.queryPageList(queryDto, pageNo, pageSize);
+		Page<RequirementsQueryDto> page = new Page<>(pageNo, pageSize);
+		IPage<RequirementsVo> pageList = requirementsService.queryPageList(page, queryDto);
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;

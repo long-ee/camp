@@ -14,5 +14,5 @@ public class MGoodsQueryDto extends BaseDto {
 	private String goodsName;
 	
 	@ApiModelProperty("商家名")
-	private String businessName;
+	private String memberName;
 }

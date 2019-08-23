@@ -23,7 +23,7 @@ import java.util.List;
  */
 public interface GoodsMapper extends BaseMapper<Goods> {
 	
-	List<GoodsListVo> queryPageList(@Param("start") Integer start, @Param("pageSize") Integer pageSize, @Param("query") GoodsQueryDto query);
+	IPage<GoodsListVo> queryPageList(Page page, @Param("query") GoodsQueryDto query);
 	
 	GoodsDetailVo queryGoodsDetail(@Param("goodsId") String goodsId);
 	

@@ -24,8 +24,8 @@ public class CartGoodsVo implements Serializable {
 		@ApiModelProperty("id")
 		private String id;
 		
-		@ApiModelProperty("身份类别，1Business，2Student/Individual")
-		private Integer identity;
+		@ApiModelProperty("身份类别")
+		private String memberType;
 		
 		@ApiModelProperty("商品图片")
 		private String goodsIcon;
@@ -33,7 +33,7 @@ public class CartGoodsVo implements Serializable {
 		@ApiModelProperty("结束日期")
 		private Date endDate;
 		
-		@ApiModelProperty("原价，identity=2有效")
+		@ApiModelProperty("原价")
 		private BigDecimal originPrice;
 		
 		@ApiModelProperty("现价")

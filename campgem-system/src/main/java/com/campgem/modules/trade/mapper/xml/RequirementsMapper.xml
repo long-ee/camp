@@ -18,7 +18,7 @@
 			r.uid,
 			ub.src_face,
 			ub.nick_name,
-			IF(m.member_type = 'BUSINESS', 1, 2) as identity,
+			m.member_type,
 			r.requirement_name,
 			r.buying_price,
 			r.requirement_description,
@@ -47,7 +47,6 @@
 				ORDER BY r.buying_price desc
 			</when>
 		</choose>
-		LIMIT #{start}, #{pageSize}
 	</select>
 	
 	<sql id="queryConditions">
@@ -104,5 +103,22 @@
 			r.del_flag = 0
 		  AND r.status = 0
 		  AND r.id = #{requirementId}
+	</select>
+	
+	<resultMap id="manageRequirementDetail" type="com.campgem.modules.trade.vo.manage.MRequirementsDetailVo">
+		<id property="id" column="rid" />
+		<collection property="requirementsImages" select="com.campgem.modules.trade.mapper.RequirementsImagesMapper.queryRequirementsImages"
+		            ofType="com.campgem.modules.trade.entity.RequirementsImages" column="rid"/>
+	</resultMap>
+	<select id="queryManageRequirementDetail" resultMap="manageRequirementDetail">
+		SELECT
+			r.id                    AS rid,
+		    r.uid,
+	       r.category_id,
+	       r.requirement_name,
+	       r.buying_price,
+	       r.requirement_description
+		FROM requirements r
+		WHERE r.id = #{requirementId}
 	</select>
 </mapper>
