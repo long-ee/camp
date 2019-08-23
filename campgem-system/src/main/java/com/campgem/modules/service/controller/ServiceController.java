@@ -1,6 +1,7 @@
 package com.campgem.modules.service.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.constant.CommonConstant;
 import com.campgem.common.exception.JeecgBootException;
@@ -106,7 +107,8 @@ public class ServiceController extends JeecgController<SysMessage, ISysMessageSe
 	                                                     @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
 	                                                     @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 		Result<IPage<ServiceVo>> result = new Result<>();
-		IPage<ServiceVo> pageList = serviceService.queryServicePageList(pageNo, pageSize, categoryId, sort);
+		Page<String> page = new Page<>(pageNo, pageSize);
+		IPage<ServiceVo> pageList = serviceService.queryServicePageList(page, categoryId, sort);
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;

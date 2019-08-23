@@ -1,6 +1,7 @@
 package com.campgem.modules.service.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.service.entity.Service;
 import com.campgem.modules.service.vo.BusinessServiceVo;
@@ -20,7 +21,7 @@ public interface IServiceService extends IService<Service> {
 	
 	List<ServiceVo> queryServiceListByCategory(String categoryId);
 	
-	IPage<ServiceVo> queryServicePageList(Integer pageNo, Integer pageSize, String categoryId, Integer sort);
+	IPage<ServiceVo> queryServicePageList(Page page, String categoryId, Integer sort);
 	
 	ServiceDetailVo queryServiceDetail(String serviceId);
 	

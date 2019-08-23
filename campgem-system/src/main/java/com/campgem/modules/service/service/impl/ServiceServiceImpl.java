@@ -27,23 +27,8 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, Service> impl
 	}
 	
 	@Override
-	public IPage<ServiceVo> queryServicePageList(Integer pageNo, Integer pageSize, String categoryId, Integer sort) {
-		LambdaQueryWrapper<Service> query = new LambdaQueryWrapper<>();
-		if (!categoryId.equals("all")) {
-			query.eq(Service::getCategoryId, categoryId);
-		}
-		query.eq(Service::getDelFlag, 0);
-		query.eq(Service::getStatus, ServiceStatusEnum.ENABLE.code());
-		
-		int count = baseMapper.selectCount(query);
-		
-		Integer start = (pageNo - 1) * pageSize;
-		List<ServiceVo> list = baseMapper.queryServicePageList(categoryId, sort, start, pageSize);
-		
-		Page<ServiceVo> page = new Page<>(pageNo, pageSize);
-		page.setRecords(list);
-		page.setTotal(count);
-		return page;
+	public IPage<ServiceVo> queryServicePageList(Page page, String categoryId, Integer sort) {
+		return baseMapper.queryServicePageList(page, categoryId, sort);
 	}
 	
 	@Override

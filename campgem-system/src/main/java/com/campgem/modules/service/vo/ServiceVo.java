@@ -23,10 +23,10 @@ public class ServiceVo {
 	private String uid;
 	
 	@ApiModelProperty(value = "商家名")
-	private String businessName;
+	private String memberName;
 	
 	@ApiModelProperty(value = "商家会员类型")
-	private String identity;
+	private String memberType;
 	
 	@ApiModelProperty(value = "服务分类")
 	private String categoryId;

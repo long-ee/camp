@@ -1,6 +1,8 @@
 package com.campgem.modules.service.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.modules.service.entity.Service;
 import com.campgem.modules.service.vo.*;
 import org.apache.ibatis.annotations.Param;
@@ -16,10 +18,9 @@ import java.util.List;
 public interface ServiceMapper extends BaseMapper<Service> {
 	List<ServiceVo> queryServiceListByCategory(@Param("categoryId") String categoryId);
 	
-	List<ServiceVo> queryServicePageList(@Param("categoryId") String categoryId,
-	                                     @Param("sort") Integer sort,
-	                                     @Param("start") Integer start,
-	                                     @Param("pageSize") Integer pageSize);
+	IPage<ServiceVo> queryServicePageList(Page page,
+	                                      @Param("categoryId") String categoryId,
+	                                      @Param("sort") Integer sort);
 	
 	ServiceDetailVo queryServiceDetail(@Param("serviceId") String serviceId);
 	

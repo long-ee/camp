@@ -20,7 +20,6 @@ import com.campgem.modules.trade.service.IGoodsSpecificationsService;
 import com.campgem.modules.trade.vo.*;
 import com.campgem.modules.trade.vo.manage.MGoodsListVo;
 import com.campgem.modules.trade.vo.manage.MGoodsVo;
-import com.campgem.modules.university.entity.enums.MemberTypeEnum;
 import com.campgem.modules.university.service.IMemberService;
 import com.campgem.modules.university.vo.MemberVo;
 import org.apache.commons.lang.StringUtils;
@@ -136,7 +135,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		// 设置卖家名为商家名
 		goods.setMemberName(member.getBusinessName());
 		goods.setMemberType(member.getMemberType());
-		if (isBusiness(member.getMemberType())) {
+		if (CommonUtils.isBusiness(member.getMemberType())) {
 			if (saveGoods.getSpecs() == null || saveGoods.getSpecs().length == 0) {
 				throw new JeecgBootException("规格不能为空");
 			}
@@ -163,13 +162,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		return true;
 	}
 	
-	private boolean isBusiness(String memberType) {
-		if (memberType.equals(MemberTypeEnum.LOCAL_BUSINESS.code()) || memberType.equals(MemberTypeEnum.ONLINE_BUSINESS.code())) {
-			return true;
-		}
-		return false;
-	}
-	
 	@Override
 	@Transactional
 	public boolean update(MGoodsVo updateGoods) {
@@ -179,7 +171,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		// 设置卖家名为商家名
 		goods.setMemberName(memberVo.getBusinessName());
 		goods.setMemberType(memberVo.getMemberType());
-		if (isBusiness(memberVo.getMemberType())) {
+		if (CommonUtils.isBusiness(memberVo.getMemberType())) {
 			if (updateGoods.getSpecs() == null || updateGoods.getSpecs().length == 0) {
 				throw new JeecgBootException("规格不能为空");
 			}
