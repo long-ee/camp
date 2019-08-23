@@ -52,7 +52,7 @@ public class GoodsVo implements Serializable {
 	@ApiModelProperty("商品名")
 	private String goodsName;
 	
-	@ApiModelProperty("状态，1:in sale 2:off shelf 3:sold 4:expired")
+	@ApiModelProperty("状态，0:in sale -1:off shelf -2:sold -3:expired")
 	private Integer status;
 	
 	@ApiModelProperty("税率")

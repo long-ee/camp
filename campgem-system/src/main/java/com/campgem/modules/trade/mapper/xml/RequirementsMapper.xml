@@ -29,6 +29,7 @@
 				LEFT JOIN member m ON m.user_base_id = r.uid
 		WHERE
 			r.del_flag = 0
+		  AND r.status = 0
 			<if test="query.categoryId != 'all'">
 				AND category_id = #{query.categoryId}
 			</if>
@@ -47,5 +48,61 @@
 			</when>
 		</choose>
 		LIMIT #{start}, #{pageSize}
+	</select>
+	
+	<sql id="queryConditions">
+		<where>
+			<if test="1 == 1">
+				r.del_flag = 0
+			</if>
+			
+			<if test="null != queryDto.requirementName and queryDto.requirementName != ''">
+				<bind name="cname" value="'%' + queryDto.requirementName + '%'" />
+				AND r.requirement_name like #{cname}
+			</if>
+			
+			<if test="null != queryDto.sellerName and queryDto.sellerName != ''">
+				AND r.seller_name = #{queryDto.seller_name}
+			</if>
+		</where>
+	</sql>
+	<select id="queryManagePageList" resultType="com.campgem.modules.trade.vo.manage.MRequirementsListVo">
+		SELECT r.id,
+		       r.seller_name,
+		       c.city_name,
+		       r.requirement_name,
+		       r.status,
+		       r.create_time
+		FROM requirements r
+		    LEFT JOIN member m on m.user_base_id = r.uid
+			LEFT JOIN city c on c.id = m.city_id
+		<include refid="queryConditions" />
+		ORDER BY r.create_time DESC
+	</select>
+	
+	
+	<resultMap id="requirementDetail" type="com.campgem.modules.trade.vo.RequirementsDetailVo">
+		<id property="id" column="rid" />
+		<collection property="requirementsImages" select="com.campgem.modules.trade.mapper.RequirementsImagesMapper.queryRequirementsImages"
+		            ofType="com.campgem.modules.trade.entity.RequirementsImages" column="rid"/>
+	</resultMap>
+	<select id="queryRequirementDetail" resultMap="requirementDetail">
+		SELECT
+			r.id                        AS rid,
+			r.uid,
+			m.member_name,
+			m.member_type,
+			r.requirement_name,
+			r.requirement_description,
+			r.review_count,
+			r.buying_price,
+			r.create_time
+		FROM
+			requirements r
+				LEFT JOIN member m ON m.user_base_id = r.uid
+		WHERE
+			r.del_flag = 0
+		  AND r.status = 0
+		  AND r.id = #{requirementId}
 	</select>
 </mapper>

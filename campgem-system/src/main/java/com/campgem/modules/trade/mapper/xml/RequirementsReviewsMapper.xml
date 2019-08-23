@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.campgem.modules.trade.mapper.RequirementsReviewsMapper">
-
+	
+	<select id="queryPageList" resultType="com.campgem.modules.trade.vo.RequirementsReviewsVo">
+		SELECT
+			rr.id,
+			rr.uid,
+			ub.src_face,
+			ub.nick_name,
+			m.member_type,
+			rr.content,
+			rr.reply_content,
+			rr.create_time
+		FROM
+			requirements_reviews rr
+				LEFT JOIN member m ON m.user_base_id = rr.uid
+				LEFT JOIN user_base ub ON ub.id = rr.uid
+		WHERE
+		      rr.del_flag = 0
+		  AND rr.requirement_id = #{requirementId}
+		  <if test="shields.size &gt; 0">
+			 AND rr.uid NOT IN
+			  <foreach item="item" index="index" collection="shields"
+			           open="(" separator="," close=")">
+				  #{item.shieldUid}
+			  </foreach>
+		  </if>
+	</select>
 </mapper>

@@ -48,7 +48,7 @@ public class WishesVo {
 	@ApiModelProperty("标签，多个以,分隔")
 	private String tags;
 	
-	@ApiModelProperty("状态，1:in sale 2:off shelf 3:sold 4:expired")
+	@ApiModelProperty("状态，0:in sale -1:off shelf -2:sold -3:expired")
 	private Integer status;
 	
 	@ApiModelProperty("结束日期")

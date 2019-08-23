@@ -8,6 +8,7 @@ import com.campgem.modules.university.entity.Category;
 import com.campgem.modules.university.service.ICategoryService;
 import com.campgem.modules.university.vo.CategoryVo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Slf4j
@@ -123,5 +125,13 @@ public class ManageCategoryController {
 			result.setSuccess(true);
 		}
 		return result;
+	}
+	
+	@ApiOperation(value="分类信息-按照类别查询", notes="分类信息-详情查询")
+	@GetMapping(value = "/category/type")
+	@ApiImplicitParam(name = "type", value = "分类", required = true, paramType = "query")
+	public Result<List<CategoryVo>> queryCategoryListByType(String type) {
+		List<CategoryVo> list = categoryService.queryByType(type);
+		return new Result<List<CategoryVo>>().result(list);
 	}
 }

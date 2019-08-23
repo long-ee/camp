@@ -1,10 +1,15 @@
 package com.campgem.modules.trade.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.trade.dto.RequirementsQueryDto;
+import com.campgem.modules.trade.dto.manage.MRequirementsQueryDto;
 import com.campgem.modules.trade.entity.Requirements;
+import com.campgem.modules.trade.vo.RequirementsDetailVo;
 import com.campgem.modules.trade.vo.RequirementsVo;
+import com.campgem.modules.trade.vo.manage.MRequirementsListVo;
+import com.campgem.modules.trade.vo.manage.MRequirementsVo;
 
 /**
  * @Description: 需求
@@ -17,4 +22,12 @@ public interface IRequirementsService extends IService<Requirements> {
 	IPage<RequirementsVo> queryPageList(RequirementsQueryDto queryDto, Integer pageNo, Integer pageSize);
 	
 	void incrementReviewCount(String requirementId);
+	
+	IPage<MRequirementsListVo> queryPageList(Page<MRequirementsListVo> page, MRequirementsQueryDto queryDto);
+	
+	boolean save(MRequirementsVo requirements);
+	
+	boolean update(MRequirementsVo updateRequirements);
+	
+	RequirementsDetailVo queryRequirementDetail(String requirementId);
 }

@@ -86,8 +86,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     @Override
     public MemberVo getMemberByUserBaseId(String userBaseId) {
-        //TODO
-        return null;
+        return baseMapper.getMemberByUserBaseId(userBaseId);
     }
 
     @Override

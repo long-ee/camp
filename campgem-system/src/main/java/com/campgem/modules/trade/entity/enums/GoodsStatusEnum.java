@@ -1,10 +1,10 @@
 package com.campgem.modules.trade.entity.enums;
 
 public enum GoodsStatusEnum {
-	IN_SALE(1),
-	OFF_SHELF(2),
-	SOLD(3),
-	EXPIRED(4);
+	IN_SALE(0),
+	OFF_SHELF(-1),
+	SOLD(-2),
+	EXPIRED(-3);
 	
 	private Integer code;
 	

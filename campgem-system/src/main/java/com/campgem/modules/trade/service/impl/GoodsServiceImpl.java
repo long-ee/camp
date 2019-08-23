@@ -8,19 +8,32 @@ import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
 import com.campgem.modules.trade.dto.OrderInfoDto;
+import com.campgem.modules.trade.dto.manage.MGoodsQueryDto;
 import com.campgem.modules.trade.entity.Goods;
+import com.campgem.modules.trade.entity.GoodsImages;
+import com.campgem.modules.trade.entity.GoodsSpecifications;
 import com.campgem.modules.trade.entity.enums.IdentityEnum;
 import com.campgem.modules.trade.mapper.GoodsMapper;
+import com.campgem.modules.trade.service.IGoodsImagesService;
 import com.campgem.modules.trade.service.IGoodsService;
+import com.campgem.modules.trade.service.IGoodsSpecificationsService;
 import com.campgem.modules.trade.vo.*;
+import com.campgem.modules.trade.vo.manage.MGoodsListVo;
+import com.campgem.modules.trade.vo.manage.MGoodsVo;
+import com.campgem.modules.university.entity.enums.MemberTypeEnum;
+import com.campgem.modules.university.service.IMemberService;
+import com.campgem.modules.university.vo.MemberVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Description: 分类信息
@@ -31,6 +44,14 @@ import java.util.List;
 @Service
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements IGoodsService {
+	
+	@Resource
+	private IMemberService memberService;
+	
+	@Resource
+	private IGoodsSpecificationsService goodsSpecificationsService;
+	@Resource
+	private IGoodsImagesService goodsImagesService;
 	
 	@Override
 	public IPage<GoodsListVo> queryPageList(Integer pageNo, Integer pageSize, GoodsQueryDto queryDto) {
@@ -55,14 +76,21 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 	
 	@Override
 	public GoodsDetailVo queryGoodsDetail(String goodsId) {
+		return queryGoodsDetail(goodsId, true);
+	}
+	
+	@Override
+	public GoodsDetailVo queryGoodsDetail(String goodsId, boolean isRelated) {
 		GoodsDetailVo goods = baseMapper.queryGoodsDetail(goodsId);
 		if (goods == null) {
 			throw new JeecgBootException("商品不存在");
 		}
 		
-		// 关联商品查询
-		List<GoodsRelatedVo> relatives = baseMapper.queryGoodsRelated(goods.getCategoryId(), goodsId);
-		goods.setRelatives(relatives);
+		if (isRelated) {
+			// 关联商品查询
+			List<GoodsRelatedVo> relatives = baseMapper.queryGoodsRelated(goods.getCategoryId(), goodsId);
+			goods.setRelatives(relatives);
+		}
 		
 		return goods;
 	}
@@ -108,5 +136,101 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		}});
 		
 		return list;
+	}
+	
+	@Override
+	public IPage<MGoodsListVo> queryPageList(Page<MGoodsQueryDto> page, MGoodsQueryDto queryDto) {
+		return baseMapper.queryManagePageList(page, queryDto);
+	}
+	
+	@Override
+	@Transactional
+	public boolean save(MGoodsVo saveGoods) {
+		String goodsId = UUID.randomUUID().toString().replace("-", "");
+		Goods goods = BeanConvertUtils.copy(saveGoods, Goods.class);
+		goods.setId(goodsId);
+		
+		MemberVo member = memberService.getMemberByUserBaseId(goods.getUid());
+		// 设置卖家名为商家名
+		goods.setSellerName(member.getBusinessName());
+		if (isBusiness(member.getMemberType())) {
+			goods.setIdentity(1);
+			if (saveGoods.getSpecs() == null || saveGoods.getSpecs().length == 0) {
+				throw new JeecgBootException("规格不能为空");
+			}
+		} else {
+			goods.setIdentity(2);
+		}
+		
+		save(goods);
+		
+		// 商品图片
+		if (saveGoods.getImages() != null) {
+			for (GoodsImages image : saveGoods.getImages()) {
+				image.setGoodsId(goodsId);
+			}
+			goodsImagesService.saveBatch(Arrays.asList(saveGoods.getImages()));
+		}
+		
+		// 商品规格
+		if (saveGoods.getSpecs() != null) {
+			for (GoodsSpecifications spec : saveGoods.getSpecs()) {
+				spec.setGoodsId(goodsId);
+			}
+			goodsSpecificationsService.saveBatch(Arrays.asList(saveGoods.getSpecs()));
+		}
+		
+		return true;
+	}
+	
+	private boolean isBusiness(String memberType) {
+		if (memberType.equals(MemberTypeEnum.LOCAL_BUSINESS.code()) || memberType.equals(MemberTypeEnum.ONLINE_BUSINESS.code())) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	@Transactional
+	public boolean update(MGoodsVo updateGoods) {
+		Goods goods = BeanConvertUtils.copy(updateGoods, Goods.class);
+		
+		MemberVo memberVo = memberService.getMemberByUserBaseId(goods.getUid());
+		// 设置卖家名为商家名
+		goods.setSellerName(memberVo.getBusinessName());
+		if (isBusiness(memberVo.getMemberType())) {
+			goods.setIdentity(1);
+			if (updateGoods.getSpecs() == null || updateGoods.getSpecs().length == 0) {
+				throw new JeecgBootException("规格不能为空");
+			}
+		} else {
+			goods.setIdentity(2);
+		}
+		
+		if (!updateById(goods)) {
+			throw new JeecgBootException("更新失败");
+		}
+		
+		// 商品图片
+		if (updateGoods.getImages() != null) {
+			for (GoodsImages image : updateGoods.getImages()) {
+				image.setGoodsId(goods.getId());
+			}
+			// 删除原来的图片
+			goodsImagesService.remove(new LambdaQueryWrapper<GoodsImages>().eq(GoodsImages::getGoodsId, goods.getId()));
+			goodsImagesService.saveBatch(Arrays.asList(updateGoods.getImages()));
+		}
+		
+		// 商品规格
+		if (updateGoods.getSpecs() != null) {
+			for (GoodsSpecifications spec : updateGoods.getSpecs()) {
+				spec.setGoodsId(goods.getId());
+			}
+			// 删除原来的规格
+			goodsSpecificationsService.remove(new LambdaQueryWrapper<GoodsSpecifications>().eq(GoodsSpecifications::getGoodsId, goods.getId()));
+			goodsSpecificationsService.saveBatch(Arrays.asList(updateGoods.getSpecs()));
+		}
+		
+		return true;
 	}
 }

@@ -97,15 +97,15 @@ public class Member {
 	/**拓展字段1*/
 	@Excel(name = "拓展字段1", width = 15)
     @ApiModelProperty(value = "拓展字段1")
-	private String extend1;
+	private String extend_1;
 	/**拓展字段2*/
 	@Excel(name = "拓展字段2", width = 15)
     @ApiModelProperty(value = "拓展字段2")
-	private String extend2;
+	private String extend_2;
 	/**拓展字段3*/
 	@Excel(name = "拓展字段3", width = 15)
     @ApiModelProperty(value = "拓展字段3")
-	private String extend3;
+	private String extend_3;
 	/**删除状态*/
 	@Excel(name = "删除状态", width = 15)
     @ApiModelProperty(value = "删除状态")

@@ -22,8 +22,13 @@
 		       m.closing_time,
 		       m.address
 		FROM member m
-			LEFT JOIN user_base ub on ub.id = m.user_base_id
+			     LEFT JOIN user_base ub on ub.id = m.user_base_id
 		WHERE m.user_base_id = #{uid}
-		AND m.del_flag = 0
+		  AND m.del_flag = 0
+	</select>
+	<select id="getMemberByUserBaseId" resultType="com.campgem.modules.university.vo.MemberVo">
+		SELECT *
+		FROM member m
+		WHERE m.user_base_id = #{id}
 	</select>
 </mapper>

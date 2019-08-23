@@ -20,23 +20,20 @@ import java.util.List;
  */
 @Data
 @ApiModel(value = "需求前端显示模型对象", description = "需求前端显示模型对象")
-public class RequirementsVo {
+public class RequirementsDetailVo {
 	
 	@TableId(type = IdType.UUID)
 	@ApiModelProperty(value = "id")
 	private String id;
 	
-	@ApiModelProperty(value = "用户ID")
+	@ApiModelProperty(value = "发布人ID")
 	private String uid;
 	
-	@ApiModelProperty("用户头像")
-	private String srcFace;
+	@ApiModelProperty("发布人名称")
+	private String memberName;
 	
-	@ApiModelProperty("用户昵称")
-	private String nickName;
-	
-	@ApiModelProperty("用户身份")
-	private Integer identity;
+	@ApiModelProperty("发布人类型")
+	private String memberType;
 	
 	@ApiModelProperty(value = "需求名")
 	private String requirementName;
@@ -46,6 +43,9 @@ public class RequirementsVo {
 	
 	@ApiModelProperty(value = "购买价格")
 	private java.math.BigDecimal buyingPrice;
+	
+	@ApiModelProperty("浏览次数")
+	private Integer reviewCount;
 	
 	@ApiModelProperty(value = "需求描述")
 	private String requirementDescription;

@@ -10,5 +10,6 @@ import com.campgem.modules.trade.entity.RequirementsImages;
  * @Version: V1.0
  */
 public interface IRequirementsImagesService extends IService<RequirementsImages> {
-
+	
+	void deleteByRequirementId(String id);
 }

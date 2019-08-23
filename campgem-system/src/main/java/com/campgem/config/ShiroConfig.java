@@ -58,6 +58,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/api/v1/goods/*/related", "anon"); // 关联商品列表
 		
 		filterChainDefinitionMap.put("/api/v1/requirements", "anon"); // 需求列表
+		filterChainDefinitionMap.put("/api/v1/requirements/*/detail", "anon"); // 需求详情
 		filterChainDefinitionMap.put("/api/v1/requirements/category", "anon"); // 需求分类列表
 		
 		filterChainDefinitionMap.put("/paypal/process", "anon"); // PayPal支付处理回调

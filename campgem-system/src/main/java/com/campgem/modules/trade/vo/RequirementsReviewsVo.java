@@ -1,4 +1,4 @@
-package com.campgem.modules.trade.entity;
+package com.campgem.modules.trade.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.jeecgframework.poi.excel.annotation.Excel;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -23,42 +22,30 @@ import org.springframework.format.annotation.DateTimeFormat;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value = "requirements_reviews对象", description = "需求留言")
-public class RequirementsReviews {
+public class RequirementsReviewsVo {
 	
-	/**
-	 * id
-	 */
 	@TableId(type = IdType.UUID)
 	@ApiModelProperty(value = "id")
-	private java.lang.String id;
+	private String id;
 	
 	@ApiModelProperty("用户ID")
 	private String uid;
-	/**
-	 * 需求ID
-	 */
-	@Excel(name = "需求ID", width = 15)
-	@ApiModelProperty(value = "需求ID")
-	private java.lang.String requirementId;
-	/**
-	 * 留言内容
-	 */
-	@Excel(name = "留言内容", width = 15)
+	
+	@ApiModelProperty("发布者用户类型")
+	private String memberType;
+	
+	@ApiModelProperty("用户头像")
+	private String srcFace;
+	
+	@ApiModelProperty("用户昵称")
+	private String nickName;
+	
 	@ApiModelProperty(value = "留言内容")
-	private java.lang.String content;
+	private String content;
 	
 	@ApiModelProperty("发布者的回复内容")
 	private String replyContent;
-	/**
-	 * delFlag
-	 */
-	@Excel(name = "delFlag", width = 15)
-	@ApiModelProperty(value = "delFlag")
-	private java.lang.Integer delFlag;
-	/**
-	 * 留言时间
-	 */
-	@Excel(name = "留言时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")
+	
 	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(value = "留言时间")

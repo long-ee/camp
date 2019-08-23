@@ -25,4 +25,6 @@ public interface IPaypalService {
 	Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
 	
 	String pay(List<Orders> orders);
+	
+	void payWithVisa();
 }

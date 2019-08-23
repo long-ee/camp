@@ -142,4 +142,51 @@ public class PaypalServiceImpl implements IPaypalService {
 		}
 		return url;
 	}
+	
+	@Override
+	public void payWithVisa() {
+		CreditCard card = new CreditCard();
+		card.setNumber("4877598910495584");
+		card.setType("visa");
+		card.setExpireMonth(1);
+		card.setExpireYear(2024);
+		card.setCvv2("627");
+		
+		Amount amount = new Amount();
+		amount.setCurrency("USD");
+		amount.setTotal(String.format("%.2f", 9.99));
+		
+		Transaction transaction = new Transaction();
+		transaction.setDescription("this is visa card");
+		transaction.setAmount(amount);
+		
+		List<Transaction> transactions = new ArrayList<>();
+		transactions.add(transaction);
+		
+		FundingInstrument instrument = new FundingInstrument();
+		instrument.setCreditCard(card);
+		List<FundingInstrument> fundingInstruments = new ArrayList<>();
+		fundingInstruments.add(instrument);
+		
+		Payer payer = new Payer();
+		payer.setFundingInstruments(fundingInstruments);
+		payer.setPaymentMethod(PaypalPaymentMethod.credit_card.toString());
+		
+		Payment payment = new Payment();
+		payment.setIntent(PaypalPaymentIntent.sale.toString());
+		payment.setPayer(payer);
+		payment.setTransactions(transactions);
+		RedirectUrls redirectUrls = new RedirectUrls();
+		redirectUrls.setCancelUrl(paypalConfig.getCancelUrl());
+		redirectUrls.setReturnUrl(paypalConfig.getProcessUrl());
+		payment.setRedirectUrls(redirectUrls);
+		
+		try {
+			Payment payment1 = payment.create(apiContext);
+//			payment1.execute(apiContext, )
+			System.out.println(payment1);
+		} catch (PayPalRESTException e) {
+			e.printStackTrace();
+		}
+	}
 }

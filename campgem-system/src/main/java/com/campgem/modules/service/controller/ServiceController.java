@@ -177,7 +177,7 @@ public class ServiceController extends JeecgController<SysMessage, ISysMessageSe
 			return new Result<String>().result(url);
 		} else {
 			// Visa/Masterd Card 支付
-			
+			paypalService.payWithVisa();
 			return null;
 		}
 	}

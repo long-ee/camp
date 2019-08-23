@@ -13,6 +13,7 @@
 		specifications_price asc limit 1), sale_price) as sale_price
 		from goods g
 		where g.del_flag = 0
+		  and g.status = 0
 		<if test="query.quality != 0">
 			and g.quality = #{query.quality}
 		</if>
@@ -71,6 +72,8 @@
 			     left join city c on c.id = g.city_id
 			     left join university u on u.id = g.university_id
 		WHERE g.id = #{goodsId}
+		  AND g.status = 0
+		  AND g.del_flag = 0
 	</select>
 	
 	<select id="queryGoodsRelated" resultType="com.campgem.modules.trade.vo.GoodsRelatedVo">
@@ -86,7 +89,9 @@
 		       (SELECT goods_image FROM goods_images WHERE goods_id = g.id LIMIT 1) AS goods_icon
 		from goods g
 		WHERE category_id = #{categoryId}
-		  AND id != #{goodsId}
+		  AND g.del_flag = 0
+		  AND g.status = 0
+		  AND g.id != #{goodsId}
 		order by g.review_count desc
 		limit 5
 	</select>
@@ -106,7 +111,43 @@
 			g.taxes
 		FROM
 			goods g
-		WHERE
-			g.id = #{goodsId}
+		WHERE g.id = #{goodsId}
+		  AND g.status = 0
+		  AND g.del_flag = 0
+	</select>
+	
+	<sql id="queryConditions">
+		<where>
+			<if test="1 == 1">
+				g.del_flag = 0
+			</if>
+			
+			<if test="null != queryDto.goodsName and queryDto.goodsName != ''">
+				<bind name="cname" value="'%' + queryDto.goodsName + '%'" />
+				AND g.goods_name like #{cname}
+			</if>
+			
+			<if test="null != queryDto.businessName and queryDto.businessName != ''">
+				AND g.seller_name = #{queryDto.businessName}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="queryManagePageList" resultType="com.campgem.modules.trade.vo.manage.MGoodsListVo">
+            SELECT
+                   g.id,
+                   g.goods_name,
+                   g.identity,
+                   g.seller_name,
+                   c.category_name,
+                   city.city_name,
+                   g.status,
+                   g.create_time
+            FROM
+                goods g
+	            LEFT JOIN category c ON c.id = g.category_id
+	            LEFT JOIN city ON city.id = g.city_id
+			<include refid="queryConditions" />
+            ORDER BY g.create_time DESC
 	</select>
 </mapper>

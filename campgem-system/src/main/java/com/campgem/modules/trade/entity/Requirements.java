@@ -33,6 +33,9 @@ public class Requirements {
 	@ApiModelProperty(value = "用户ID")
 	private java.lang.String uid;
 	
+	@ApiModelProperty("卖家名称")
+	private String sellerName;
+	
 	@Excel(name = "分类ID", width = 15)
 	@ApiModelProperty(value = "分类ID")
 	private java.lang.String categoryId;
@@ -47,7 +50,7 @@ public class Requirements {
 	
 	@Excel(name = "需求描述", width = 15)
 	@ApiModelProperty(value = "需求描述")
-	private java.lang.Object requirementDescription;
+	private java.lang.String requirementDescription;
 	
 	@Excel(name = "删除状态", width = 15)
 	@ApiModelProperty(value = "删除状态")
@@ -55,6 +58,9 @@ public class Requirements {
 	
 	@ApiModelProperty("需求留言数")
 	private Integer reviewCount;
+	
+	@ApiModelProperty("0Enable，1Disable")
+	private Integer status;
 	
 	@Excel(name = "createBy", width = 15)
 	@ApiModelProperty(value = "createBy")
