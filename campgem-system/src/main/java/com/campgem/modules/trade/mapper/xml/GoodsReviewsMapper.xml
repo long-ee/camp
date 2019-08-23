@@ -7,7 +7,7 @@
 		       gr.uid,
 		       ub.src_face,
 		       ub.nick_name,
-		       IF(m.member_type = 'BUSINESS', 1, 2) AS identity,
+		       m.member_type,
 		       gr.content,
 		       gr.create_time
 		FROM goods_reviews gr
@@ -20,9 +20,8 @@
 			  AND gr.uid NOT IN
 			  <foreach item="item" index="index" collection="shields"
 			           open="(" separator="," close=")">
-				  #{item}
+				  #{item.shieldUid}
 			  </foreach>
 		  </if>
-		LIMIT #{start}, #{pageSize}
 	</select>
 </mapper>

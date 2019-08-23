@@ -1,6 +1,7 @@
 package com.campgem.modules.trade.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.system.base.controller.JeecgController;
@@ -12,7 +13,9 @@ import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
 import com.campgem.modules.trade.dto.GoodsReviewDto;
+import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.entity.GoodsReviews;
+import com.campgem.modules.trade.entity.GoodsReviewsShields;
 import com.campgem.modules.trade.service.IGoodsEvaluationService;
 import com.campgem.modules.trade.service.IGoodsReviewsService;
 import com.campgem.modules.trade.service.IGoodsReviewsShieldsService;
@@ -23,9 +26,11 @@ import com.campgem.modules.trade.vo.GoodsListVo;
 import com.campgem.modules.trade.vo.GoodsReviewsVo;
 import com.campgem.modules.university.entity.enums.CategoryTypeEnum;
 import com.campgem.modules.university.service.ICategoryService;
+import com.campgem.modules.university.service.IUserBaseService;
 import com.campgem.modules.university.vo.CategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +65,9 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	private IGoodsReviewsService goodsReviewsService;
 	@Resource
 	private IGoodsReviewsShieldsService goodsReviewsShieldsService;
+	
+	@Resource
+	private IUserBaseService userBaseService;
 	
 	/**
 	 * 交易分类列表
@@ -145,7 +153,10 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 		if (StringUtils.isEmpty(goodsId)) {
 			throw new JeecgBootException("商品ID不能为空");
 		}
-		IPage<GoodsReviewsVo> pageList = goodsReviewsService.queryGoodsReviewsPageList(request, goodsId, pageNo, pageSize);
+		
+		Page<String> page = new Page<>(pageNo, pageSize);
+		IPage<GoodsReviewsVo> pageList = goodsReviewsService.queryGoodsReviewsPageList(page, goodsId);
+		
 		Result<IPage<GoodsReviewsVo>> result = new Result<>();
 		result.setSuccess(true);
 		result.setResult(pageList);
@@ -153,13 +164,36 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	}
 	
 	@ApiOperation(value = "商品留言屏蔽接口", notes = "C12 商品详情")
-	@PostMapping(value = "/goods/review/shield")
-	@ApiImplicitParam(name = "targetId", value = "屏蔽的用户ID", required = true, paramType = "form")
-	public Result addUserReviewShield(String targetId) {
+	@PostMapping(value = "/goods/{goodsId}/shield")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "goodsId", value = "商品ID", required = true, paramType = "path"),
+			@ApiImplicitParam(name = "targetId", value = "屏蔽的用户ID", required = true, paramType = "form")
+	})
+	public Result addUserReviewShield(@PathVariable String goodsId, String targetId) {
 		if (StringUtils.isEmpty(targetId)) {
 			throw new JeecgBootException("用户ID不能为空");
 		}
-		Boolean result = goodsReviewsShieldsService.addUserReviewShield(targetId);
+		
+		Goods goods = goodsService.getById(goodsId);
+		if (goods == null) {
+			throw new JeecgBootException("商品不存在");
+		}
+		
+		// 是否是发布者
+		if (!goods.getUid().equals(SecurityUtils.getCurrentUserUid())) {
+			throw new JeecgBootException("不是商品的发布者，不能屏蔽用户");
+		}
+		
+		if (userBaseService.getById(targetId) == null) {
+			throw new JeecgBootException("被屏蔽的用户不存在");
+		}
+		
+		GoodsReviewsShields shields = new GoodsReviewsShields();
+		shields.setGoodsId(goodsId);
+		shields.setShieldUid(targetId);
+		shields.setCreateTime(new Date());
+		
+		boolean result = goodsReviewsShieldsService.save(shields);
 		return result ? Result.succ : Result.fail;
 	}
 	

@@ -1,7 +1,10 @@
 package com.campgem.modules.trade.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.modules.trade.entity.GoodsReviews;
+import com.campgem.modules.trade.entity.GoodsReviewsShields;
 import com.campgem.modules.trade.vo.GoodsReviewsVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,6 +18,7 @@ import java.util.List;
  */
 public interface GoodsReviewsMapper extends BaseMapper<GoodsReviews> {
 	
-	List<GoodsReviewsVo> queryPageList(@Param("start") Integer start, @Param("pageSize") Integer pageSize,
-	                                   @Param("goodsId") String goodsId, @Param("shields") List<String> shields);
+	IPage<GoodsReviewsVo> queryPageList(Page page,
+	                                    @Param("goodsId") String goodsId,
+	                                    @Param("shields") List<GoodsReviewsShields> shields);
 }

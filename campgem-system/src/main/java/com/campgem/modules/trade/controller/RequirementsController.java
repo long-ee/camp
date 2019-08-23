@@ -21,6 +21,7 @@ import com.campgem.modules.trade.vo.RequirementsReviewsVo;
 import com.campgem.modules.trade.vo.RequirementsVo;
 import com.campgem.modules.university.entity.enums.CategoryTypeEnum;
 import com.campgem.modules.university.service.ICategoryService;
+import com.campgem.modules.university.service.IUserBaseService;
 import com.campgem.modules.university.vo.CategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -53,6 +54,8 @@ public class RequirementsController extends JeecgController<SysMessage, ISysMess
 	private IRequirementsReviewsService requirementsReviewsService;
 	@Resource
 	private IRequirementsReviewsShieldsService requirementsReviewsShieldsService;
+	@Resource
+	private IUserBaseService userBaseService;
 	
 	@ApiOperation(value = "需求分类查询", notes = "C15 需求列表")
 	@GetMapping(value = "/requirements/category")
@@ -115,6 +118,10 @@ public class RequirementsController extends JeecgController<SysMessage, ISysMess
 			throw new JeecgBootException("不是需求的发布者，不能屏蔽用户");
 		}
 		
+		// 是否存在被屏蔽用户
+		if (userBaseService.getById(targetId) == null) {
+			throw new JeecgBootException("被屏蔽的用户不存在");
+		}
 		
 		RequirementsReviewsShields shields = new RequirementsReviewsShields();
 		shields.setRequirementId(requirementId);

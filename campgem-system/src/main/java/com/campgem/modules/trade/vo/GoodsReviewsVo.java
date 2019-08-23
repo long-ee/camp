@@ -46,23 +46,12 @@ public class GoodsReviewsVo {
 	private String nickName;
 	
 	@ApiModelProperty("用户身份类型")
-	private Integer identity;
+	private String memberType;
 	
-	/**
-	 * 商品ID
-	 */
-//	@Excel(name = "商品ID", width = 15)
-//	@ApiModelProperty(value = "商品ID")
-//	private String goodsId;
-	/**
-	 * 留言内容
-	 */
 	@Excel(name = "留言内容", width = 15)
 	@ApiModelProperty(value = "留言内容")
 	private String content;
-	/**
-	 * 留言时间
-	 */
+	
 	@Excel(name = "留言时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
