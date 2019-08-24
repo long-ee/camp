@@ -20,6 +20,10 @@
             <if test="null != queryDto.posterId and queryDto.posterId != ''">
                 <![CDATA[ AND poster.id = #{queryDto.posterId}  ]]>
             </if>
+
+            <if test="null != queryDto.publisherId and queryDto.publisherId != ''">
+                <![CDATA[ AND poster.publisher_id = #{queryDto.publisherId}  ]]>
+            </if>
         </where>
     </sql>
 

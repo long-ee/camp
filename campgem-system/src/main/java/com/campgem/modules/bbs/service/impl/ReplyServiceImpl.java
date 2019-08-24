@@ -86,7 +86,7 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
 
         LambdaQueryWrapper<Reply> replyLambdaQueryWrapper = new LambdaQueryWrapper<>();
         replyLambdaQueryWrapper.eq(Reply::getTopicId, topicReplyDto.getTopicId());
-        replyLambdaQueryWrapper.eq(Reply::getDelFlag, 0);
+//        replyLambdaQueryWrapper.eq(Reply::getDelFlag, 0);
         int replyCount = this.count(replyLambdaQueryWrapper);
 
         Reply reply = new Reply();
@@ -102,5 +102,13 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
         this.save(reply);
         // 更新回复数量
         topicService.updateTopicReplyPCount(topicReplyDto);
+    }
+
+    @Override
+    public void removeReply(String replyId) {
+        if(StringUtils.isBlank(replyId)){
+            throw new JeecgBootException(StatusEnum.BadRequest);
+        }
+        replyMapper.deleteById(replyId);
     }
 }

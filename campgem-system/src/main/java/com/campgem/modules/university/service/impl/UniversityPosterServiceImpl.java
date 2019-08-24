@@ -61,6 +61,9 @@ public class UniversityPosterServiceImpl extends ServiceImpl<UniversityPosterMap
     public UniversityPosterVo publish(UniversityPosterDto universityPosterDto) {
         // 参数校验
         universityPosterDto.paramValidation();
+        if(StringUtils.isBlank(universityPosterDto.getPublisherId())){
+            throw new JeecgBootException(StatusEnum.BadRequest);
+        }
         UniversityPoster universityPoster = BeanConvertUtils.convertBean(universityPosterDto, UniversityPoster.class);
         this.save(universityPoster);
 
@@ -69,5 +72,15 @@ public class UniversityPosterServiceImpl extends ServiceImpl<UniversityPosterMap
             throw new JeecgBootException(StatusEnum.UnknownError);
         }
         return universityPosterVo;
+    }
+
+    @Override
+    public void edit(UniversityPosterDto universityPosterDto) {
+        if(StringUtils.isBlank(universityPosterDto.getId())){
+            throw new JeecgBootException(StatusEnum.BadRequest);
+        }
+        UniversityPoster universityPoster = this.getById(universityPosterDto.getId());
+        universityPoster = BeanConvertUtils.convertBean(universityPosterDto, UniversityPoster.class);
+        this.updateById(universityPoster);
     }
 }

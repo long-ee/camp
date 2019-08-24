@@ -18,4 +18,6 @@ public class UniversityPosterQueryDto implements Serializable {
     /** 学校海报ID **/
     @ApiModelProperty(value = "学校海报ID")
     private String posterId;
+    @ApiModelProperty(value = "发布者", hidden = true)
+    private String publisherId;
 }

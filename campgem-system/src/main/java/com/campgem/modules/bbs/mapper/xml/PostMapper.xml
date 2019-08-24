@@ -10,6 +10,9 @@
             <if test="null != queryDto.postId and queryDto.postId != ''">
                 <![CDATA[ AND post.id = #{queryDto.postId}  ]]>
             </if>
+            <if test="null != queryDto.adminId and queryDto.adminId != ''">
+                <![CDATA[ AND  FIND_IN_SET(#{queryDto.adminId}, post.admin_ids)  ]]>
+            </if>
             <if test="null != queryDto.postName and queryDto.postName != ''">
                 <bind name="pname" value="'%' + queryDto.postName + '%'" />
                 <![CDATA[ AND post.post_name like #{pname}  ]]>

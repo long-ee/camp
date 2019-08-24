@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
+import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.bbs.dto.TopicDto;
+import com.campgem.modules.bbs.dto.TopicReplyDto;
 import com.campgem.modules.bbs.dto.TopicReplyStandDto;
 import com.campgem.modules.bbs.dto.TopicQueryDto;
 import com.campgem.modules.bbs.entity.Topic;
@@ -46,7 +49,7 @@ public class TopicController {
 		return new Result<List<Topic>>().result(pageList.getRecords());
 	}
 
-	@ApiOperation(value="话题信息管理-话题列表分页查询", notes="F11 话题列表分页查询")
+	@ApiOperation(value="话题信息管理-话题列表分页查询", notes="F11 G161 话题列表分页查询")
 	@GetMapping(value = "/post/topic/list")
 	public Result<IPage<TopicVo>> queryTopicList(TopicQueryDto queryDto,
 											  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -64,6 +67,21 @@ public class TopicController {
 		return new Result<TopicVo>().result(topic);
 	}
 
+	@ApiOperation(value="话题信息管理-创建话题", notes="G162 创建/编辑话题-创建话题")
+	@PostMapping(value = "/post/topic/create")
+	public Result create(@Valid TopicDto topicDto) {
+		String memberId = SecurityUtils.getCurrentUserMemberId();
+		topicDto.setPublisherId(memberId);
+		topicService.create(topicDto);
+		return Result.ok();
+	}
+
+	@ApiOperation(value="话题信息管理-编辑话题", notes="G162 创建/编辑话题-编辑话题")
+	@PostMapping(value = "/post/topic/edit")
+	public Result edit(@Valid TopicDto topicDto) {
+		topicService.create(topicDto);
+		return Result.ok();
+	}
 
 	@ApiOperation(value="话题信息管理-话题回复列表查询", notes="F12 话题回复列表查询（回复基本信息）")
 	@GetMapping(value = "/post/topic/reply/list")
@@ -78,8 +96,15 @@ public class TopicController {
 
 	@ApiOperation(value="话题信息管理-话题回复", notes="F12 话题回复")
 	@PostMapping(value = "/post/topic/reply")
-	public Result topicReply(@Valid TopicReplyStandDto replyStandDto) {
-		replyService.replyStand(replyStandDto);
+	public Result topicReply(@Valid TopicReplyDto topicReplyDto) {
+		replyService.reply(topicReplyDto);
+		return Result.ok();
+	}
+
+	@ApiOperation(value="话题信息管理-删除回复", notes="G162 创建/编辑话题-删除回复")
+	@PostMapping(value = "/post/topic/reply/remove")
+	public Result removeReply(String replyId) {
+		replyService.removeReply(replyId);
 		return Result.ok();
 	}
 

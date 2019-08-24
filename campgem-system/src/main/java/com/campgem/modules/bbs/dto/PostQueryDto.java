@@ -15,4 +15,7 @@ public class PostQueryDto implements Serializable {
     /** 版块Id **/
     @ApiModelProperty(value = "版块Id")
     private String postId;
+    /** 管理员ID **/
+    @ApiModelProperty(value = "管理员ID", hidden = true)
+    private String adminId;
 }

@@ -15,6 +15,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 @ApiModel(value="UniversityPosterDto", description="学校海报发布请求数据模型")
 public class UniversityPosterDto extends BaseDto {
+    @ApiModelProperty(value = "海报ID")
+    private String id;
     /**学校ID*/
     @ApiModelProperty(value = "学校ID")
     @NotBlank(message = "请选择海报所属学校")
@@ -45,10 +47,4 @@ public class UniversityPosterDto extends BaseDto {
     @ApiModelProperty(value = "发布时间", hidden = true)
     private java.util.Date publishTime;
 
-    @Override
-    public void paramValidation(){
-        if(StringUtils.isBlank(this.publisherId)){
-            throw new JeecgBootException(StatusEnum.PermissionDenied);
-        }
-    }
 }

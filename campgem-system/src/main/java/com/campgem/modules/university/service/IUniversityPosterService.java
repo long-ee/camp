@@ -47,4 +47,10 @@ public interface IUniversityPosterService extends IService<UniversityPoster> {
      * @return
      */
     UniversityPosterVo publish(UniversityPosterDto universityPosterDto);
+
+    /**
+     * 编辑海报
+     * @param universityPosterDto
+     */
+    public void edit(UniversityPosterDto universityPosterDto);
 }

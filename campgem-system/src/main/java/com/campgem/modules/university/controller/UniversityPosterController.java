@@ -46,7 +46,7 @@ public class UniversityPosterController {
 	}
 	
 
-	@ApiOperation(value="海报信息-发布海报信息", notes="E111 发布海报")
+	@ApiOperation(value="海报信息-发布海报信息", notes="E111 G161 发布海报")
 	@PostMapping(value = "/university/poster/publish")
 	public Result<UniversityPosterVo> publish(@Valid UniversityPosterDto universityPosterDto) {
 		String publisherId = SecurityUtils.getCurrentUserMemberId();
@@ -56,5 +56,11 @@ public class UniversityPosterController {
 		return new Result<UniversityPosterVo>().result(universityPosterVo);
 	}
 
+	@ApiOperation(value="海报信息-编辑海报信息", notes="E111 G161 编辑海报信息")
+	@PostMapping(value = "/university/poster/edit")
+	public Result edit(@Valid UniversityPosterDto universityPosterDto) {
+		universityPosterService.edit(universityPosterDto);
+		return Result.ok();
+	}
 
 }

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.additional.update.impl.LambdaU
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
+import com.campgem.common.util.BeanConvertUtils;
+import com.campgem.modules.bbs.dto.TopicDto;
 import com.campgem.modules.bbs.dto.TopicQueryDto;
 import com.campgem.modules.bbs.dto.TopicReplyDto;
 import com.campgem.modules.bbs.entity.Topic;
@@ -83,5 +85,29 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         if(!viewCountUpdate){
             throw new JeecgBootException(StatusEnum.InternalError);
         }
+    }
+
+    @Override
+    public void create(TopicDto topicDto) {
+        if(StringUtils.isBlank(topicDto.getPublisherId())){
+            throw new JeecgBootException(StatusEnum.BadRequest);
+        }
+        Topic topic = BeanConvertUtils.convertBean(topicDto, Topic.class);
+        topic.setReplyCount(0);
+        topic.setViewCount(0);
+        this.save(topic);
+    }
+
+    @Override
+    public void edit(TopicDto topicDto) {
+        if(StringUtils.isBlank(topicDto.getId())){
+            throw new JeecgBootException(StatusEnum.BadRequest);
+        }
+        Topic topic = this.getById(topicDto.getId());
+        if(null == topic){
+            throw new JeecgBootException(StatusEnum.BadRequest);
+        }
+        topic = BeanConvertUtils.convertBean(topicDto, Topic.class);
+        this.updateById(topic);
     }
 }

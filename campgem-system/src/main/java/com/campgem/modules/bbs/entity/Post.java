@@ -42,6 +42,14 @@ public class Post {
 	@ApiModelProperty(value = "是否启用")
 	@NotBlank(message = "请选择是否启版块")
 	private String enabled;
+	/**主管理员ID*/
+	@Excel(name = "主管理员ID", width = 15)
+	@ApiModelProperty(value = "主管理员ID")
+	private String primaryAdminId;
+	/**所有管理员ID*/
+	@Excel(name = "所有管理员ID", width = 15)
+	@ApiModelProperty(value = "所有管理员ID")
+	private String adminIds;
 	/**删除状态*/
 	@Excel(name = "删除状态", width = 15)
     @ApiModelProperty(value = "删除状态")

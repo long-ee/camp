@@ -35,4 +35,10 @@ public interface IReplyService extends IService<Reply> {
      */
     void reply(TopicReplyDto topicReplyDto);
 
+    /**
+     * 删除回复
+     * @param replyId
+     */
+    void removeReply(String replyId);
+
 }

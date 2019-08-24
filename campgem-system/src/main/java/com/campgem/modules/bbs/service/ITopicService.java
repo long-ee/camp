@@ -1,5 +1,6 @@
 package com.campgem.modules.bbs.service;
 
+import com.campgem.modules.bbs.dto.TopicDto;
 import com.campgem.modules.bbs.dto.TopicQueryDto;
 import com.campgem.modules.bbs.dto.TopicReplyDto;
 import com.campgem.modules.bbs.entity.Topic;
@@ -40,4 +41,16 @@ public interface ITopicService extends IService<Topic> {
      * 更新话题浏览数量
      */
     void updateTopicReplyVCount(String topicId);
+
+    /**
+     * 创建话题
+     * @param topicDto
+     */
+    public void create(TopicDto topicDto);
+
+    /**
+     * 修改话题
+     * @param topicDto
+     */
+    public void edit(TopicDto topicDto);
 }
