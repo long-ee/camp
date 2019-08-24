@@ -28,7 +28,7 @@ public class RegistryController {
 
 
     @GetMapping(value = "/register/email/validityCode")
-    @ApiOperation(value="getEmailValidityCode", notes="获取邮箱验证码")
+    @ApiOperation(value="getEmailValidityCode", notes="A11 ~ A14 发送验证码")
     public Result getEmailValidityCode(String email) {
         memberService.getEmailValidityCode(email);
         Result result = new Result<>();
@@ -37,7 +37,7 @@ public class RegistryController {
     }
 
     @PostMapping(value = "/register")
-    @ApiOperation(value="register", notes="用户注册")
+    @ApiOperation(value="register", notes="A11 ~ A14 提交用户注册信息")
     public Result<MemberVo> register(@Valid UserRegistrationDto userRegistrationDto, HttpServletRequest request) {
         IdentifyInfo identifyInfo = JwtUtil.getIdentifierByToken(request);
         userRegistrationDto.setIdentifyInfo(identifyInfo);

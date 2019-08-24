@@ -26,7 +26,7 @@ public class ClubController {
 	@Autowired
 	private IClubService clubService;
 
-	@ApiOperation(value="社团信息管理接口-社团列表分页查询", notes="社团信息管理接口-社团列表分页查询")
+	@ApiOperation(value="社团信息管理接口-社团列表分页查询", notes="E1 E13 社团列表(支持根据分类查询)")
 	@GetMapping(value = "/university/club/list")
 	public Result<IPage<ClubVo>> queryPageList(ClubQueryDto queryDto,
 											 @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -38,7 +38,7 @@ public class ClubController {
 	}
 	
 
-	@ApiOperation(value="社团社团信息管理接口信息-社团详情查询", notes="社团信息管理接口-社团详情查询")
+	@ApiOperation(value="社团社团信息管理接口信息-社团详情查询", notes="E12 社团基本信息查询")
 	@GetMapping(value = "/university/club/details")
 	public Result<ClubVo> queryDetails(String clubId) {
 		String memberId = SecurityUtils.getCurrentUserMemberId();
@@ -49,7 +49,7 @@ public class ClubController {
 	}
 
 
-	@ApiOperation(value="社团信息管理接口-加入社团", notes="社团信息管理接口-加入社团")
+	@ApiOperation(value="社团信息管理接口-加入社团", notes="E12 E13 加入社团")
 	@PostMapping(value = "/university/club/join")
 	public Result join(String clubId) {
 		String memberId = SecurityUtils.getCurrentUserMemberId();
@@ -61,7 +61,7 @@ public class ClubController {
 	}
 
 
-	@ApiOperation(value="社团信息管理接口-退出社团", notes="社团信息管理接口-退出社团")
+	@ApiOperation(value="社团信息管理接口-退出社团", notes="E12 E13 退出社团")
 	@PostMapping(value = "/university/club/dropOut")
 	public Result dropOut(String clubId) {
 		String memberId = SecurityUtils.getCurrentUserMemberId();

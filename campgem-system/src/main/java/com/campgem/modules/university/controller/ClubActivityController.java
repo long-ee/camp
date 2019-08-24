@@ -31,7 +31,7 @@ public class ClubActivityController {
 	private IClubActivityService clubActivityService;
 	
 
-	@ApiOperation(value="社团活动信息接口-今天活动列表查询", notes="默认查出条数小于等于10条")
+	@ApiOperation(value="社团活动信息接口-今天活动列表查询", notes="E1 今天活动列表查询（默认查出条数小于等于10条）")
 	@GetMapping(value = "/university/club/activity/list/today")
 	public Result<IPage<ClubActivityVo>> queryTodayActivities(ClubActivityQueryDto queryDto) {
 		Page<ClubActivityQueryDto> page = new Page<ClubActivityQueryDto>(1, 10);
@@ -42,7 +42,7 @@ public class ClubActivityController {
 	}
 	
 
-	@ApiOperation(value="社团活动信息-社团活动列表分页查询", notes="universityId 查询校园活动，clubId 查询俱乐部")
+	@ApiOperation(value="社团活动信息-社团活动列表分页查询", notes="E14 社团活动列表查询（universityId 查询校园活动，clubId 查询俱乐部）")
 	@GetMapping(value = "/university/club/activity/list")
 	public Result<IPage<ClubActivityVo>> queryActivities(ClubActivityQueryDto queryDto,
 												@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -53,7 +53,7 @@ public class ClubActivityController {
 	}
 	
 
-	@ApiOperation(value="社团活动信息-活动详情查询", notes="社团活动信息-活动详情查询")
+	@ApiOperation(value="社团活动信息-活动详情查询", notes="E13 社团活动详情查询")
 	@GetMapping(value = "/university/club/activity/details")
 	public Result<ClubActivityVo> details(String activityId) {
 		ClubActivityVo clubActivity = clubActivityService.queryDetails(activityId);

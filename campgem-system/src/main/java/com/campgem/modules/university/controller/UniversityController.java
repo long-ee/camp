@@ -24,7 +24,7 @@ public class UniversityController {
 	private IUniversityService universityService;
 
 
-	@ApiOperation(value="学校信息管理接口-学校列表查询", notes="校园基本信息查询")
+	@ApiOperation(value="学校信息管理接口-学校列表查询", notes="B1 首页-学校列表查询")
 	@GetMapping(value = "/university/list")
 	public Result<List<UniversityVo>> list(UniversityQueryDto queryDto) {
 		List<UniversityVo> universityVos = universityService.queryList(queryDto);
@@ -32,7 +32,7 @@ public class UniversityController {
 	}
 
 
-	@ApiOperation(value="学校信息管理接口-根据学校ID查询学校基本信息", notes="学校信息管理接口-当前登录用户所属学校信息")
+	@ApiOperation(value="学校信息管理接口-根据学校ID查询学校基本信息", notes="E1 校园-校园基本信息查询")
 	@GetMapping(value = "/university/details")
 	public Result<UniversityVo> queryDetails(String universityId) {
 		UniversityVo university = universityService.queryDetails(universityId);

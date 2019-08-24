@@ -27,7 +27,7 @@ public class PasswordController {
     private IUserAuthService userAuthService;
 
 
-    @ApiOperation(value = "用户密码管理-密码重置邮箱验证码获取", notes = "用户密码管理-密码重置邮箱验证码获取")
+    @ApiOperation(value = "用户密码管理-密码重置邮箱验证码获取", notes = "A15 发送验证码")
     @GetMapping(value = "/user/password/reset/validityCode")
     public Result getPasswordResetValidityCode(String email) {
         userAuthService.getPasswordResetValidityCode(email);
@@ -35,14 +35,14 @@ public class PasswordController {
     }
 
 
-    @ApiOperation(value = "用户密码管理-验证邮箱验证码", notes = "用户密码管理-验证邮箱验证码")
+    @ApiOperation(value = "用户密码管理-验证邮箱验证码", notes = "A15 重置密码")
     @PostMapping(value = "/user/password/reset/verify")
     public Result validityCode(@Valid PasswordResetCodeVerifyDto verifyDto) {
         userAuthService.passwordResetCodeVerify(verifyDto);
         return Result.ok();
     }
 
-    @ApiOperation(value = "用户密码管理-用户密码重置", notes = "用户密码管理-用户密码重置")
+    @ApiOperation(value = "用户密码管理-用户密码重置", notes = "A16 提交")
     @PostMapping(value = "/user/password/reset")
     public Result passwordReset(@Valid PasswordResetDto passwordResetDto) {
         userAuthService.passwordReset(passwordResetDto);

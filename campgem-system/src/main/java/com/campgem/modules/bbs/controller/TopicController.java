@@ -35,7 +35,7 @@ public class TopicController {
 	@Resource
 	private IReplyService replyService;
 
-	@ApiOperation(value="话题信息管理-热门话题列表查询", notes="话题信息管理-热门话题列表查询")
+	@ApiOperation(value="话题信息管理-热门话题列表查询", notes="F1 热门话题列表查询")
 	@GetMapping(value = "/post/topic/hot/list")
 	public Result<List<Topic>> queryHotTopicList() {
 		LambdaQueryWrapper<Topic> queryWrapper = new LambdaQueryWrapper<>();
@@ -46,7 +46,7 @@ public class TopicController {
 		return new Result<List<Topic>>().result(pageList.getRecords());
 	}
 
-	@ApiOperation(value="话题信息管理-话题列表分页查询", notes="话题信息管理-话题列表分页查询")
+	@ApiOperation(value="话题信息管理-话题列表分页查询", notes="F11 话题列表分页查询")
 	@GetMapping(value = "/post/topic/list")
 	public Result<IPage<TopicVo>> queryTopicList(TopicQueryDto queryDto,
 											  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -57,7 +57,7 @@ public class TopicController {
 		return new Result<IPage<TopicVo>>().result(topicVos);
 	}
 
-	@ApiOperation(value="话题信息管理-话题详情查询", notes="话题信息管理-话题详情查询")
+	@ApiOperation(value="话题信息管理-话题详情查询", notes="F12 话题详情查询（话题基本信息）")
 	@GetMapping(value = "/post/topic/details")
 	public Result<TopicVo> queryDetails(String topicId) {
 		TopicVo topic = topicService.queryDetails(topicId);
@@ -65,7 +65,7 @@ public class TopicController {
 	}
 
 
-	@ApiOperation(value="话题信息管理-话题回复列表查询", notes="话题信息管理-话题回复列表查询")
+	@ApiOperation(value="话题信息管理-话题回复列表查询", notes="F12 话题回复列表查询（回复基本信息）")
 	@GetMapping(value = "/post/topic/reply/list")
 	public Result<IPage<ReplyVo>> queryTopicReplyList(String topicId,
 											   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -76,7 +76,7 @@ public class TopicController {
 	}
 
 
-	@ApiOperation(value="话题信息管理-话题回复", notes="话题信息管理-话题回复")
+	@ApiOperation(value="话题信息管理-话题回复", notes="F12 话题回复")
 	@PostMapping(value = "/post/topic/reply")
 	public Result topicReply(@Valid TopicReplyStandDto replyStandDto) {
 		replyService.replyStand(replyStandDto);
@@ -84,7 +84,7 @@ public class TopicController {
 	}
 
 
-	@ApiOperation(value="话题信息管理-话题回复点踩/点赞", notes="0 点踩 1 点赞")
+	@ApiOperation(value="话题信息管理-话题回复点踩/点赞", notes="F12 0 点踩 1 点赞")
 	@PostMapping(value = "/post/topic/reply/stand")
 	public Result topicReplyStand(@Valid TopicReplyStandDto replyStandDto) {
 		replyService.replyStand(replyStandDto);

@@ -38,7 +38,7 @@ public class LoginController {
     private AuthRequestFactory factory;
 
     @PostMapping(value = "/account/login")
-    @ApiOperation(value="用户登录", notes="用户登录")
+    @ApiOperation(value="用户登录", notes="A1 登录")
     public Result<LoginVo> localLogin(@Valid LocalLoginDto loginDto) {
         LoginVo loginVo = userAuthService.localLogin(loginDto);
         Result<LoginVo> result = new Result<>();
@@ -53,7 +53,7 @@ public class LoginController {
      * @return
      */
     @PostMapping(value = "/account/thirdParty/login")
-    @ApiOperation(value="第三方平台登录", notes="第三方平台登录")
+    @ApiOperation(value="第三方平台登录", notes="A1 第三方平台登录")
     public Result<LoginVo> thirdPartyLogin(@Valid ThirdPartyLoginDto ThirdPartyLoginDto) {
         LoginVo loginVo = userAuthService.thirdPartyLogin(ThirdPartyLoginDto);
         Result<LoginVo> result = new Result<>();
@@ -88,6 +88,7 @@ public class LoginController {
      * @throws IOException
      */
     @GetMapping("/oauth/login/{authType}")
+    @ApiOperation(value="重定向第三方平台授权页面", notes="A1 第三方平台登录")
     public void oauthLogin(@PathVariable(name = "authType") String authType, HttpServletResponse response) throws IOException {
         AuthRequest authRequest = factory.get(AuthSource.valueOf(authType.toUpperCase()));
         response.sendRedirect(authRequest.authorize(AuthStateUtils.createState()));
@@ -100,7 +101,7 @@ public class LoginController {
      * @return
      */
     @RequestMapping(value = "/oauth/{authType}/callback")
-    @ApiOperation(value="授权回调地址", notes="授权回调地址")
+    @ApiOperation(value="授权回调地址", notes="A1 第三方平台登录")
     public Result<LoginVo> oauthLoginCallBack(@PathVariable(name = "authType") String authType, AuthCallback authCallback) {
         ThirdPartyLoginDto loginDto = BeanConvertUtils.convertBean(authCallback, ThirdPartyLoginDto.class);
         loginDto.setIdentityType(IdentityTypeEnum.valueOf(authType.toUpperCase()).code());

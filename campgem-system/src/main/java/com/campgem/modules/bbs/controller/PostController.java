@@ -25,7 +25,7 @@ public class PostController {
 	@Autowired
 	private IPostService postService;
 
-	@ApiOperation(value="版块信息管理-分页列表查询", notes="版块信息管理-分页列表查询")
+	@ApiOperation(value="版块信息管理-分页列表查询", notes="F1 版块列表查询")
 	@GetMapping(value = "/post/list")
 	public Result<IPage<PostVo>> queryPageList(PostQueryDto queryDto,
 											   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,

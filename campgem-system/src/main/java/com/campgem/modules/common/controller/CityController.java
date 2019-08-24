@@ -27,7 +27,7 @@ public class CityController {
     private ICityService cityService;
 
 
-    @ApiOperation(value="城市信息管理-城市列表查询", notes="城市信息管理-城市列表查询")
+    @ApiOperation(value="城市信息管理-城市列表查询", notes="B1 首页-城市列表查询")
     @GetMapping(value = "/city/list")
     public Result<List<CityVo>> list(CityQueryDto queryDto) {
         LambdaQueryWrapper<City> query = new LambdaQueryWrapper<>();

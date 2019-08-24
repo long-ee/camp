@@ -30,7 +30,7 @@ public class UniversityPosterController {
 	private IUniversityPosterService universityPosterService;
 	
 
-	@ApiOperation(value="海报信息-海报列表查询", notes="海报信息-海报列表查询")
+	@ApiOperation(value="海报信息-海报列表查询", notes="E1 校园-海报列表")
 	@GetMapping(value = "/university/poster/list")
 	public Result<List<UniversityPosterVo>> list(UniversityPosterQueryDto queryDto) {
 		List<UniversityPosterVo> universityPosterVos = universityPosterService.queryList(queryDto);
@@ -38,7 +38,7 @@ public class UniversityPosterController {
 	}
 
 
-	@ApiOperation(value="海报信息-海报详情查询", notes="海报信息-海报详情查询")
+	@ApiOperation(value="海报信息-海报详情查询", notes="E11 海报详情")
 	@GetMapping(value = "/university/poster/details")
 	public Result<UniversityPosterVo> details(String posterId) {
 		UniversityPosterVo universityPoster = universityPosterService.queryDetails(posterId);
@@ -46,7 +46,7 @@ public class UniversityPosterController {
 	}
 	
 
-	@ApiOperation(value="海报信息-发布海报信息", notes="海报信息-发布海报信息")
+	@ApiOperation(value="海报信息-发布海报信息", notes="E111 发布海报")
 	@PostMapping(value = "/university/poster/publish")
 	public Result<UniversityPosterVo> publish(@Valid UniversityPosterDto universityPosterDto) {
 		String publisherId = SecurityUtils.getCurrentUserMemberId();
