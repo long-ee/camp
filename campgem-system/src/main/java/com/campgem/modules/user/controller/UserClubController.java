@@ -38,14 +38,5 @@ public class UserClubController {
         return new Result<IPage<ClubVo>>().result(clubVos);
     }
 
-    @ApiOperation(value="我的资源（社团）-创建社团", notes="E12 E13 加入社团")
-    @PostMapping(value = "/university/club/join")
-    public Result join(String clubId) {
-        String memberId = SecurityUtils.getCurrentUserMemberId();
-        ClubDto clubDto = new ClubDto();
-        clubDto.setClubId(clubId);
-        clubDto.setMemberId(memberId);
-        clubService.joinClub(clubDto);
-        return Result.ok();
-    }
+
 }
