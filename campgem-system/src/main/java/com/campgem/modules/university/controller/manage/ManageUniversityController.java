@@ -7,7 +7,7 @@ import com.campgem.common.api.vo.Result;
 import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.university.dto.UniversityQueryDto;
 import com.campgem.modules.university.entity.University;
-import com.campgem.modules.university.entity.enums.MemberTypeEnum;
+import com.campgem.modules.user.entity.enums.MemberTypeEnum;
 import com.campgem.modules.university.service.IUniversityService;
 import com.campgem.modules.university.vo.UniversityVo;
 import io.swagger.annotations.Api;

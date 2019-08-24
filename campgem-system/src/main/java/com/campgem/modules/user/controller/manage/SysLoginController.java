@@ -12,7 +12,7 @@ import com.campgem.modules.common.dto.SysLoginModel;
 import com.campgem.modules.user.service.ISysDepartService;
 import com.campgem.modules.common.service.ISysLogService;
 import com.campgem.modules.user.service.ISysUserService;
-import com.campgem.modules.university.entity.enums.IdentityTypeEnum;
+import com.campgem.modules.user.entity.enums.IdentityTypeEnum;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import com.campgem.common.api.vo.Result;

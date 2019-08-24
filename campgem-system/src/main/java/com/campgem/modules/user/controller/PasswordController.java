@@ -1,7 +1,7 @@
 package com.campgem.modules.user.controller;
 
 import com.campgem.common.api.vo.Result;
-import com.campgem.modules.university.service.IUserAuthService;
+import com.campgem.modules.user.service.IUserAuthService;
 import com.campgem.modules.user.dto.PasswordResetCodeVerifyDto;
 import com.campgem.modules.user.dto.PasswordResetDto;
 import io.swagger.annotations.Api;

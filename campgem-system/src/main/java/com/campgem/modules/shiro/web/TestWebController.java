@@ -1,7 +1,7 @@
 package com.campgem.modules.shiro.web;
 
 import com.campgem.modules.shiro.vo.ResponseBean;
-import com.campgem.modules.university.entity.enums.IdentityTypeEnum;
+import com.campgem.modules.user.entity.enums.IdentityTypeEnum;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.Logical;

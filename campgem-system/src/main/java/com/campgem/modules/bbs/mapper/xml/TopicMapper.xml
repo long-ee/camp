@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.bbs.mapper.TopicMapper">
+
+    <sql id="queryConditions">
+        <where>
+            <if test="1 == 1">
+                <![CDATA[ topic.del_flag = 0  ]]>
+            </if>
+            <if test="null != queryDto.postId and queryDto.postId != ''">
+                <![CDATA[ AND topic.id = #{queryDto.postId}  ]]>
+            </if>
+            <if test="null != queryDto.categoryId and queryDto.categoryId != ''">
+                <![CDATA[ AND topic.category_id = #{queryDto.categoryId}  ]]>
+            </if>
+            <if test="null != queryDto.topicTitle and queryDto.topicTitle != ''">
+                <bind name="tname" value="'%' + queryDto.topicTitle + '%'" />
+                <![CDATA[ AND topic.topic_title like #{tname}  ]]>
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryPageList" resultType="com.campgem.modules.bbs.vo.TopicVo">
+        <![CDATA[
+             select
+                topic.*,
+                 post.post_name,
+                 member.member_name as publisherName,
+                 member.member_type,
+                 userBase.face as publisherFace
+             from
+                  topic topic
+             left join post post on topic.post_id = post.id
+             left join member member on topic.publisher_id = member.id
+             left join user_base userBase on member.user_base_id = userBase.id
+         ]]>
+        <include refid="queryConditions"></include>
+        <if test="null == queryDto.orderBy or queryDto.orderBy == '0' or queryDto.orderBy == ''">
+            <![CDATA[
+                order by topic.create_time desc, topic.top desc,
+            ]]>
+        </if>
+        <if test="null != queryDto.orderBy and queryDto.orderBy == '1' ">
+            <![CDATA[
+                order by topic.reply_count desc
+            ]]>
+        </if>
+        <if test="null != queryDto.orderBy and queryDto.orderBy == '2' ">
+            <![CDATA[
+                order by topic.view_count desc
+            ]]>
+        </if>
+    </select>
+
+    <select id="queryDetails" resultType="com.campgem.modules.bbs.vo.TopicVo">
+        <![CDATA[
+             select
+                topic.*,
+                 post.post_name,
+                 member.member_name as publisherName,
+                 member.member_type,
+                 userBase.face as publisherFace
+             from
+                  topic topic
+             left join post post on topic.post_id = post.id
+             left join member member on topic.publisher_id = member.id
+             left join user_base userBase on member.user_base_id = userBase.id
+             where topic.id = #{topicId}
+         ]]>
+    </select>
+</mapper>

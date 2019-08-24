@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.bbs.mapper.PostModeratorMapper">
+
+    <select id="queryList" resultType="com.campgem.modules.bbs.vo.PostModeratorVo" parameterType="java.lang.String">
+        <![CDATA[
+             select
+                 *
+             frompost_moderator
+
+         ]]>
+    </select>
+</mapper>

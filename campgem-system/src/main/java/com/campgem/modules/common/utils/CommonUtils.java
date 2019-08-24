@@ -1,6 +1,6 @@
 package com.campgem.modules.common.utils;
 
-import com.campgem.modules.university.entity.enums.MemberTypeEnum;
+import com.campgem.modules.user.entity.enums.MemberTypeEnum;
 
 public class CommonUtils {
 	/**

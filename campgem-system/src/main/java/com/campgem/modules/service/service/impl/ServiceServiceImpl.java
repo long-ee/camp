@@ -17,8 +17,8 @@ import com.campgem.modules.service.vo.*;
 import com.campgem.modules.service.vo.manage.MServiceDetailVo;
 import com.campgem.modules.service.vo.manage.MServiceListVo;
 import com.campgem.modules.service.vo.manage.MServiceVo;
-import com.campgem.modules.university.service.IMemberService;
-import com.campgem.modules.university.vo.MemberVo;
+import com.campgem.modules.user.service.IMemberService;
+import com.campgem.modules.user.vo.MemberVo;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;

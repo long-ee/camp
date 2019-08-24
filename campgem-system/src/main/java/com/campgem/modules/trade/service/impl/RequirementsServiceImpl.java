@@ -17,8 +17,8 @@ import com.campgem.modules.trade.vo.RequirementsVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsDetailVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsListVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsVo;
-import com.campgem.modules.university.service.IMemberService;
-import com.campgem.modules.university.vo.MemberVo;
+import com.campgem.modules.user.service.IMemberService;
+import com.campgem.modules.user.vo.MemberVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.user.mapper.UserBaseMapper">
+
+    <select id="getUserByIdentifyInfo" resultType="com.campgem.modules.user.vo.UserBaseVo">
+        select
+            auth.identifier,
+            auth.identity_type,
+            auth.certificate,
+            member.member_type,
+            member.id as memberId,
+            member.university_id,
+            member.city_id,
+            base.id as uid,
+            base.user_status,
+            base.username,
+            base.nick_name,
+            base.email,
+            base.mobile,
+            base.birthday,
+            base.gender
+        from
+            user_base base
+        left join user_auth auth on base.id = auth.user_base_id
+        left join member member on base.id = member.user_base_id
+        where
+            base.del_flag = 0
+            and auth.identifier = #{queryObj.identifier}
+            and auth.identity_type = #{queryObj.identityType}
+    </select>
+</mapper>

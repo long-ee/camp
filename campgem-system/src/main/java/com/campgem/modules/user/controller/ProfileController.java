@@ -6,7 +6,7 @@ import com.campgem.common.constant.CommonConstant;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.SecurityUtils;
-import com.campgem.modules.university.service.IMemberService;
+import com.campgem.modules.user.service.IMemberService;
 import com.campgem.modules.user.entity.Address;
 import com.campgem.modules.user.service.IAddressService;
 import com.campgem.modules.user.vo.AddressVo;

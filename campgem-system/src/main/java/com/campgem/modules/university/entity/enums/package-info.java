@@ -1,0 +1,1 @@
+package com.campgem.modules.university.entity.enums;
