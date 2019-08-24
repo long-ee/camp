@@ -31,7 +31,6 @@
 				IF(ba.start_date = #{date}, 2, 1) DESC,
 			</if>
 			ba.create_time DESC
-		LIMIT #{start}, #{pageSize}
 	</select>
 	
 	<select id="getActivityCalendar" resultType="com.campgem.modules.service.vo.BusinessActivityCalendarVo">
@@ -116,5 +115,48 @@
 		  AND ba.del_flag = 0
 		  AND ba.id != #{activityId}
 		LIMIT 4
+	</select>
+	
+	<select id="queryManagePageList"
+	        resultType="com.campgem.modules.service.vo.manage.MBusinessActivityListVo">
+		SELECT ba.id,
+		       ba.title,
+		       m.business_name,
+		       c.category_name,
+		       ba.start_date,
+		       ba.end_date,
+		       ba.start_time,
+		       ba.end_time,
+		       ba.create_time
+		FROM business_activity ba
+			LEFT JOIN member m on m.user_base_id = ba.uid
+			LEFT JOIN category c on c.id = ba.category_id
+		ORDER BY ba.create_time DESC
+	</select>
+	
+	<resultMap id="manageActivityDetail" type="com.campgem.modules.service.vo.manage.MBusinessActivityDetailVo">
+		<id property="id" column="aid" />
+		<collection property="images"
+		            select="com.campgem.modules.service.mapper.BusinessActivityImagesMapper.queryActivityImages"
+		            ofType="com.campgem.modules.service.entity.BusinessActivityImages"
+		            column="aid"/>
+	</resultMap>
+	<select id="queryManageBusinessActivityDetail" resultMap="manageActivityDetail">
+		SELECT ba.id            AS aid,
+		       ba.uid,
+		       ba.title,
+		       ba.category_id,
+		       ba.start_date,
+		       ba.end_date,
+		       ba.start_time,
+		       ba.end_time,
+		       ba.duration,
+		       ba.content,
+		       ba.venue,
+		       ba.website,
+		       ba.price
+		FROM business_activity ba
+		WHERE ba.del_flag = 0
+		  AND ba.id = #{activityId}
 	</select>
 </mapper>

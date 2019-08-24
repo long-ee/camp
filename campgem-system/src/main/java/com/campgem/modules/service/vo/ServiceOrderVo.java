@@ -24,7 +24,7 @@ public class ServiceOrderVo {
 	private String id;
 	
 	@ApiModelProperty(value = "商家名")
-	private String memberName;
+	private String businessName;
 	
 	@ApiModelProperty(value = "价格")
 	private java.math.BigDecimal salePrice;

@@ -5,16 +5,24 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.exception.JeecgBootException;
+import com.campgem.common.util.BeanConvertUtils;
+import com.campgem.modules.service.dto.manage.MServiceQueryDto;
 import com.campgem.modules.service.entity.BusinessActivity;
+import com.campgem.modules.service.entity.BusinessActivityImages;
 import com.campgem.modules.service.mapper.BusinessActivityMapper;
+import com.campgem.modules.service.service.IBusinessActivityImagesService;
 import com.campgem.modules.service.service.IBusinessActivityService;
 import com.campgem.modules.service.vo.*;
+import com.campgem.modules.service.vo.manage.MBusinessActivityDetailVo;
+import com.campgem.modules.service.vo.manage.MBusinessActivityListVo;
+import com.campgem.modules.service.vo.manage.MBusinessActivityVo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description: 商家活动
@@ -24,6 +32,9 @@ import java.util.List;
  */
 @Service
 public class BusinessActivityServiceImpl extends ServiceImpl<BusinessActivityMapper, BusinessActivity> implements IBusinessActivityService {
+	@Resource
+	private IBusinessActivityImagesService businessActivityImagesService;
+	
 	/**
 	 * 本月第一天
 	 */
@@ -34,34 +45,23 @@ public class BusinessActivityServiceImpl extends ServiceImpl<BusinessActivityMap
 	 */
 	private static String lastDayOfNextMonth;
 	
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 	
 	static {
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH, 0);
 		c.set(Calendar.DAY_OF_MONTH,1);//1:本月第一天
-		firstDayOfThisMonth = sdf.format(c.getTime());
+		firstDayOfThisMonth = dateFormat.format(c.getTime());
 		
 		c.add(Calendar.MONTH, 1);
 		c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-		lastDayOfNextMonth = sdf.format(c.getTime());
+		lastDayOfNextMonth = dateFormat.format(c.getTime());
 	}
 	
 	@Override
-	public IPage<BusinessActivityListVo> queryActivityPageList(String date, String categoryId, Integer pageNo, Integer pageSize) {
-		LambdaQueryWrapper<BusinessActivity> query = new LambdaQueryWrapper<>();
-		query.eq(BusinessActivity::getDelFlag, 0);
-		if (!categoryId.equals("all")) {
-			query.eq(BusinessActivity::getCategoryId, categoryId);
-		}
-		int count = baseMapper.selectCount(query);
-		
-		Integer start = (pageNo - 1) * pageSize;
-		List<BusinessActivityListVo> list = baseMapper.queryActivityPageList(date, categoryId, start, pageSize);
-		Page<BusinessActivityListVo> page = new Page<>(pageNo, pageSize);
-		page.setRecords(list);
-		
-		return page;
+	public IPage<BusinessActivityListVo> queryActivityPageList(String date, String categoryId, Page page) {
+		return baseMapper.queryActivityPageList(page, date, categoryId);
 	}
 	
 	@Override
@@ -89,13 +89,72 @@ public class BusinessActivityServiceImpl extends ServiceImpl<BusinessActivityMap
 	
 	@Override
 	public List<BusinessActivityTodayListVo> queryTodayBusinessActivityList() {
-		String today = sdf.format(new Date());
+		String today = dateFormat.format(new Date());
 		return baseMapper.queryTodayBusinessActivityList(today);
 	}
 	
 	@Override
 	public List<BusinessActivityInProgressVo> queryBusinessActivityInProgress(String businessId) {
-		String today = sdf.format(new Date());
+		String today = dateFormat.format(new Date());
 		return baseMapper.queryBusinessActivityInProgress(today, businessId);
+	}
+	
+	@Override
+	public IPage<MBusinessActivityListVo> queryManagePageList(Page<MServiceQueryDto> page, MServiceQueryDto queryDto) {
+		return baseMapper.queryManagePageList(page, queryDto);
+	}
+	
+	@Override
+	@Transactional
+	public boolean saveOrUpdate(MBusinessActivityVo activityVo, boolean isUpdate) {
+		if (activityVo.getImages().length == 0) {
+			throw new JeecgBootException("活动图片不能为空");
+		}
+		
+		BusinessActivity businessActivity = BeanConvertUtils.copy(activityVo, BusinessActivity.class);
+		
+		// 设置时间属性
+		String[] dates = activityVo.getDateRange().split("~");
+		String[] times = activityVo.getTimeRange().split("~");
+		try {
+			businessActivity.setStartDate(dateFormat.parse(dates[0]));
+			businessActivity.setEndDate(dateFormat.parse(dates[1]));
+			
+			businessActivity.setStartTime(timeFormat.parse(times[0]));
+			businessActivity.setEndTime(timeFormat.parse(times[1]));
+		} catch (ParseException e) {
+			throw new JeecgBootException("时间格式错误");
+		}
+		
+		String uuid;
+		if (!isUpdate) {
+			// 新增
+			uuid = UUID.randomUUID().toString().replaceAll("-", "");
+			businessActivity.setId(uuid);
+			businessActivity.setDelFlag(0);
+			businessActivity.setCreateTime(new Date());
+			save(businessActivity);
+		} else {
+			uuid = businessActivity.getId();
+			updateById(businessActivity);
+			
+			// 删除图片列表
+			businessActivityImagesService.remove(new LambdaQueryWrapper<BusinessActivityImages>()
+					.eq(BusinessActivityImages::getBusinessActivityId, uuid));
+		}
+		
+		for (BusinessActivityImages image : activityVo.getImages()) {
+			image.setBusinessActivityId(uuid);
+		}
+		
+		// 添加
+		businessActivityImagesService.saveBatch(Arrays.asList(activityVo.getImages()));
+		
+		return true;
+	}
+	
+	@Override
+	public MBusinessActivityDetailVo queryManageBusinessActivityDetail(String id) {
+		return baseMapper.queryManageBusinessActivityDetail(id);
 	}
 }

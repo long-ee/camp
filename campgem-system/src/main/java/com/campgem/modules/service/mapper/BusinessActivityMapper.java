@@ -1,8 +1,13 @@
 package com.campgem.modules.service.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.campgem.modules.service.dto.manage.MServiceQueryDto;
 import com.campgem.modules.service.entity.BusinessActivity;
 import com.campgem.modules.service.vo.*;
+import com.campgem.modules.service.vo.manage.MBusinessActivityDetailVo;
+import com.campgem.modules.service.vo.manage.MBusinessActivityListVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,10 +20,9 @@ import java.util.List;
  */
 public interface BusinessActivityMapper extends BaseMapper<BusinessActivity> {
 	
-	List<BusinessActivityListVo> queryActivityPageList(@Param("date") String date,
-	                                                   @Param("categoryId") String categoryId,
-	                                                   @Param("start") Integer start,
-	                                                   @Param("pageSize") Integer pageSize);
+	IPage<BusinessActivityListVo> queryActivityPageList(Page page,
+	                                                    @Param("date") String date,
+	                                                    @Param("categoryId") String categoryId);
 	
 	List<BusinessActivityCalendarVo> getActivityCalendar(@Param("first") String firstDayOfThisMonth,
 	                                                     @Param("last") String lastDayOfNextMonth);
@@ -35,4 +39,8 @@ public interface BusinessActivityMapper extends BaseMapper<BusinessActivity> {
 	
 	List<BusinessActivityMoreOrSimilarListVo> queryMoreActivity(@Param("activityId") String activityId,
 	                                                            @Param("businessId") String businessId);
+	
+	IPage<MBusinessActivityListVo> queryManagePageList(Page page, @Param("queryDto") MServiceQueryDto queryDto);
+	
+	MBusinessActivityDetailVo queryManageBusinessActivityDetail(@Param("activityId") String activityId);
 }

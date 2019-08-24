@@ -1,9 +1,14 @@
 package com.campgem.modules.service.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.service.dto.manage.MServiceQueryDto;
 import com.campgem.modules.service.entity.BusinessActivity;
 import com.campgem.modules.service.vo.*;
+import com.campgem.modules.service.vo.manage.MBusinessActivityDetailVo;
+import com.campgem.modules.service.vo.manage.MBusinessActivityListVo;
+import com.campgem.modules.service.vo.manage.MBusinessActivityVo;
 
 import java.util.List;
 
@@ -15,7 +20,7 @@ import java.util.List;
  */
 public interface IBusinessActivityService extends IService<BusinessActivity> {
 	
-	IPage<BusinessActivityListVo> queryActivityPageList(String date, String categoryId, Integer pageNo, Integer pageSize);
+	IPage<BusinessActivityListVo> queryActivityPageList(String date, String categoryId, Page page);
 	
 	List<BusinessActivityCalendarVo> getActivityCalendar();
 	
@@ -24,4 +29,10 @@ public interface IBusinessActivityService extends IService<BusinessActivity> {
 	List<BusinessActivityTodayListVo> queryTodayBusinessActivityList();
 	
 	List<BusinessActivityInProgressVo> queryBusinessActivityInProgress(String businessId);
+	
+	IPage<MBusinessActivityListVo> queryManagePageList(Page<MServiceQueryDto> page, MServiceQueryDto queryDto);
+	
+	boolean saveOrUpdate(MBusinessActivityVo activity, boolean isUpdate);
+	
+	MBusinessActivityDetailVo queryManageBusinessActivityDetail(String id);
 }
