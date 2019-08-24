@@ -1,8 +1,12 @@
 package com.campgem.modules.service.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.system.base.controller.JeecgController;
+import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
+import com.campgem.modules.common.service.ICategoryService;
+import com.campgem.modules.common.vo.CategoryVo;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.service.service.IBusinessActivityService;
@@ -10,9 +14,6 @@ import com.campgem.modules.service.vo.BusinessActivityCalendarVo;
 import com.campgem.modules.service.vo.BusinessActivityDetailVo;
 import com.campgem.modules.service.vo.BusinessActivityListVo;
 import com.campgem.modules.service.vo.BusinessActivityTodayListVo;
-import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
-import com.campgem.modules.common.service.ICategoryService;
-import com.campgem.modules.common.vo.CategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -67,7 +68,8 @@ public class ActivityController extends JeecgController<SysMessage, ISysMessageS
 	                                                                   @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
 	                                                                   @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 		Result<IPage<BusinessActivityListVo>> result = new Result<>();
-		IPage<BusinessActivityListVo> pageList = businessActivityService.queryActivityPageList(date, categoryId, pageNo, pageSize);
+		Page<String> page = new Page<>(pageNo, pageSize);
+		IPage<BusinessActivityListVo> pageList = businessActivityService.queryActivityPageList(date, categoryId, page);
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;
