@@ -7,12 +7,15 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.campgem.common.enums.StatusEnum;
+import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.common.entity.SysAnnouncement;
 import com.campgem.modules.common.entity.SysAnnouncementSend;
 import com.campgem.modules.common.mapper.SysAnnouncementMapper;
 import com.campgem.modules.common.mapper.SysAnnouncementSendMapper;
 import com.campgem.modules.common.service.ISysAnnouncementService;
 import com.campgem.common.constant.CommonConstant;
+import com.campgem.modules.user.dto.UserMessageReplyDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,6 +118,25 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
 	@Override
 	public Page<SysAnnouncement> querySysCementPageByUserId(Page<SysAnnouncement> page, String userId,String msgCategory) {
 		 return page.setRecords(sysAnnouncementMapper.querySysCementListByUserId(page, userId, msgCategory));
+	}
+
+	@Override
+	public void messageReply(UserMessageReplyDto messageReplyDto) {
+		messageReplyDto.paramValidation();
+		SysAnnouncement sysAnnouncement = this.getById(messageReplyDto.getAnntId());
+		if(null == sysAnnouncement){
+			throw new JeecgBootException(StatusEnum.BadRequest);
+		}
+		SysAnnouncement replyMessage = new SysAnnouncement();
+		replyMessage.setTitile("[回复]" + sysAnnouncement.getTitile());
+		replyMessage.setMsgContent(messageReplyDto.getReplyContent());
+		replyMessage.setMsgType(CommonConstant.MSG_TYPE_UESR);
+		replyMessage.setSendStatus("1");
+		replyMessage.setSendTime(new Date());
+		replyMessage.setSender(messageReplyDto.getMemberId());
+		replyMessage.setUserIds(sysAnnouncement.getSender());
+		replyMessage.setMsgCategory(sysAnnouncement.getMsgCategory());
+		this.saveAnnouncement(replyMessage);
 	}
 
 }

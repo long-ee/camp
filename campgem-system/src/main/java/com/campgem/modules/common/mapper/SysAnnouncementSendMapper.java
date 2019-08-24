@@ -17,15 +17,19 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
  */
 public interface SysAnnouncementSendMapper extends BaseMapper<SysAnnouncementSend> {
 
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
 	public List<String> queryByUserId(@Param("userId") String userId);
 
 	/**
-	 * @功能：获取我的消息
+	 * 获取我的消息
+	 * @param page
 	 * @param announcementSendModel
-	 * @param pageSize 
-	 * @param pageNo 
 	 * @return
 	 */
-	public List<AnnouncementSendModel> getMyAnnouncementSendList(Page<AnnouncementSendModel> page, @Param("announcementSendModel") AnnouncementSendModel announcementSendModel);
+	public List<AnnouncementSendModel> getMyAnnouncementSendList(Page page, @Param("queryObj") AnnouncementSendModel announcementSendModel);
 
 }

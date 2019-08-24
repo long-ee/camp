@@ -1,27 +1,16 @@
 package com.campgem.modules.common.dto;
 
-import java.io.Serializable;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-/**
- * @Description: 用户通告阅读标记表
- * @Author: campgem
- * @Date:  2019-02-21
- * @Version: V1.0
- */
+import java.io.Serializable;
+
 @Data
-@TableName("sys_announcement_send")
 public class AnnouncementSendModel implements Serializable {
     private static final long serialVersionUID = 1L;
-    
 	/**id*/
 	@TableId(type = IdType.UUID)
 	private java.lang.String id;
@@ -43,12 +32,6 @@ public class AnnouncementSendModel implements Serializable {
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private java.util.Date sendTime;
-	/**页数*/
-	private java.lang.Integer pageNo;
-	/**大小*/
-	private java.lang.Integer pageSize;
-    /**
-     * 消息类型1:通知公告2:系统消息
-     */
+    /** 消息类型 */
     private java.lang.String msgCategory;
 }

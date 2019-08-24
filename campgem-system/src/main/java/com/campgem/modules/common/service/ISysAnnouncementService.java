@@ -4,12 +4,11 @@ import com.campgem.modules.common.entity.SysAnnouncement;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.user.dto.UserMessageReplyDto;
 
 /**
- * @Description: 系统通告表
- * @Author: campgem
- * @Date:  2019-01-02
- * @Version: V1.0
+ * 消息管理
+ * @author X.Tony
  */
 public interface ISysAnnouncementService extends IService<SysAnnouncement> {
 
@@ -21,5 +20,10 @@ public interface ISysAnnouncementService extends IService<SysAnnouncement> {
 
 	public Page<SysAnnouncement> querySysCementPageByUserId(Page<SysAnnouncement> page,String userId,String msgCategory);
 
+	/**
+	 * 用户消息回复
+	 * @param messageReplyDto
+	 */
+	public void messageReply(UserMessageReplyDto messageReplyDto);
 
 }
