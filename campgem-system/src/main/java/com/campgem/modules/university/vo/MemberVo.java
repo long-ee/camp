@@ -1,6 +1,6 @@
 package com.campgem.modules.university.vo;
 
-import com.campgem.modules.university.entity.Member;
+import com.campgem.modules.user.entity.Member;
 import lombok.Data;
 
 @Data

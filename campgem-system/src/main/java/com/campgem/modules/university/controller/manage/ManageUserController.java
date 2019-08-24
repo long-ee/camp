@@ -7,7 +7,7 @@ import com.campgem.common.api.vo.Result;
 import com.campgem.common.system.util.JwtUtil;
 import com.campgem.modules.university.dto.MemberQueryDto;
 import com.campgem.modules.university.dto.UserPasswordModifyDto;
-import com.campgem.modules.university.entity.Member;
+import com.campgem.modules.user.entity.Member;
 import com.campgem.modules.university.service.IMemberService;
 import com.campgem.modules.university.vo.MemberVo;
 import io.swagger.annotations.Api;

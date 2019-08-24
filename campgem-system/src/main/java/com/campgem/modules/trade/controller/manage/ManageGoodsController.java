@@ -12,7 +12,7 @@ import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.manage.MBusinessListVo;
 import com.campgem.modules.trade.vo.manage.MGoodsListVo;
 import com.campgem.modules.trade.vo.manage.MGoodsVo;
-import com.campgem.modules.university.entity.Member;
+import com.campgem.modules.user.entity.Member;
 import com.campgem.modules.university.entity.enums.MemberTypeEnum;
 import com.campgem.modules.university.service.IMemberService;
 import io.swagger.annotations.Api;

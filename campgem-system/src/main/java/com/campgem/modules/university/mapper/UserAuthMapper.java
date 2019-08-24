@@ -1,6 +1,6 @@
 package com.campgem.modules.university.mapper;
 
-import com.campgem.modules.university.entity.UserAuth;
+import com.campgem.modules.user.entity.UserAuth;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

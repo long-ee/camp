@@ -2,7 +2,7 @@ package com.campgem.modules.university.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.common.api.vo.IdentifyInfo;
-import com.campgem.modules.university.entity.UserBase;
+import com.campgem.modules.user.entity.UserBase;
 import com.campgem.modules.university.vo.UserBaseVo;
 
 /**

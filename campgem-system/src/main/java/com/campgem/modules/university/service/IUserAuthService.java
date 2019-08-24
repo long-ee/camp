@@ -2,7 +2,7 @@ package com.campgem.modules.university.service;
 
 import com.campgem.modules.university.dto.ThirdPartyLoginDto;
 import com.campgem.modules.university.dto.LocalLoginDto;
-import com.campgem.modules.university.entity.UserAuth;
+import com.campgem.modules.user.entity.UserAuth;
 import com.campgem.modules.university.vo.LoginVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.user.dto.PasswordResetCodeVerifyDto;

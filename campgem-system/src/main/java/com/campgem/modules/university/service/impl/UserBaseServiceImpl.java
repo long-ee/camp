@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.api.vo.IdentifyInfo;
 import com.campgem.common.system.query.QueryGenerator;
-import com.campgem.modules.university.entity.UserBase;
+import com.campgem.modules.user.entity.UserBase;
 import com.campgem.modules.university.mapper.UserBaseMapper;
 import com.campgem.modules.university.service.IUserBaseService;
 import com.campgem.modules.university.vo.UserBaseVo;

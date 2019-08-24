@@ -8,7 +8,7 @@ import com.campgem.modules.demo.mock.MockController;
 import com.campgem.modules.demo.test.entity.JeecgDemo;
 import com.campgem.modules.demo.test.mapper.JeecgDemoMapper;
 import com.campgem.modules.demo.test.service.IJeecgDemoService;
-import com.campgem.modules.system.service.ISysDataLogService;
+import com.campgem.modules.common.service.ISysDataLogService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

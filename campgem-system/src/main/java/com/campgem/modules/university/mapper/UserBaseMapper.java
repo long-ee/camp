@@ -2,7 +2,7 @@ package com.campgem.modules.university.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.campgem.common.api.vo.IdentifyInfo;
-import com.campgem.modules.university.entity.UserBase;
+import com.campgem.modules.user.entity.UserBase;
 import com.campgem.modules.university.vo.UserBaseVo;
 import org.apache.ibatis.annotations.Param;
 

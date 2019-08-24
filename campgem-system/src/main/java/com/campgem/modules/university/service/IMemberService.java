@@ -8,7 +8,7 @@ import com.campgem.modules.service.vo.BusinessDetailVo;
 import com.campgem.modules.university.dto.MemberQueryDto;
 import com.campgem.modules.university.dto.UserPasswordModifyDto;
 import com.campgem.modules.university.dto.UserRegistrationDto;
-import com.campgem.modules.university.entity.Member;
+import com.campgem.modules.user.entity.Member;
 import com.campgem.modules.university.vo.MemberVo;
 import com.campgem.modules.user.vo.ShippingMethodsVo;
 
