@@ -5,19 +5,19 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.util.DateUtils;
 import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.university.dto.ClubActivityDto;
 import com.campgem.modules.university.dto.ClubActivityQueryDto;
+import com.campgem.modules.university.entity.ClubActivity;
 import com.campgem.modules.university.service.IClubActivityService;
 import com.campgem.modules.university.service.IClubService;
 import com.campgem.modules.university.vo.ClubActivityVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 
 @Slf4j
@@ -42,7 +42,7 @@ public class ClubActivityController {
 	}
 	
 
-	@ApiOperation(value="社团活动信息-社团活动列表分页查询", notes="E14 社团活动列表查询（universityId 查询校园活动，clubId 查询俱乐部）")
+	@ApiOperation(value="社团活动信息-社团活动列表分页查询", notes="E14 G152 社团活动列表查询（universityId 查询校园活动，clubId 查询俱乐部）")
 	@GetMapping(value = "/university/club/activity/list")
 	public Result<IPage<ClubActivityVo>> queryActivities(ClubActivityQueryDto queryDto,
 												@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -62,4 +62,22 @@ public class ClubActivityController {
 		clubActivity.setClubMember(isClubMember);
 		return new Result<ClubActivityVo>().result(clubActivity);
 	}
+
+
+	@ApiOperation(value="社团活动信息-创建活动", notes="G153 创建/编辑社团活动-创建活动")
+	@PostMapping(value = "/university/club/activity/create")
+	public Result create(@Valid ClubActivityDto clubActivityDto) {
+		String memberId = SecurityUtils.getCurrentUserMemberId();
+		clubActivityDto.setPublisherId(memberId);
+		clubActivityService.create(clubActivityDto);
+		return Result.ok();
+	}
+
+	@ApiOperation(value="社团活动信息-编辑活动", notes="G153 创建/编辑社团活动-编辑活动")
+	@PostMapping(value = "/university/club/activity/edit")
+	public Result edit(@Valid ClubActivityDto clubActivityDto) {
+		clubActivityService.edit(clubActivityDto);
+		return Result.ok();
+	}
+
 }

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
+import com.campgem.common.util.BeanConvertUtils;
+import com.campgem.modules.university.dto.ClubActivityDto;
 import com.campgem.modules.university.dto.ClubActivityQueryDto;
 import com.campgem.modules.university.entity.ClubActivity;
 import com.campgem.modules.university.mapper.ClubActivityMapper;
@@ -43,5 +45,27 @@ public class ClubActivityServiceImpl extends ServiceImpl<ClubActivityMapper, Clu
             throw new JeecgBootException(StatusEnum.NotFound);
         }
         return activityVo;
+    }
+
+    @Override
+    public void create(ClubActivityDto clubActivityDto) {
+        if(StringUtils.isBlank(clubActivityDto.getPublisherId())){
+            throw new JeecgBootException(StatusEnum.BadRequest);
+        }
+        ClubActivity clubActivity = BeanConvertUtils.convertBean(clubActivityDto, ClubActivity.class);
+        this.save(clubActivity);
+    }
+
+    @Override
+    public void edit(ClubActivityDto clubActivityDto) {
+        if(StringUtils.isBlank(clubActivityDto.getId())){
+            throw new JeecgBootException(StatusEnum.BadRequest);
+        }
+        ClubActivity clubActivity = this.getById(clubActivityDto.getId());
+        if(null == clubActivity){
+            throw new JeecgBootException(StatusEnum.NotFound);
+        }
+        clubActivity = BeanConvertUtils.convertBean(clubActivityDto, ClubActivity.class);
+        this.updateById(clubActivity);
     }
 }

@@ -31,4 +31,12 @@
 		FROM member m
 		WHERE m.user_base_id = #{id}
 	</select>
+
+	<select id="queryMemberByIds" resultType="com.campgem.modules.user.vo.MemberVo"
+			parameterType="java.lang.String">
+			SELECT
+			       *
+			FROM member m
+			WHERE m.id in (${memberIds}) order by field(m.id,${memberIds})
+	</select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.campgem.modules.university.service;
 
+import com.campgem.modules.university.dto.ClubActivityDto;
 import com.campgem.modules.university.dto.ClubActivityQueryDto;
 import com.campgem.modules.university.entity.ClubActivity;
 import com.campgem.modules.university.vo.ClubActivityVo;
@@ -28,4 +29,16 @@ public interface IClubActivityService extends IService<ClubActivity> {
      * @return
      */
     ClubActivityVo queryDetails(String id);
+
+    /**
+     * 创建活动
+     * @param clubActivityDto
+     */
+    public void create(ClubActivityDto clubActivityDto);
+
+    /**
+     * 编辑活动
+     * @param clubActivityDto
+     */
+    public void edit(ClubActivityDto clubActivityDto);
 }

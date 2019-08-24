@@ -75,4 +75,11 @@ public interface IMemberService extends IService<Member> {
      * D14 商家主页
      */
 	BusinessDetailVo queryBusinessDetail(String businessId);
+
+    /**
+     * 根据会员id数组字符串查询会员信息
+     * @param memberIds
+     * @return
+     */
+	List<MemberVo> queryMemberByIds(String memberIds);
 }

@@ -56,6 +56,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     private IUserAuthService userAuthService;
     @Resource
     private IBusinessActivityService businessActivityService;
+    @Resource
+    private MemberMapper memberMapper;
 
     @Override
     public IPage<MemberVo> queryPageList(Page page, MemberQueryDto queryDto) {
@@ -210,5 +212,13 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         detail.setInProgressActivities(list);
         
         return detail;
+    }
+
+    @Override
+    public List<MemberVo> queryMemberByIds(String memberIds) {
+        if(StringUtils.isBlank(memberIds)){
+            return null;
+        }
+        return memberMapper.queryMemberByIds(memberIds);
     }
 }

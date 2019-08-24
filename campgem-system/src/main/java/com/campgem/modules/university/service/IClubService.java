@@ -1,5 +1,7 @@
 package com.campgem.modules.university.service;
 
+import com.campgem.modules.university.dto.ClubAdminDto;
+import com.campgem.modules.university.dto.ClubCreateOrUpdateDto;
 import com.campgem.modules.university.dto.ClubDto;
 import com.campgem.modules.university.dto.ClubQueryDto;
 import com.campgem.modules.university.entity.Club;
@@ -7,6 +9,7 @@ import com.campgem.modules.university.vo.ClubVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.user.vo.MemberVo;
 
 import java.util.List;
 
@@ -23,7 +26,7 @@ public interface IClubService extends IService<Club> {
      * @param queryDto
      * @return
      */
-    List<ClubVo> queryList(ClubQueryDto queryDto);
+    public List<ClubVo> queryList(ClubQueryDto queryDto);
 
     /**
      * 根据条件分页查询学校海报分页列表
@@ -31,26 +34,26 @@ public interface IClubService extends IService<Club> {
      * @param queryDto
      * @return
      */
-    IPage<ClubVo> queryPageList(Page page, ClubQueryDto queryDto);
+    public IPage<ClubVo> queryPageList(Page page, ClubQueryDto queryDto);
 
     /**
      * 查询学校海报信息详情
      * @param id
      * @return
      */
-    ClubVo queryDetails(String id);
+    public ClubVo queryDetails(String id);
 
     /**
      * 加入社团
      * @param clubDto
      */
-    void joinClub(ClubDto clubDto);
+    public void joinClub(ClubDto clubDto);
 
     /**
      * 退出社团
      * @param clubDto
      */
-    void dropOutClub(ClubDto clubDto);
+    public void dropOutClub(ClubDto clubDto);
 
     /**
      * 用户是否是社团成员
@@ -58,11 +61,41 @@ public interface IClubService extends IService<Club> {
      * @param memberId
      * @return
      */
-    boolean isClubMember(String clubId, String memberId);
+    public boolean isClubMember(String clubId, String memberId);
 
     /**
-     * 重置社团成员数量
+     * 创建社团
+     * @param createOrUpdateDto
+     */
+    public void createClub(ClubCreateOrUpdateDto createOrUpdateDto);
+
+    /**
+     * 更新社团
+     * @param createOrUpdateDto
+     */
+    public void updateClub(ClubCreateOrUpdateDto createOrUpdateDto);
+
+    /**
+     * 社团管理员列表
      * @param clubId
      */
-    void updateClubMemberCount(String clubId);
+    public List<MemberVo> listAdmin(String clubId, boolean includePrimaryAdmin);
+
+    /**
+     * 添加管理员
+     * @param clubAdminDto
+     */
+    public void addAdmin(ClubAdminDto clubAdminDto);
+
+    /**
+     * 删除管理员
+     * @param clubAdminDto
+     */
+    public void removeAdmin(ClubAdminDto clubAdminDto);
+
+    /**
+     * 转让管理员
+     * @param clubAdminDto
+     */
+    public void transferAdmin(ClubAdminDto clubAdminDto);
 }

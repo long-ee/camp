@@ -28,15 +28,16 @@ public class UserClubController {
     @ApiOperation(value="我的资源（社团）- 社团列表", notes="G15 我的资源（社团）- 社团列表")
     @GetMapping(value = "/user/club/list")
     public Result<IPage<ClubVo>> queryUserClubList(ClubQueryDto queryDto,
-                                               @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-                                               @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
-                                               HttpServletRequest req) {
+                                                   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+                                                   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+                                                   HttpServletRequest req) {
         String memberId = SecurityUtils.getCurrentUserMemberId();
         queryDto.setMemberId(memberId);
         Page<ClubQueryDto> page = new Page<>(pageNo, pageSize);
         IPage<ClubVo> clubVos = clubService.queryPageList(page, queryDto);
         return new Result<IPage<ClubVo>>().result(clubVos);
     }
+
 
 
 }

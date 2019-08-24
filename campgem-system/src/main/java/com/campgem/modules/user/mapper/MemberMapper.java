@@ -24,4 +24,7 @@ public interface MemberMapper extends BaseMapper<Member> {
 	BusinessDetailVo queryBusinessDetail(@Param("uid") String uid);
 	
 	MemberVo getMemberByUserBaseId(@Param("id") String userBaseId);
+
+	List<MemberVo> queryMemberByIds(@Param("memberIds") String memberIds);
+			;
 }
