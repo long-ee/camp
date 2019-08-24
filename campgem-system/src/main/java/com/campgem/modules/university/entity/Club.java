@@ -57,6 +57,9 @@ public class Club {
 	@Excel(name = "成员数量", width = 15)
 	@ApiModelProperty(value = "成员数量")
 	private Integer memberCount;
+	@Excel(name = "成员用户ID", width = 15)
+	@ApiModelProperty(value = "成员用户ID")
+	private String memberIds;
 	/**所属大学*/
 	@Excel(name = "所属大学", width = 15)
     @ApiModelProperty(value = "所属大学")

@@ -95,8 +95,9 @@ public class PermissionDataAspect {
 			String username = identifyInfo.getIdentifier();
 			List<SysPermissionDataRule> dataRules = sysPermissionDataRuleService.queryPermissionDataRules(username, currentSyspermission.getId());
 			if(dataRules!=null && dataRules.size()>0) {
-				JeecgDataAutorUtils.installDataSearchConditon(request, dataRules);
-				
+				//TODO 数据权限后续优化
+//				JeecgDataAutorUtils.installDataSearchConditon(request, dataRules);
+
 				//TODO 此处将用户信息查找出来放到request中实属无奈  可以优化
 				SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
 				JeecgDataAutorUtils.installUserInfo(request, userinfo);

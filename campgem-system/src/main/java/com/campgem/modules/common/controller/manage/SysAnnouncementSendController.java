@@ -211,8 +211,6 @@ public class SysAnnouncementSendController {
 		LoginUser sysUser = (LoginUser)SecurityUtils.getSubject().getPrincipal();
 		String userId = sysUser.getId();
 		announcementSendModel.setUserId(userId);
-		announcementSendModel.setPageNo((pageNo-1)*pageSize);
-		announcementSendModel.setPageSize(pageSize);
 		Page<AnnouncementSendModel> pageList = new Page<AnnouncementSendModel>(pageNo,pageSize);
 		pageList = sysAnnouncementSendService.getMyAnnouncementSendPage(pageList, announcementSendModel);
 		result.setResult(pageList);

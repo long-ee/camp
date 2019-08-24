@@ -20,6 +20,15 @@
             <if test="null != queryDto.categoryId and queryDto.categoryId != ''">
                 <![CDATA[ AND club.category_id = #{queryDto.categoryId}  ]]>
             </if>
+            <if test="null != queryDto.memberId and queryDto.memberId != ''">
+                 <![CDATA[ AND
+                      (
+                          club.creator_id = #{queryDto.memberId}
+                          OR
+                          FIND_IN_SET(#{queryDto.memberId}, club.member_ids)
+                      )
+                 ]]>
+            </if>
         </where>
     </sql>
 
