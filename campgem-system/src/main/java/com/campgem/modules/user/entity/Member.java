@@ -78,6 +78,16 @@ public class Member {
 	@Excel(name = "专业", width = 15)
     @ApiModelProperty(value = "专业")
 	private String major;
+	/**爱好*/
+	@Excel(name = "爱好", width = 15)
+	@ApiModelProperty(value = "爱好")
+	private String hobbies;
+	@Excel(name = "firstName", width = 15)
+	@ApiModelProperty(value = "firstName")
+	private String firstName;
+	@Excel(name = "lastName", width = 15)
+	@ApiModelProperty(value = "lastName")
+	private String lastName;
 	/**入学时间*/
 	@Excel(name = "入学时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
@@ -111,11 +121,10 @@ public class Member {
     @ApiModelProperty(value = "删除状态")
 	@TableLogic
 	private Integer delFlag;
+	@ApiModelProperty(value = "是否允许私聊")
+	private String allowChat;
 	@ApiModelProperty("配送方式")
 	private String shippingMethods;
-	/**是否允许私信*/
-	@ApiModelProperty(value = "是否允许私信")
-	private boolean allowChat;
 	/**createBy*/
 	@Excel(name = "createBy", width = 15)
     @ApiModelProperty(value = "createBy")

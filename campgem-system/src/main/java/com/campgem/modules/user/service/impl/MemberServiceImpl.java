@@ -14,6 +14,7 @@ import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
 import com.campgem.modules.service.service.IBusinessActivityService;
 import com.campgem.modules.service.vo.BusinessActivityInProgressVo;
 import com.campgem.modules.service.vo.BusinessDetailVo;
+import com.campgem.modules.user.dto.MemberDto;
 import com.campgem.modules.user.dto.MemberQueryDto;
 import com.campgem.modules.user.dto.UserPasswordModifyDto;
 import com.campgem.modules.user.dto.UserRegistrationDto;
@@ -61,12 +62,24 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     @Override
     public IPage<MemberVo> queryPageList(Page page, MemberQueryDto queryDto) {
-        return null;
+        return memberMapper.queryPageList(page, queryDto);
     }
 
     @Override
     public MemberVo queryDetails(String id) {
-        return null;
+        return memberMapper.queryDetails(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void edit(MemberDto memberDto) {
+        memberDto.paramValidation();
+        Member member = BeanConvertUtils.convertBean(memberDto, Member.class);
+        this.updateById(member);
+        UserBase userBase = userBaseService.getById(member.getUserBaseId());
+        userBase.setFace(memberDto.getFace());
+        userBase.setUsername(memberDto.getMemberName());
+        userBaseService.updateById(userBase);
     }
 
     @Override
@@ -169,7 +182,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     }
 
     @Override
-    public MemberVo modifyPassword(UserPasswordModifyDto passwordModifyDto) {
+    public void modifyPassword(UserPasswordModifyDto passwordModifyDto) {
         passwordModifyDto.paramValidation();
         if(!StringUtils.equals(passwordModifyDto.getNewPassword(), passwordModifyDto.getRepeatPassword())){
             throw new JeecgBootException("新密码两次输入不一致");
@@ -186,7 +199,6 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         String newEncryptPassword = PasswordUtils.encryptPassword(passwordModifyDto.getEmail(), passwordModifyDto.getNewPassword(), 2);
         userAuth.setCertificate(newEncryptPassword);
         userAuthService.updateById(userAuth);
-        return this.getMemberByUserBaseId(userAuth.getUserBaseId());
     }
     
     @Override

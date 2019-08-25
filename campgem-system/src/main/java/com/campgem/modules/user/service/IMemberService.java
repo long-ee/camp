@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.service.vo.BusinessDetailVo;
+import com.campgem.modules.user.dto.MemberDto;
 import com.campgem.modules.user.dto.MemberQueryDto;
 import com.campgem.modules.user.dto.UserPasswordModifyDto;
 import com.campgem.modules.user.dto.UserRegistrationDto;
@@ -34,6 +35,12 @@ public interface IMemberService extends IService<Member> {
     MemberVo queryDetails(String id);
 
     /**
+     * 用户编辑
+     * @param memberDto
+     */
+    public void edit(MemberDto memberDto);
+
+    /**
      * 获取邮箱验证码
      * @param email
      * @return
@@ -59,7 +66,7 @@ public interface IMemberService extends IService<Member> {
      * @param passwordModifyDto
      * @return
      */
-    public MemberVo modifyPassword(UserPasswordModifyDto passwordModifyDto);
+    public void modifyPassword(UserPasswordModifyDto passwordModifyDto);
     
     /**
      * 查询商家配送方式
