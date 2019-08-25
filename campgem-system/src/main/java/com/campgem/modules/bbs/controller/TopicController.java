@@ -5,15 +5,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.util.SecurityUtils;
-import com.campgem.modules.bbs.dto.TopicDto;
-import com.campgem.modules.bbs.dto.TopicReplyDto;
-import com.campgem.modules.bbs.dto.TopicReplyStandDto;
-import com.campgem.modules.bbs.dto.TopicQueryDto;
+import com.campgem.modules.bbs.dto.*;
 import com.campgem.modules.bbs.entity.Topic;
 import com.campgem.modules.bbs.service.IReplyService;
 import com.campgem.modules.bbs.service.ITopicService;
 import com.campgem.modules.bbs.vo.ReplyVo;
 import com.campgem.modules.bbs.vo.TopicVo;
+import com.campgem.modules.common.service.ISysAnnouncementService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +35,8 @@ public class TopicController {
 	private ITopicService topicService;
 	@Resource
 	private IReplyService replyService;
+	@Resource
+	private ISysAnnouncementService sysAnnouncementService;
 
 	@ApiOperation(value="话题信息管理-热门话题列表查询", notes="F1 热门话题列表查询")
 	@GetMapping(value = "/post/topic/hot/list")
@@ -113,6 +113,13 @@ public class TopicController {
 	@PostMapping(value = "/post/topic/reply/stand")
 	public Result topicReplyStand(@Valid TopicReplyStandDto replyStandDto) {
 		replyService.replyStand(replyStandDto);
+		return Result.ok();
+	}
+
+	@ApiOperation(value="话题信息管理-发送站内信", notes="F14 发送站内信")
+	@PostMapping(value = "/post/topic/letter/send")
+	public Result sendLetter(@Valid TopicLetterDto letterDto) {
+		sysAnnouncementService.sendTopicLetter(letterDto);
 		return Result.ok();
 	}
 

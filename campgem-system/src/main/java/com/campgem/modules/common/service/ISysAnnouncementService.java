@@ -1,5 +1,7 @@
 package com.campgem.modules.common.service;
 
+import com.campgem.modules.bbs.dto.TopicDto;
+import com.campgem.modules.bbs.dto.TopicLetterDto;
 import com.campgem.modules.common.entity.SysAnnouncement;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -25,5 +27,11 @@ public interface ISysAnnouncementService extends IService<SysAnnouncement> {
 	 * @param messageReplyDto
 	 */
 	public void messageReply(UserMessageReplyDto messageReplyDto);
+
+	/**
+	 * 发送站内信（BBS）
+	 * @param topicLetterDto
+	 */
+	public void sendTopicLetter(TopicLetterDto topicLetterDto);
 
 }

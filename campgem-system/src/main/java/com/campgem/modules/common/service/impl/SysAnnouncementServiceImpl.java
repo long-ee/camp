@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
+import com.campgem.modules.bbs.dto.TopicLetterDto;
 import com.campgem.modules.common.entity.SysAnnouncement;
 import com.campgem.modules.common.entity.SysAnnouncementSend;
 import com.campgem.modules.common.mapper.SysAnnouncementMapper;
@@ -16,6 +17,7 @@ import com.campgem.modules.common.mapper.SysAnnouncementSendMapper;
 import com.campgem.modules.common.service.ISysAnnouncementService;
 import com.campgem.common.constant.CommonConstant;
 import com.campgem.modules.user.dto.UserMessageReplyDto;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -137,6 +139,23 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
 		replyMessage.setUserIds(sysAnnouncement.getSender());
 		replyMessage.setMsgCategory(sysAnnouncement.getMsgCategory());
 		this.saveAnnouncement(replyMessage);
+	}
+
+	@Override
+	public void sendTopicLetter(TopicLetterDto topicLetterDto) {
+		if(StringUtils.isBlank(topicLetterDto.getSenderId())){
+			throw new JeecgBootException(StatusEnum.BadRequest);
+		}
+		SysAnnouncement letter = new SysAnnouncement();
+		letter.setTitile("收到一条站内信");
+		letter.setMsgContent(topicLetterDto.getLetterContent());
+		letter.setMsgType(CommonConstant.MSG_TYPE_UESR);
+		letter.setSendStatus("1");
+		letter.setSendTime(new Date());
+		letter.setSender(topicLetterDto.getSenderId());
+		letter.setUserIds(topicLetterDto.getReceiverId());
+		letter.setMsgCategory("TOPIC_LETTER");
+		this.saveAnnouncement(letter);
 	}
 
 }
