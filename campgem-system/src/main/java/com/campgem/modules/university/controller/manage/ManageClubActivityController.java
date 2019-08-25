@@ -71,7 +71,7 @@ public class ManageClubActivityController {
 	 * @return
 	 */
 	@ApiOperation(value="社团活动信息-编辑", notes="E31")
-	@PostMapping(value = "/clubActivity/edit")
+	@PostMapping(value = "/club/activity/edit")
 	public Result<ClubActivity> edit(ClubActivity clubActivity) {
 		Result<ClubActivity> result = new Result<ClubActivity>();
 		ClubActivity clubActivityEntity = clubActivityService.getById(clubActivity.getId());
@@ -94,7 +94,7 @@ public class ManageClubActivityController {
 	 * @return
 	 */
 	@ApiOperation(value="社团活动信息-通过id删除", notes="E3")
-	@PostMapping(value = "/clubActivity/delete")
+	@PostMapping(value = "/club/activity/delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			clubActivityService.removeById(id);
@@ -111,7 +111,7 @@ public class ManageClubActivityController {
 	 * @return
 	 */
 	@ApiOperation(value="社团活动信息-详情查询", notes="E31")
-	@GetMapping(value = "/clubActivity/details")
+	@GetMapping(value = "/club/activity/details")
 	public Result<ClubActivityVo> queryById(@RequestParam(name="id",required=true) String id) {
 		Result<ClubActivityVo> result = new Result<ClubActivityVo>();
 		ClubActivityVo clubActivity = clubActivityService.queryDetails(id);
