@@ -51,8 +51,7 @@ public class University {
 	private String officialAddress;
 	/**是否启用*/
 	@Excel(name = "是否启用", width = 15)
-    @ApiModelProperty(value = "是否启用")
-	@NotBlank(message = "请选择是否启用学校信息")
+    @ApiModelProperty(value = "是否启用", hidden = true)
 	private String enabled;
 	/**删除状态*/
 	@Excel(name = "删除状态", width = 15)

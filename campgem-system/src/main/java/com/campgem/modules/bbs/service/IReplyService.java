@@ -8,6 +8,8 @@ import com.campgem.modules.bbs.dto.TopicReplyStandDto;
 import com.campgem.modules.bbs.entity.Reply;
 import com.campgem.modules.bbs.vo.ReplyVo;
 
+import java.util.List;
+
 /**
  * @Description: 话题回复信息
  * @Author: campgem
@@ -15,6 +17,9 @@ import com.campgem.modules.bbs.vo.ReplyVo;
  * @Version: V1.0
  */
 public interface IReplyService extends IService<Reply> {
+
+    List<ReplyVo> queryList(String topicId);
+
     /**
      * 分页查询话题回复列表
      * @param page

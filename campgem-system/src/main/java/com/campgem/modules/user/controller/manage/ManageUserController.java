@@ -13,11 +13,13 @@ import com.campgem.modules.user.vo.MemberVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @Api(tags="【管理端】用户管理接口")
@@ -125,6 +127,20 @@ public class ManageUserController {
             result.error500("未找到对应实体");
         }else {
             result.setResult(member);
+            result.setSuccess(true);
+        }
+        return result;
+    }
+
+    @ApiOperation(value="用户信息-通过用户类型查询", notes="D11 用户信息-通过用户类型查询(参数格式：STUDENT，INDIVIDUAL)")
+    @GetMapping(value = "/user/list/type")
+    public Result<List<Member>> queryMemberListByTypes(String memberTypes) {
+        Result<List<Member>> result = new Result<List<Member>>();
+        List<Member> members = memberService.queryMemberByTypes(memberTypes);
+        if(CollectionUtils.isEmpty(members)) {
+            result.error500("未找到对应实体");
+        }else {
+            result.setResult(members);
             result.setSuccess(true);
         }
         return result;

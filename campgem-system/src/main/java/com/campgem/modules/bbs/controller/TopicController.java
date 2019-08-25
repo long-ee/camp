@@ -64,6 +64,8 @@ public class TopicController {
 	@GetMapping(value = "/post/topic/details")
 	public Result<TopicVo> queryDetails(String topicId) {
 		TopicVo topic = topicService.queryDetails(topicId);
+		// 更新浏览数量
+		topicService.updateTopicReplyVCount(topicId);
 		return new Result<TopicVo>().result(topic);
 	}
 

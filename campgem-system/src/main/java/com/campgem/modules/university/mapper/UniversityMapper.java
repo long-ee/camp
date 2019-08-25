@@ -1,5 +1,7 @@
 package com.campgem.modules.university.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.modules.university.dto.UniversityQueryDto;
 import com.campgem.modules.university.entity.University;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -21,4 +23,13 @@ public interface UniversityMapper extends BaseMapper<University> {
      * @return
      */
     List<UniversityVo> queryList(@Param("queryDto") UniversityQueryDto queryDto);
+
+    /**
+     * 分页查询城市列表
+     * @param page
+     * @param queryDto
+     * @return
+     */
+    IPage<UniversityVo> queryPageList(Page page, @Param("queryDto") UniversityQueryDto queryDto);
+
 }

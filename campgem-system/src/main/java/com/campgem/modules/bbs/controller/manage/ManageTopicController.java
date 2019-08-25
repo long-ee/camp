@@ -3,11 +3,11 @@ package com.campgem.modules.bbs.controller.manage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
-import com.campgem.modules.common.dto.CityQueryDto;
 import com.campgem.modules.bbs.dto.TopicQueryDto;
 import com.campgem.modules.bbs.entity.Topic;
 import com.campgem.modules.bbs.service.IReplyService;
 import com.campgem.modules.bbs.service.ITopicService;
+import com.campgem.modules.bbs.vo.ReplyVo;
 import com.campgem.modules.bbs.vo.TopicVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,51 +32,25 @@ public class ManageTopicController {
 	@Resource
 	private IReplyService replyService;
 
-	/**
-	 * 根据关键字查询话题列表信息
-	 * @return
-	 */
-	@ApiOperation(value="Search topic list by keywords", notes="根据关键字查询话题列表信息")
-	@GetMapping(value = "/topic/list")
-	public Result<List<TopicVo>> searchTopicList(TopicQueryDto queryDto, HttpServletRequest req) {
-		Result<List<TopicVo>> result = new Result<>();
-		Page<CityQueryDto> page = new Page<CityQueryDto>(1, 10);
-		IPage<TopicVo> pageList = topicService.queryPageList(page, queryDto);
-		result.setSuccess(true);
-		result.setResult(pageList.getRecords());
-		return result;
-	}
-	
-	/**
-	  * 分页列表查询
-	 * @param queryDto
-	 * @param pageNo
-	 * @param pageSize
-	 * @param req
-	 * @return
-	 */
-	@ApiOperation(value="话题信息-分页列表查询", notes="话题信息-分页列表查询")
+	@ApiOperation(value="话题信息管理-话题列表分页查询", notes="D2")
 	@GetMapping(value = "/topic/pageList")
-	public Result<IPage<TopicVo>> queryPageList(TopicQueryDto queryDto,
-												@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-												@RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
-												HttpServletRequest req) {
-		Result<IPage<TopicVo>> result = new Result<>();
+	public Result<IPage<TopicVo>> queryTopicList(TopicQueryDto queryDto,
+												 @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+												 @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+												 HttpServletRequest req) {
 		Page<TopicQueryDto> page = new Page<TopicQueryDto>(pageNo, pageSize);
-		IPage<TopicVo> pageList = topicService.queryPageList(page, queryDto);
-		result.setSuccess(true);
-		result.setResult(pageList);
-		return result;
+		IPage<TopicVo> topicVos = topicService.queryPageList(page, queryDto);
+		return new Result<IPage<TopicVo>>().result(topicVos);
 	}
-	
+
 	/**
 	  *   添加
 	 * @param topic
 	 * @return
 	 */
-	@ApiOperation(value="话题信息-添加", notes="话题信息-添加")
+	@ApiOperation(value="话题信息-添加", notes="D21")
 	@PostMapping(value = "/topic/add")
-	public Result<Topic> add(@RequestBody Topic topic) {
+	public Result<Topic> add(Topic topic) {
 		Result<Topic> result = new Result<Topic>();
 		try {
 			topicService.save(topic);
@@ -93,9 +67,9 @@ public class ManageTopicController {
 	 * @param topic
 	 * @return
 	 */
-	@ApiOperation(value="话题信息-编辑", notes="话题信息-编辑")
+	@ApiOperation(value="话题信息-编辑", notes="D21")
 	@PostMapping(value = "/topic/edit")
-	public Result<Topic> edit(@RequestBody Topic topic) {
+	public Result<Topic> edit(Topic topic) {
 		Result<Topic> result = new Result<Topic>();
 		Topic topicEntity = topicService.getById(topic.getId());
 		if(topicEntity==null) {
@@ -116,7 +90,7 @@ public class ManageTopicController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="话题信息-通过id删除", notes="话题信息-通过id删除")
+	@ApiOperation(value="话题信息-通过id删除", notes="D2 ")
 	@PostMapping(value = "/topic/delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
@@ -128,12 +102,19 @@ public class ManageTopicController {
 		return Result.ok("删除成功!");
 	}
 
+	@ApiOperation(value="话题信息-话题回复列表查询", notes="D21")
+	@GetMapping(value = "/topic/reply/list")
+	public Result<List<ReplyVo>> queryTopicReplyList(@RequestParam(name="id",required=true) String id) {
+		List<ReplyVo> replyVoList = replyService.queryList(id);
+		return new Result<List<ReplyVo>>().result(replyVoList);
+	}
+
 	 /**
 	  * 通过id删除
 	  * @param id
 	  * @return
 	  */
-	 @ApiOperation(value="话题回复信息-通过id删除", notes="话题回复信息-通过id删除")
+	 @ApiOperation(value="话题回复信息-通过id删除", notes="D21")
 	 @PostMapping(value = "/topic/reply/delete")
 	 public Result<?> deleteReply(@RequestParam(name="id",required=true) String id) {
 		 try {
@@ -151,7 +132,7 @@ public class ManageTopicController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="话题信息-详情查询", notes="话题信息-详情查询")
+	@ApiOperation(value="话题信息-详情查询", notes="D21")
 	@GetMapping(value = "/topic/details")
 	public Result<TopicVo> queryDetails(@RequestParam(name="id",required=true) String id) {
 		Result<TopicVo> result = new Result<TopicVo>();

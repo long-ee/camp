@@ -1,12 +1,15 @@
 package com.campgem.modules.bbs.vo;
 
 import com.campgem.modules.bbs.entity.Topic;
+import com.campgem.modules.user.vo.MemberVo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.jeecgframework.poi.excel.annotation.Excel;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Data
@@ -43,8 +46,15 @@ public class PostVo {
     private Topic latestTopic;
     /**版块管理员列表*/
     @ApiModelProperty(value = "版块管理员列表")
-    private List<PostModeratorVo> moderators;
+    private List<MemberVo> moderators;
     /**主版块管理员*/
     @ApiModelProperty(value = "主版块管理员")
-    private PostModeratorVo primaryModerator;
+    private MemberVo primaryModerator;
+    /**主管理员ID*/
+    @ApiModelProperty(value = "主管理员ID", hidden = true)
+    private String primaryAdminId;
+    /**所有管理员ID*/
+    @ApiModelProperty(value = "所有管理员ID", hidden = true)
+    private String adminIds;
+
 }

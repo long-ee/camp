@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.LoginUserVo;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.bbs.entity.Post;
 import com.campgem.modules.university.dto.UniversityQueryDto;
 import com.campgem.modules.university.entity.University;
 import com.campgem.modules.user.entity.enums.MemberTypeEnum;
@@ -30,28 +31,6 @@ public class ManageUniversityController {
 	private IUniversityService universityService;
 
 	/**
-	 * 校园基本信息查询
-	 * @param request
-	 * @return
-	 */
-	@ApiOperation(value="Query university base information", notes="校园基本信息查询")
-	@GetMapping(value = "/university/baseInfo")
-	public Result<UniversityVo> queryUniversityBaseInfo(HttpServletRequest request) {
-		Result<UniversityVo> result = new Result<>();
-		LoginUserVo currentUser = SecurityUtils.getCurrentUser();
-		// 如果当前用户为学生，则查询其所属学校信息
-		if(StringUtils.equals(MemberTypeEnum.STUDENT.code(), currentUser.getMemberType())){
-			UniversityVo universityVo = universityService.queryDetails(currentUser.getUniversityId());
-			result.setResult(universityVo);
-			result.setSuccess(true);
-			return result;
-		}
-		result.setMessage("当前无法查询到用户匹配的校园信息");
-		return result;
-	}
-
-	
-	/**
 	  * 分页列表查询
 	 * @param queryDto
 	 * @param pageNo
@@ -59,7 +38,7 @@ public class ManageUniversityController {
 	 * @param req
 	 * @return
 	 */
-	@ApiOperation(value="校园信息-分页列表查询", notes="校园信息-分页列表查询")
+	@ApiOperation(value="校园信息-分页列表查询", notes="G2")
 	@GetMapping(value = "/university/pageList")
 	public Result<IPage<UniversityVo>> queryPageList(UniversityQueryDto queryDto,
 												   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -78,11 +57,12 @@ public class ManageUniversityController {
 	 * @param university
 	 * @return
 	 */
-	@ApiOperation(value="校园信息-添加", notes="校园信息-添加")
+	@ApiOperation(value="校园信息-添加", notes="G21")
 	@PostMapping(value = "/university/add")
 	public Result<University> add(@Valid University university) {
 		Result<University> result = new Result<University>();
 		try {
+			university.setEnabled("1");
 			universityService.save(university);
 			result.success("添加成功！");
 		} catch (Exception e) {
@@ -97,7 +77,7 @@ public class ManageUniversityController {
 	 * @param university
 	 * @return
 	 */
-	@ApiOperation(value="校园信息-编辑", notes="校园信息-编辑")
+	@ApiOperation(value="校园信息-编辑", notes="G21")
 	@PostMapping(value = "/university/edit")
 	public Result<University> edit(@Valid University university) {
 		Result<University> result = new Result<University>();
@@ -120,7 +100,7 @@ public class ManageUniversityController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="校园信息-通过id删除", notes="校园信息-通过id删除")
+	@ApiOperation(value="校园信息-通过id删除", notes="G1")
 	@PostMapping(value = "/university/delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
@@ -132,13 +112,60 @@ public class ManageUniversityController {
 		return Result.ok("删除成功!");
 	}
 
+
+	/**
+	 *   启用
+	 * @param id
+	 * @return
+	 *//*
+	@ApiOperation(value="版块信息-版块启用", notes="D1 版块启用")
+	@PostMapping(value = "/university/enable")
+	public Result<?> enable(@RequestParam(name="id",required=true) String id) {
+		Result<University> result = new Result<University>();
+		University university = universityService.getById(id);
+		if(university==null) {
+			result.error500("未找到对应实体");
+		}else {
+			university.setEnabled("1");
+			boolean ok = universityService.updateById(university);
+			//TODO 返回false说明什么？
+			if(ok) {
+				result.success("启用成功!");
+			}
+		}
+		return result;
+	}
+
+	*//**
+	 *   禁用
+	 * @param id
+	 * @return
+	 *//*
+	@ApiOperation(value="版块信息-版块禁用", notes="D1 版块禁用")
+	@PostMapping(value = "/university/disable")
+	public Result<?> disable(@RequestParam(name="id",required=true) String id) {
+		Result<University> result = new Result<University>();
+		University university = universityService.getById(id);
+		if(university==null) {
+			result.error500("未找到对应实体");
+		}else {
+			university.setEnabled("0");
+			boolean ok = universityService.updateById(university);
+			//TODO 返回false说明什么？
+			if(ok) {
+				result.success("禁用成功!");
+			}
+		}
+		return result;
+	}*/
+
 	
 	/**
 	 * 详情查询
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="校园信息-详情查询", notes="校园信息-详情查询")
+	@ApiOperation(value="校园信息-详情查询", notes="G21")
 	@GetMapping(value = "/university/details")
 	public Result<UniversityVo> queryDetails(@RequestParam(name="id",required=true) String id) {
 		Result<UniversityVo> result = new Result<UniversityVo>();

@@ -44,7 +44,7 @@ public class Post {
 	private String enabled;
 	/**主管理员ID*/
 	@Excel(name = "主管理员ID", width = 15)
-	@ApiModelProperty(value = "主管理员ID")
+	@ApiModelProperty(value = "主管理员ID", hidden = true)
 	private String primaryAdminId;
 	/**所有管理员ID*/
 	@Excel(name = "所有管理员ID", width = 15)
@@ -52,27 +52,27 @@ public class Post {
 	private String adminIds;
 	/**删除状态*/
 	@Excel(name = "删除状态", width = 15)
-    @ApiModelProperty(value = "删除状态")
+    @ApiModelProperty(value = "删除状态", hidden = true)
 	@TableLogic
 	private Integer delFlag;
 	/**createBy*/
 	@Excel(name = "createBy", width = 15)
-    @ApiModelProperty(value = "createBy")
+    @ApiModelProperty(value = "createBy", hidden = true)
 	private String createBy;
 	/**createTime*/
 	@Excel(name = "createTime", width = 20, format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "createTime")
+    @ApiModelProperty(value = "createTime", hidden = true)
 	private java.util.Date createTime;
 	/**updateTime*/
 	@Excel(name = "updateTime", width = 20, format = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "updateTime")
+    @ApiModelProperty(value = "updateTime", hidden = true)
 	private java.util.Date updateTime;
 	/**updateBy*/
 	@Excel(name = "updateBy", width = 15)
-    @ApiModelProperty(value = "updateBy")
+    @ApiModelProperty(value = "updateBy", hidden = true)
 	private String updateBy;
 }

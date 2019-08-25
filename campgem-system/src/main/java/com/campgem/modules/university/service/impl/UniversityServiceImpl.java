@@ -1,5 +1,8 @@
 package com.campgem.modules.university.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.university.dto.UniversityQueryDto;
@@ -7,13 +10,9 @@ import com.campgem.modules.university.entity.University;
 import com.campgem.modules.university.mapper.UniversityMapper;
 import com.campgem.modules.university.service.IUniversityService;
 import com.campgem.modules.university.vo.UniversityVo;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -38,7 +37,7 @@ public class UniversityServiceImpl extends ServiceImpl<UniversityMapper, Univers
 
     @Override
     public IPage<UniversityVo> queryPageList(Page page, UniversityQueryDto queryDto) {
-        return null;
+        return universityMapper.queryPageList(page, queryDto);
     }
 
     @Override

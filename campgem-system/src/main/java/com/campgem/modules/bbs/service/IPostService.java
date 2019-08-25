@@ -25,4 +25,5 @@ public interface IPostService extends IService<Post> {
      * @return
      */
     PostVo queryDetails(String id);
+    
 }

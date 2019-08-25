@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.campgem.modules.bbs.vo.ReplyVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @Description: 话题回复信息
  * @Author: campgem
@@ -22,4 +24,7 @@ public interface ReplyMapper extends BaseMapper<Reply> {
      * @return
      */
     IPage<ReplyVo> queryPageList(Page page, @Param("topicId") String topicId);
+
+
+    List<ReplyVo> queryList(@Param("topicId") String topicId);
 }

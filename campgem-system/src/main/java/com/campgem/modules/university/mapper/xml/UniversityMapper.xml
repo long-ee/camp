@@ -51,4 +51,21 @@
             order by u.create_time desc
         ]]>
     </select>
+
+    <select id="queryPageList" resultType="com.campgem.modules.university.vo.UniversityVo">
+        <![CDATA[
+            select
+                u.*,
+                c.country,
+                c.city_name,
+                c.state,
+                c.post_code
+            from
+                university u left join city c on u.city_id = c.id
+        ]]>
+        <include refid="queryConditions"></include>
+        <![CDATA[
+            order by u.create_time desc
+        ]]>
+    </select>
 </mapper>

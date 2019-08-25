@@ -18,4 +18,21 @@
              order by reply.create_time desc
          ]]>
     </select>
+
+    <select id="queryList" resultType="com.campgem.modules.bbs.vo.ReplyVo">
+        <![CDATA[
+            select
+                reply.*,
+                member.member_name as replierName,
+                member.member_type,
+                member.allow_chat,
+                userBase.face as replierFace
+            from
+                reply reply
+                    left join member member on topic.publisher_id = member.id
+                    left join user_base userBase on member.user_base_id = userBase.id
+            where reply.topic_id = #{topicId}
+            order by reply.create_time desc
+        ]]>
+    </select>
 </mapper>

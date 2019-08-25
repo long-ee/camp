@@ -89,4 +89,11 @@ public interface IMemberService extends IService<Member> {
      * @return
      */
 	List<MemberVo> queryMemberByIds(String memberIds);
+
+    /**
+     * 根据用户类型查询用户信息
+     * @param memberTypes
+     * @return
+     */
+	List<Member> queryMemberByTypes(String... memberTypes);
 }

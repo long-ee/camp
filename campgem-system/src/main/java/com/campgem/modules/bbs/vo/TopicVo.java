@@ -56,6 +56,9 @@ public class TopicVo {
 	/**发布者头像*/
 	@ApiModelProperty(value = "发布者头像")
 	private String publisherFace;
+	/**发布者城市*/
+	@ApiModelProperty(value = "发布者城市")
+	private String publisherCity;
 	/**发布者用户类型*/
 	@ApiModelProperty(value = "发布者用户类型")
 	private String memberType;

@@ -46,8 +46,6 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
         if(null == topicVo){
             throw new JeecgBootException(StatusEnum.NotFound);
         }
-        // 更新浏览数量
-        this.updateTopicReplyVCount(id);
         return topicVo;
     }
 

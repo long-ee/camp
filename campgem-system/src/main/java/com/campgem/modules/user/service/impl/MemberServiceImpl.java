@@ -2,6 +2,7 @@ package com.campgem.modules.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -232,5 +233,12 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
             return null;
         }
         return memberMapper.queryMemberByIds(memberIds);
+    }
+
+    @Override
+    public List<Member> queryMemberByTypes(String... memberTypes) {
+        LambdaQueryWrapper<Member> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(Member::getMemberType, memberTypes);
+        return memberMapper.selectList(queryWrapper);
     }
 }

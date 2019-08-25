@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description: 话题回复信息
@@ -36,6 +37,11 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
     private ReplyMapper replyMapper;
     @Resource
     private ITopicService topicService;
+
+    @Override
+    public List<ReplyVo> queryList(String topicId) {
+        return replyMapper.queryList(topicId);
+    }
 
     @Override
     public IPage<ReplyVo> queryPageList(Page page, String topicId) {

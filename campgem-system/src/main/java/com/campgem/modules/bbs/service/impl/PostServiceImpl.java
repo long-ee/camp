@@ -19,6 +19,8 @@ import com.campgem.modules.bbs.service.IReplyService;
 import com.campgem.modules.bbs.service.ITopicService;
 import com.campgem.modules.bbs.vo.PostModeratorVo;
 import com.campgem.modules.bbs.vo.PostVo;
+import com.campgem.modules.user.service.IMemberService;
+import com.campgem.modules.user.vo.MemberVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,8 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
     private IReplyService replyService;
     @Resource
     private IPostModeratorService postModeratorService;
+    @Resource
+    private IMemberService memberService;
 
     @Override
     public IPage<PostVo> queryPageList(Page page, PostQueryDto queryDto) {
@@ -89,14 +93,10 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
         replyQuery.eq(Reply::getDelFlag, 0);
         int replyCount = replyService.count(replyQuery);
         // 查询管理员信息
-        LambdaQueryWrapper<PostModerator> postModeratorQuery = new LambdaQueryWrapper<>();
-        postModeratorQuery.eq(PostModerator::getPostId, postId);
-        postModeratorQuery.eq(PostModerator::getIsPrimaryAdmin, 1);
-        List<PostModeratorVo> postModerators = postModeratorService.queryList(postId);
-        if(CollectionUtils.isNotEmpty(postModerators)){
-            postVo.setModerators(postModerators);
-            postVo.setPrimaryModerator(postModerators.get(0));
-        }
+        MemberVo primaryPostModerator = memberService.queryDetails(postVo.getPrimaryAdminId());
+        List<MemberVo> postModerators = memberService.queryMemberByIds(postVo.getAdminIds());
+        postVo.setModerators(postModerators);
+        postVo.setPrimaryModerator(primaryPostModerator);
         postVo.setTodayTopicCount(todayTopicCount);
         postVo.setTopicCount(topicCount);
         postVo.setReplyCount(replyCount);
