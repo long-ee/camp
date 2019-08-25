@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.modules.university.dto.UniversityPosterQueryDto;
+import com.campgem.modules.university.dto.UniversityQueryDto;
 import com.campgem.modules.university.entity.UniversityPoster;
 import com.campgem.modules.university.service.IUniversityPosterService;
 import com.campgem.modules.university.vo.UniversityPosterVo;
+import com.campgem.modules.university.vo.UniversityVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Slf4j
@@ -34,8 +37,8 @@ public class ManageUniversityPosterController {
 	 * @param req
 	 * @return
 	 */
-	@ApiOperation(value="海报信息-分页列表查询", notes="海报信息-分页列表查询")
-	@GetMapping(value = "/universityPoster/pageList")
+	@ApiOperation(value="海报信息-分页列表查询", notes="E1")
+	@GetMapping(value = "/university/poster/pageList")
 	public Result<IPage<UniversityPosterVo>> queryPageList(UniversityPosterQueryDto queryDto,
 														   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 														   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
@@ -47,14 +50,15 @@ public class ManageUniversityPosterController {
 		result.setResult(pageList);
 		return result;
 	}
-	
+
+
 	/**
 	  *   添加
 	 * @param universityPoster
 	 * @return
 	 */
-	@ApiOperation(value="海报信息-添加", notes="海报信息-添加")
-	@PostMapping(value = "/universityPoster/add")
+	@ApiOperation(value="海报信息-添加", notes="E11")
+	@PostMapping(value = "/university/poster/add")
 	public Result<UniversityPoster> add(@Valid UniversityPoster universityPoster) {
 		Result<UniversityPoster> result = new Result<UniversityPoster>();
 		try {
@@ -72,8 +76,8 @@ public class ManageUniversityPosterController {
 	 * @param universityPoster
 	 * @return
 	 */
-	@ApiOperation(value="海报信息-编辑", notes="海报信息-编辑")
-	@PostMapping(value = "/universityPoster/edit")
+	@ApiOperation(value="海报信息-编辑", notes="E11")
+	@PostMapping(value = "/university/poster/edit")
 	public Result<UniversityPoster> edit(@Valid UniversityPoster universityPoster) {
 		Result<UniversityPoster> result = new Result<UniversityPoster>();
 		UniversityPoster universityPosterEntity = universityPosterService.getById(universityPoster.getId());
@@ -95,8 +99,8 @@ public class ManageUniversityPosterController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="海报信息-通过id删除", notes="海报信息-通过id删除")
-	@PostMapping(value = "/universityPoster/delete")
+	@ApiOperation(value="海报信息-通过id删除", notes="E1")
+	@PostMapping(value = "/university/poster/delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
 			universityPosterService.removeById(id);
@@ -112,8 +116,8 @@ public class ManageUniversityPosterController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="海报信息-详情查询", notes="海报信息-详情查询")
-	@GetMapping(value = "/universityPoster/details")
+	@ApiOperation(value="海报信息-详情查询", notes="E11")
+	@GetMapping(value = "/university/poster/details")
 	public Result<UniversityPosterVo> queryById(@RequestParam(name="id",required=true) String id) {
 		Result<UniversityPosterVo> result = new Result<UniversityPosterVo>();
 		UniversityPosterVo universityPoster = universityPosterService.queryDetails(id);

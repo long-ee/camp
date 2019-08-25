@@ -57,7 +57,7 @@ public class UniversityPoster {
 	private java.util.Date endDate;
 	/**发布者*/
 	@Excel(name = "发布者", width = 15)
-    @ApiModelProperty(value = "发布者", hidden = true)
+    @ApiModelProperty(value = "发布者")
 	private String publisherId;
 	/**发布时间*/
 	@Excel(name = "发布时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")

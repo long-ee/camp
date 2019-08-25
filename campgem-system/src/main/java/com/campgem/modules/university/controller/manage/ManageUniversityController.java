@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @Api(tags="【管理端】学校信息管理接口")
@@ -29,6 +30,13 @@ public class ManageUniversityController {
 
 	@Resource
 	private IUniversityService universityService;
+
+	@ApiOperation(value="学校信息管理接口-学校列表查询", notes="E11")
+	@GetMapping(value = "/university/list")
+	public Result<List<UniversityVo>> list(UniversityQueryDto queryDto) {
+		List<UniversityVo> universityVos = universityService.queryList(queryDto);
+		return new Result<List<UniversityVo>>().result(universityVos);
+	}
 
 	/**
 	  * 分页列表查询

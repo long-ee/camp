@@ -30,25 +30,6 @@ public class ManageClubController {
 	@Resource
 	private IClubMemberService clubMemberService;
 
-	/**
-	 *   添加
-	 * @param clubMember
-	 * @return
-	 */
-	@ApiOperation(value="会员加入社团接口", notes="会员加入社团接口")
-	@PostMapping(value = "/club/member/add")
-	public Result<ClubMember> add(@Valid ClubMember clubMember) {
-		Result<ClubMember> result = new Result<ClubMember>();
-		try {
-			clubMemberService.save(clubMember);
-			result.success("添加成功！");
-		} catch (Exception e) {
-			log.error(e.getMessage(),e);
-			result.error500("操作失败");
-		}
-		return result;
-	}
-
 
 	/**
 	  * 分页列表查询
@@ -58,7 +39,7 @@ public class ManageClubController {
 	 * @param req
 	 * @return
 	 */
-	@ApiOperation(value="Query club information page list", notes="社团信息-分页列表查询")
+	@ApiOperation(value="社团信息-分页列表查询", notes="E2")
 	@GetMapping(value = "/club/pageList")
 	public Result<IPage<ClubVo>> queryPageList(ClubQueryDto queryDto,
 											 @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -77,7 +58,7 @@ public class ManageClubController {
 	 * @param club
 	 * @return
 	 */
-	@ApiOperation(value="社团信息-添加", notes="社团信息-添加")
+	@ApiOperation(value="社团信息-添加", notes="E21")
 	@PostMapping(value = "/club/add")
 	public Result<Club> add(@Valid Club club) {
 		Result<Club> result = new Result<Club>();
@@ -96,7 +77,7 @@ public class ManageClubController {
 	 * @param club
 	 * @return
 	 */
-	@ApiOperation(value="社团信息-编辑", notes="社团信息-编辑")
+	@ApiOperation(value="社团信息-编辑", notes="E21")
 	@PostMapping(value = "/club/edit")
 	public Result<Club> edit(@Valid Club club) {
 		Result<Club> result = new Result<Club>();
@@ -119,7 +100,7 @@ public class ManageClubController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="社团信息-通过id删除", notes="社团信息-通过id删除")
+	@ApiOperation(value="社团信息-通过id删除", notes="E2")
 	@PostMapping(value = "/club/delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
@@ -136,7 +117,7 @@ public class ManageClubController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="社团信息-详情查询", notes="社团信息-详情查询")
+	@ApiOperation(value="社团信息-详情查询", notes="E21")
 	@GetMapping(value = "/club/details")
 	public Result<ClubVo> queryDetails(@RequestParam(name="id",required=true) String id) {
 		Result<ClubVo> result = new Result<ClubVo>();

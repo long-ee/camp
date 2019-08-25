@@ -32,8 +32,8 @@ public class ManageClubActivityController {
 	 * @param req
 	 * @return
 	 */
-	@ApiOperation(value="社团活动信息-分页列表查询", notes="社团活动信息-分页列表查询")
-	@GetMapping(value = "/clubActivity/pageList")
+	@ApiOperation(value="社团活动信息-分页列表查询", notes="E3")
+	@GetMapping(value = "/club/activity/pageList")
 	public Result<IPage<ClubActivityVo>> queryPageList(ClubActivityQueryDto queryDto,
 													   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 													   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
@@ -51,9 +51,9 @@ public class ManageClubActivityController {
 	 * @param clubActivity
 	 * @return
 	 */
-	@ApiOperation(value="社团活动信息-添加", notes="社团活动信息-添加")
-	@PostMapping(value = "/clubActivity/add")
-	public Result<ClubActivity> add(@RequestBody ClubActivity clubActivity) {
+	@ApiOperation(value="社团活动信息-添加", notes="E31")
+	@PostMapping(value = "/club/activity/add")
+	public Result<ClubActivity> add(ClubActivity clubActivity) {
 		Result<ClubActivity> result = new Result<ClubActivity>();
 		try {
 			clubActivityService.save(clubActivity);
@@ -70,9 +70,9 @@ public class ManageClubActivityController {
 	 * @param clubActivity
 	 * @return
 	 */
-	@ApiOperation(value="社团活动信息-编辑", notes="社团活动信息-编辑")
+	@ApiOperation(value="社团活动信息-编辑", notes="E31")
 	@PostMapping(value = "/clubActivity/edit")
-	public Result<ClubActivity> edit(@RequestBody ClubActivity clubActivity) {
+	public Result<ClubActivity> edit(ClubActivity clubActivity) {
 		Result<ClubActivity> result = new Result<ClubActivity>();
 		ClubActivity clubActivityEntity = clubActivityService.getById(clubActivity.getId());
 		if(clubActivityEntity==null) {
@@ -93,7 +93,7 @@ public class ManageClubActivityController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="社团活动信息-通过id删除", notes="社团活动信息-通过id删除")
+	@ApiOperation(value="社团活动信息-通过id删除", notes="E3")
 	@PostMapping(value = "/clubActivity/delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
@@ -110,7 +110,7 @@ public class ManageClubActivityController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="社团活动信息-详情查询", notes="社团活动信息-详情查询")
+	@ApiOperation(value="社团活动信息-详情查询", notes="E31")
 	@GetMapping(value = "/clubActivity/details")
 	public Result<ClubActivityVo> queryById(@RequestParam(name="id",required=true) String id) {
 		Result<ClubActivityVo> result = new Result<ClubActivityVo>();

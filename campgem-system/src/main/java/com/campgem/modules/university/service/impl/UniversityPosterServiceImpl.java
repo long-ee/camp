@@ -39,7 +39,7 @@ public class UniversityPosterServiceImpl extends ServiceImpl<UniversityPosterMap
 
     @Override
     public IPage<UniversityPosterVo> queryPageList(Page page, UniversityPosterQueryDto queryDto) {
-        return null;
+        return universityPosterMapper.queryPageList(page, queryDto);
     }
 
 

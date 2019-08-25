@@ -1,5 +1,7 @@
 package com.campgem.modules.university.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.modules.university.dto.UniversityPosterQueryDto;
 import com.campgem.modules.university.entity.UniversityPoster;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -23,4 +25,6 @@ public interface UniversityPosterMapper extends BaseMapper<UniversityPoster> {
      */
     List<UniversityPosterVo> queryList(@Param("queryDto") UniversityPosterQueryDto queryDto);
 
+
+    IPage<UniversityPosterVo> queryPageList(Page page, @Param("queryDto") UniversityPosterQueryDto queryDto);
 }

@@ -47,4 +47,24 @@
             order by poster.create_time desc
         ]]>
     </select>
+
+    <select id="queryPageList" resultType="com.campgem.modules.university.vo.UniversityPosterVo">
+        <![CDATA[
+            select
+                poster.*,
+                u.university_name,
+                u.city_id,
+                c.city_name,
+                m.member_name as publisherName
+            from
+                university_poster poster
+            left join member m on poster.publisher_id = m.id
+            left join university u on poster.university_id = u.id
+            left join city c on u.city_id = c.id
+        ]]>
+        <include refid="queryConditions"></include>
+        <![CDATA[
+            order by poster.create_time desc
+        ]]>
+    </select>
 </mapper>
