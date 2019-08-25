@@ -21,7 +21,7 @@ public interface ICategoryService extends IService<Category> {
      * @param queryDto
      * @return
      */
-    IPage<CategoryVo> queryPageList(Page page, CategoryQueryDto queryDto);
+    IPage<Category> queryPageList(Page page, CategoryQueryDto queryDto);
 
     /**
      * 查询城市信息详情

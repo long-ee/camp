@@ -35,15 +35,15 @@ public class ManageCategoryController {
 	 * @param req
 	 * @return
 	 */
-	@ApiOperation(value="分类信息-分页列表查询", notes="分类信息-分页列表查询")
+	@ApiOperation(value="分类信息-分页列表查询", notes="G3")
 	@GetMapping(value = "/category/pageList")
-	public Result<IPage<CategoryVo>> queryPageList(CategoryQueryDto queryDto,
+	public Result<IPage<Category>> queryPageList(CategoryQueryDto queryDto,
 												   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 												   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 												   HttpServletRequest req) {
-		Result<IPage<CategoryVo>> result = new Result<>();
+		Result<IPage<Category>> result = new Result<>();
 		Page<CategoryQueryDto> page = new Page<CategoryQueryDto>(pageNo, pageSize);
-		IPage<CategoryVo> pageList = categoryService.queryPageList(page, queryDto);
+		IPage<Category> pageList = categoryService.queryPageList(page, queryDto);
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;
@@ -54,7 +54,7 @@ public class ManageCategoryController {
 	 * @param category
 	 * @return
 	 */
-	@ApiOperation(value="分类信息-添加", notes="分类信息-添加")
+	@ApiOperation(value="分类信息-添加", notes="G31")
 	@PostMapping(value = "/category/add")
 	public Result<Category> add(@Valid Category category) {
 		Result<Category> result = new Result<Category>();
@@ -73,7 +73,7 @@ public class ManageCategoryController {
 	 * @param category
 	 * @return
 	 */
-	@ApiOperation(value="分类信息-编辑", notes="分类信息-编辑")
+	@ApiOperation(value="分类信息-编辑", notes="G31")
 	@PostMapping(value = "/category/edit")
 	public Result<Category> edit(@Valid Category category) {
 		Result<Category> result = new Result<Category>();
@@ -96,7 +96,7 @@ public class ManageCategoryController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="分类信息-通过id删除", notes="分类信息-通过id删除")
+	@ApiOperation(value="分类信息-通过id删除", notes="G1")
 	@PostMapping(value = "/category/delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
@@ -113,7 +113,7 @@ public class ManageCategoryController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value="分类信息-详情查询", notes="分类信息-详情查询")
+	@ApiOperation(value="分类信息-详情查询", notes="G31")
 	@GetMapping(value = "/category/details")
 	public Result<CategoryVo> queryDetails(@RequestParam(name="id",required=true) String id) {
 		Result<CategoryVo> result = new Result<CategoryVo>();

@@ -1,10 +1,13 @@
 package com.campgem.common.enums;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 系统错误码
  * @author: campgem
  */
 public enum StatusEnum {
+
     // general error code
     OK(10200, "Succeeded", "成功"),
     BadRequest(10400, "Bad request", "请求错误"),
@@ -40,7 +43,7 @@ public enum StatusEnum {
 
     ;
 
-
+    private final String enableLanguage = "zh";
     private int code;
     private String enMsg;
     private String cnMsg;
@@ -58,4 +61,12 @@ public enum StatusEnum {
     public int code() {
         return code;
     }
+
+    public String msg() {
+        if(StringUtils.equals(enableLanguage, "zh")){
+            return cnMsg;
+        }
+        return enMsg;
+    }
+
 }

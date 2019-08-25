@@ -33,15 +33,15 @@ public class ManageCityController {
      * @param req
      * @return
      */
-    @ApiOperation(value="城市信息-分页列表查询", notes="城市信息-分页列表查询")
+    @ApiOperation(value="城市信息-分页列表查询", notes="G1")
     @GetMapping(value = "/city/pageList")
-    public Result<IPage<CityVo>> queryPageList(CityQueryDto queryDto,
+    public Result<IPage<City>> queryPageList(CityQueryDto queryDto,
                                                @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
                                                @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
                                                HttpServletRequest req) {
-        Result<IPage<CityVo>> result = new Result<>();
+        Result<IPage<City>> result = new Result<>();
         Page<CityQueryDto> page = new Page<CityQueryDto>(pageNo, pageSize);
-        IPage<CityVo> pageList = cityService.queryPageList(page, queryDto);
+        IPage<City> pageList = cityService.queryPageList(page, queryDto);
         result.setSuccess(true);
         result.setResult(pageList);
         return result;
@@ -53,7 +53,7 @@ public class ManageCityController {
      * @param city
      * @return
      */
-    @ApiOperation(value="城市信息-添加", notes="城市信息-添加")
+    @ApiOperation(value="城市信息-添加", notes="G11")
     @PostMapping(value = "/city/add")
     public Result<City> add(@Valid City city) {
         Result<City> result = new Result<City>();
@@ -73,7 +73,7 @@ public class ManageCityController {
      * @param city
      * @return
      */
-    @ApiOperation(value="城市信息-编辑", notes="城市信息-编辑")
+    @ApiOperation(value="城市信息-编辑", notes="G11")
     @PostMapping(value = "/city/edit")
     public Result<City> edit(@Valid City city) {
         Result<City> result = new Result<City>();
@@ -94,7 +94,7 @@ public class ManageCityController {
      * @param id
      * @return
      */
-    @ApiOperation(value="城市信息-详情查询", notes="城市信息-详情查询")
+    @ApiOperation(value="城市信息-详情查询", notes="G11")
     @GetMapping(value = "/city/details")
     public Result<CityVo> queryById(@RequestParam(name="id",required=true) String id) {
         Result<CityVo> result = new Result<CityVo>();
@@ -113,7 +113,7 @@ public class ManageCityController {
      * @param id
      * @return
      */
-    @ApiOperation(value="城市信息-通过id删除", notes="城市信息-通过id删除")
+    @ApiOperation(value="城市信息-通过id删除", notes="G1")
     @PostMapping(value = "/city/delete")
     public Result<?> delete(@RequestParam(name="id",required=true) String id) {
         try {

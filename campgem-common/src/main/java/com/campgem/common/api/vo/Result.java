@@ -1,6 +1,7 @@
 package com.campgem.common.api.vo;
 
 import com.campgem.common.constant.CommonConstant;
+import com.campgem.common.enums.StatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -55,17 +56,24 @@ public class Result<T> implements Serializable {
 	public Result() {
 		
 	}
+
+	public Result<T> error(StatusEnum statusEnum) {
+		this.message = statusEnum.msg();
+		this.code = statusEnum.code();
+		this.success = false;
+		return this;
+	}
 	
 	public Result<T> error500(String message) {
 		this.message = message;
-		this.code = CommonConstant.SC_INTERNAL_SERVER_ERROR_500;
+		this.code = StatusEnum.InternalError.code();
 		this.success = false;
 		return this;
 	}
 	
 	public Result<T> success(String message) {
 		this.message = message;
-		this.code = CommonConstant.SC_OK_200;
+		this.code = StatusEnum.OK.code();
 		this.success = true;
 		return this;
 	}
@@ -102,7 +110,7 @@ public class Result<T> implements Serializable {
 	}
 	
 	public static Result<Object> error(String msg) {
-		return error(CommonConstant.SC_INTERNAL_SERVER_ERROR_500, msg);
+		return error(StatusEnum.InternalError.code(), msg);
 	}
 	
 	public static Result<Object> error(int code, String msg) {
@@ -112,7 +120,7 @@ public class Result<T> implements Serializable {
 		r.setSuccess(false);
 		return r;
 	}
-	
+
 	/**
 	 * 无权限访问返回结果
 	 */

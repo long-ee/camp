@@ -19,7 +19,7 @@ public interface ICityService extends IService<City> {
      * @param queryDto
      * @return
      */
-    IPage<CityVo> queryPageList(Page page, CityQueryDto queryDto);
+    IPage<City> queryPageList(Page page, CityQueryDto queryDto);
 
     /**
      * 查询城市信息详情
