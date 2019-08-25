@@ -2,24 +2,21 @@ package com.campgem.modules.user.controller.manage;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.campgem.common.api.vo.IdentifyInfo;
 import com.campgem.common.api.vo.Result;
-import com.campgem.common.system.util.JwtUtil;
+import com.campgem.modules.user.dto.MemberDto;
 import com.campgem.modules.user.dto.MemberQueryDto;
-import com.campgem.modules.user.dto.UserPasswordModifyDto;
-import com.campgem.modules.user.entity.Member;
+import com.campgem.modules.user.entity.UserBase;
 import com.campgem.modules.user.service.IMemberService;
+import com.campgem.modules.user.service.IUserBaseService;
 import com.campgem.modules.user.vo.MemberVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @Api(tags="【管理端】用户管理接口")
@@ -29,6 +26,8 @@ public class ManageUserController {
 
     @Resource
     private IMemberService memberService;
+    @Resource
+    private IUserBaseService userBaseService;
 
     /**
      * 分页列表查询
@@ -38,7 +37,7 @@ public class ManageUserController {
      * @param req
      * @return
      */
-    @ApiOperation(value="用户信息-分页列表查询", notes="用户信息-分页列表查询")
+    @ApiOperation(value="用户信息-分页列表查询", notes="B1")
     @GetMapping(value = "/user/pageList")
     public Result<IPage<MemberVo>> queryPageList(MemberQueryDto queryDto,
                                                @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -52,98 +51,62 @@ public class ManageUserController {
         return result;
     }
 
-    /**
-     *   添加
-     * @param member
-     * @return
-     */
-    @ApiOperation(value="用户信息-添加", notes="用户信息-添加")
-    @PostMapping(value = "/user/add")
-    public Result<Member> add(@Valid Member member) {
-        Result<Member> result = new Result<Member>();
-        try {
-            memberService.save(member);
-            result.success("添加成功！");
-        } catch (Exception e) {
-            log.error(e.getMessage(),e);
-            result.error500("操作失败");
-        }
-        return result;
+    @PostMapping(value = "/user/edit")
+    @ApiOperation(value="用户信息-编辑用户信息", notes="B11")
+    public Result edit(@Valid MemberDto memberDto) {
+        memberService.edit(memberDto);
+        return Result.ok();
     }
 
-    /**
-     *  编辑
-     * @param member
-     * @return
-     */
-    @ApiOperation(value="用户信息-编辑", notes="用户信息-编辑")
+    @GetMapping(value = "/user/details")
+    @ApiOperation(value="信息设置-用户基本资料", notes="B1")
+    public Result<MemberVo> details(@RequestParam(name="id",required=true) String id) {
+        MemberVo memberVo = memberService.queryDetails(id);
+        return new Result<MemberVo>().result(memberVo);
+    }
+
     @PostMapping(value = "/user/edit")
-    public Result<Member> edit(@Valid Member member) {
-        Result<Member> result = new Result<Member>();
-        Member memberEntity = memberService.getById(member.getId());
-        if(memberEntity==null) {
+    @ApiOperation(value="用户信息-编辑用户信息", notes="B11")
+    public Result enable(@Valid MemberDto memberDto) {
+        memberService.edit(memberDto);
+        return Result.ok();
+    }
+
+
+    @PostMapping(value = "/user/enable")
+    @ApiOperation(value="用户信息-启用用户", notes="B11")
+    public Result enable(@RequestParam(name="userBaseId",required=true) String userBaseId) {
+        Result<?> result = new Result<>();
+        UserBase userBase = userBaseService.getById(userBaseId);
+        if(userBase==null) {
             result.error500("未找到对应实体");
         }else {
-            boolean ok = memberService.updateById(member);
+            userBase.setUserStatus("1");
+            boolean ok = userBaseService.updateById(userBase);
             //TODO 返回false说明什么？
             if(ok) {
-                result.success("修改成功!");
+                result.success("启用成功!");
             }
         }
-
         return result;
     }
-
-    /**
-     *   通过id删除
-     * @param id
-     * @return
-     */
-    @ApiOperation(value="用户信息-通过id删除", notes="用户信息-通过id删除")
-    @PostMapping(value = "/user/delete")
-    public Result<?> delete(@RequestParam(name="id",required=true) String id) {
-        try {
-            memberService.removeById(id);
-        } catch (Exception e) {
-            log.error("删除失败",e.getMessage());
-            return Result.error("删除失败!");
-        }
-        return Result.ok("删除成功!");
-    }
-
-
-
-    /**
-     * 通过id查询
-     * @param id
-     * @return
-     */
-    @ApiOperation(value="用户信息-通过id查询", notes="用户信息-通过id查询")
-    @GetMapping(value = "/user/details")
-    public Result<MemberVo> queryDetails(@RequestParam(name="id",required=true) String id) {
-        Result<MemberVo> result = new Result<MemberVo>();
-        MemberVo member = memberService.queryDetails(id);
-        if(member==null) {
+    @PostMapping(value = "/user/disable")
+    @ApiOperation(value="用户信息-禁用用户", notes="B11")
+    public Result disable(@RequestParam(name="userBaseId",required=true) String userBaseId) {
+        Result<?> result = new Result<>();
+        UserBase userBase = userBaseService.getById(userBaseId);
+        if(userBase==null) {
             result.error500("未找到对应实体");
         }else {
-            result.setResult(member);
-            result.setSuccess(true);
+            userBase.setUserStatus("2");
+            boolean ok = userBaseService.updateById(userBase);
+            //TODO 返回false说明什么？
+            if(ok) {
+                result.success("禁用成功!");
+            }
         }
         return result;
     }
 
-    @ApiOperation(value="用户信息-通过用户类型查询", notes="D11 用户信息-通过用户类型查询(参数格式：STUDENT，INDIVIDUAL)")
-    @GetMapping(value = "/user/list/type")
-    public Result<List<Member>> queryMemberListByTypes(String memberTypes) {
-        Result<List<Member>> result = new Result<List<Member>>();
-        List<Member> members = memberService.queryMemberByTypes(memberTypes);
-        if(CollectionUtils.isEmpty(members)) {
-            result.error500("未找到对应实体");
-        }else {
-            result.setResult(members);
-            result.setSuccess(true);
-        }
-        return result;
-    }
 
 }
