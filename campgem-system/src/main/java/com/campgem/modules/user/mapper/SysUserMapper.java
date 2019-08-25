@@ -3,6 +3,7 @@ package com.campgem.modules.user.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.modules.user.entity.SysUser;
+import com.campgem.modules.user.vo.SysUserVo;
 import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -59,4 +60,19 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 	 * @return
 	 */
 	public SysUser getUserByEmail(@Param("email")String email);
+
+	/**
+	 * 分页列表
+	 * @param page
+	 * @param accountName
+	 * @return
+	 */
+	public IPage<SysUserVo> queryPageList(Page page, @Param("accountName") String accountName);
+
+	/**
+	 * 查询用户详情
+	 * @param userId
+	 * @return
+	 */
+	public SysUserVo queryUserDtails(@Param("userId") String userId);
 }

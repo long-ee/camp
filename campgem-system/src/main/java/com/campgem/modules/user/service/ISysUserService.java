@@ -11,6 +11,8 @@ import com.campgem.common.api.vo.Result;
 import com.campgem.common.system.vo.SysUserCacheInfo;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.user.vo.SysUserRoleVO;
+import com.campgem.modules.user.vo.SysUserVo;
 
 /**
  * <p>
@@ -122,5 +124,20 @@ public interface ISysUserService extends IService<SysUser> {
 	 * @return
 	 */
 	Result checkUserIsEffective(SysUser sysUser);
+
+	/**
+	 * 根据用户名分页查询用户列表
+	 * @param page
+	 * @param accountName
+	 * @return
+	 */
+	IPage<SysUserVo>  queryPageList(Page page, String accountName);
+
+	/**
+	 * 查询用户详情
+	 * @param id
+	 * @return
+	 */
+	SysUserVo queryUserDetails(String id);
 
 }

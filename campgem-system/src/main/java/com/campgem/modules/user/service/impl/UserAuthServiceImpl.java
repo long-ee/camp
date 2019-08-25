@@ -6,6 +6,7 @@ import com.campgem.common.api.vo.IdentifyInfo;
 import com.campgem.common.api.vo.LoginUserVo;
 import com.campgem.common.constant.CacheConstant;
 import com.campgem.common.constant.CommonConstant;
+import com.campgem.common.constant.IdentityConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.system.query.QueryGenerator;
@@ -83,7 +84,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         // 3、jwt token 生成
         String identifier = this.getIdentifier(authUser);
         String certificate = PasswordUtils.encryptPassword(identifier, identifier, 2);
-        String token = JwtUtil.sign(identifier, certificate, thirdPartyLoginDto.getIdentityType());
+        String token = JwtUtil.sign(identifier, certificate, thirdPartyLoginDto.getIdentityType(), IdentityConstant.IDENTITY_SERVICE_APP);
         UserAuth existUserAuth =  this.getUserAuthByIdentityType(identifier, thirdPartyLoginDto.getIdentityType());
         if(null == existUserAuth){
             UserBase userBase = new UserBase();
@@ -140,7 +141,7 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         if(!StringUtils.equals(userBaseVo.getCertificate(), encryptPassword)){
             throw new JeecgBootException("用户账号或密码错误");
         }
-        String token = JwtUtil.sign(loginDto.getEmail(), loginDto.getPassword(), IdentityTypeEnum.EMAIL.code());
+        String token = JwtUtil.sign(loginDto.getEmail(), encryptPassword, IdentityTypeEnum.EMAIL.code(), IdentityConstant.IDENTITY_SERVICE_APP);
         LoginUserVo loginUser = BeanConvertUtils.convertBean(userBaseVo, LoginUserVo.class);
         redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, token);
         // 设置超时时间

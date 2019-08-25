@@ -66,7 +66,8 @@ public class JwtUtil {
 			DecodedJWT jwt = JWT.decode(token);
 			String identifier = jwt.getClaim("identifier").asString();
 			String identityType = jwt.getClaim("identityType").asString();
-			IdentifyInfo identifyInfo = new IdentifyInfo(identifier, identityType);
+			String serviceId = jwt.getClaim("serviceId").asString();
+			IdentifyInfo identifyInfo = new IdentifyInfo(identifier, identityType, serviceId);
 			return identifyInfo;
 		} catch (JWTDecodeException e) {
 			return null;
@@ -81,13 +82,15 @@ public class JwtUtil {
 	 * @param identityType
 	 * @return
 	 */
-	public static String sign(String identifier, String certificate, String identityType) {
+	public static String sign(String identifier, String certificate, String identityType, String serviceId) {
 		Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
 		Algorithm algorithm = Algorithm.HMAC256(certificate);
 		// 附带认证信息
 		return JWT.create()
 				.withClaim("identifier", identifier)
-				.withClaim("identityType",identityType).withExpiresAt(date).sign(algorithm);
+				.withClaim("identityType",identityType)
+				.withClaim("serviceId",serviceId )
+				.withExpiresAt(date).sign(algorithm);
 	}
 
 	/**

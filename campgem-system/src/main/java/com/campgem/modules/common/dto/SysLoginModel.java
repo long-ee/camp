@@ -15,8 +15,6 @@ public class SysLoginModel {
     private String username;
 	@ApiModelProperty(value = "密码")
     private String password;
-	@ApiModelProperty(value = "验证码")
-    private String captcha;
 
     public String getUsername() {
         return username;
@@ -34,11 +32,4 @@ public class SysLoginModel {
         this.password = password;
     }
 
-    public String getCaptcha() {
-        return captcha;
-    }
-
-    public void setCaptcha(String captcha) {
-        this.captcha = captcha;
-    }
 }

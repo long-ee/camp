@@ -1,40 +1,19 @@
-package com.campgem.modules.user.entity;
+package com.campgem.modules.user.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.campgem.common.aspect.annotation.Dict;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import org.jeecgframework.poi.excel.annotation.Excel;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
 import java.util.Date;
 
-/**
- * <p>
- * 用户表
- * </p>
- *
- * @Author: campgem
- * @since 2018-12-20
- */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class SysUser implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class SysUserVo{
 
     /**
      * id
      */
-    @TableId(type = IdType.UUID)
-    @ApiModelProperty(value = "主键ID")
+    @ApiModelProperty(value = "账户ID")
     private String id;
 
     /**
@@ -48,16 +27,6 @@ public class SysUser implements Serializable {
      */
     @ApiModelProperty(value = "真实姓名")
     private String realname;
-
-    /**
-     * 密码
-     */
-    private String password;
-
-    /**
-     * md5密码盐
-     */
-    private String salt;
 
     /**
      * 头像
@@ -96,33 +65,24 @@ public class SysUser implements Serializable {
      */
     @ApiModelProperty(value = "状态(1：正常  2：冻结 ）")
     private Integer status;
-    @ApiModelProperty(value = "城市权限")
-    private String cityIds;
-
-    /**
-     * 删除状态（0，正常，1已删除）
-     */
-    @TableLogic
-    private String delFlag;
-
-    /**
-     * 创建人
-     */
-    private String createBy;
 
     /**
      * 创建时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
     /**
-     * 更新人
+     * 角色ID
      */
-    private String updateBy;
+    @ApiModelProperty(value = "角色ID")
+    private String roleId;
 
     /**
-     * 更新时间
+     * 角色名称
      */
-    private Date updateTime;
-
+    @ApiModelProperty(value = "角色名称")
+    private String roleName;
 }

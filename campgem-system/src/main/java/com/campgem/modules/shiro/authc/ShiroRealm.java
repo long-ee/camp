@@ -112,7 +112,7 @@ public class ShiroRealm extends AuthorizingRealm {
 		}
 
 		// 校验token是否超时失效 & 或者账号密码是否错误
-		if (!jwtTokenRefresh(token, userBaseVo.getIdentifier(), userBaseVo.getCertificate(), userBaseVo.getIdentityType())) {
+		if (!jwtTokenRefresh(token, userBaseVo.getIdentifier(), userBaseVo.getCertificate(), userBaseVo.getIdentityType(), identifyInfo.getServiceId())) {
 			throw new AuthenticationException("Token失效，请重新登录!");
 		}
 
@@ -146,12 +146,12 @@ public class ShiroRealm extends AuthorizingRealm {
 	 * @return
 	 */
 
-	public boolean jwtTokenRefresh(String token, String identifier, String certificate, String identityType) {
+	public boolean jwtTokenRefresh(String token, String identifier, String certificate, String identityType, String serviceId) {
 		String cacheToken = String.valueOf(redisUtil.get(CommonConstant.PREFIX_USER_TOKEN + token));
 		if (oConvertUtils.isNotEmpty(cacheToken)) {
 			// 校验token有效性
 			if (!JwtUtil.verify(token, identifier, certificate, identityType)) {
-				String newAuthorization = JwtUtil.sign(identifier, certificate, identityType);
+				String newAuthorization = JwtUtil.sign(identifier, certificate, identityType, serviceId);
 				redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, newAuthorization);
 				// 设置超时时间
 				redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME / 1000);

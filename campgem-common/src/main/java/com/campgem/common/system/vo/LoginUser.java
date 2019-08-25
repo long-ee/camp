@@ -75,9 +75,5 @@ public class LoginUser {
 	private Integer status;
 	
 	private String delFlag;
-	/**
-     * 同步工作流引擎1同步0不同步
-     */
-    private String activitiSync;
 
 }

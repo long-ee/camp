@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.campgem.modules.user.entity.enums.UserStatusEnum;
 import com.campgem.modules.user.service.ISysUserService;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.constant.CacheConstant;
@@ -15,6 +16,7 @@ import com.campgem.common.system.vo.SysUserCacheInfo;
 import com.campgem.common.util.oConvertUtils;
 import com.campgem.modules.user.entity.*;
 import com.campgem.modules.user.mapper.*;
+import com.campgem.modules.user.vo.SysUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -240,21 +242,28 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		//情况1：根据用户信息查询，该用户不存在
 		if (sysUser == null) {
 			result.error500("该用户不存在，请注册");
-			sysBaseAPI.addLog("用户登录失败，用户不存在！", CommonConstant.LOG_TYPE_1, null);
 			return result;
 		}
 		//情况2：根据用户信息查询，该用户已注销
 		if (CommonConstant.DEL_FLAG_1.toString().equals(sysUser.getDelFlag())) {
-			sysBaseAPI.addLog("用户登录失败，用户名:" + sysUser.getUsername() + "已注销！", CommonConstant.LOG_TYPE_1, null);
 			result.error500("该用户已注销");
 			return result;
 		}
 		//情况3：根据用户信息查询，该用户已冻结
-		if (CommonConstant.USER_FREEZE.equals(sysUser.getStatus())) {
-			sysBaseAPI.addLog("用户登录失败，用户名:" + sysUser.getUsername() + "已冻结！", CommonConstant.LOG_TYPE_1, null);
+		if (UserStatusEnum.FROZEN.code().equals(sysUser.getStatus())) {
 			result.error500("该用户已冻结");
 			return result;
 		}
 		return result;
+	}
+
+	@Override
+	public IPage<SysUserVo> queryPageList(Page page, String accountName) {
+		return userMapper.queryPageList(page, accountName);
+	}
+
+	@Override
+	public SysUserVo queryUserDetails(String id) {
+		return userMapper.queryUserDtails(id);
 	}
 }

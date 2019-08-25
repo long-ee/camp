@@ -37,5 +37,54 @@
 	<select id="getUserByEmail" resultType="com.campgem.modules.user.entity.SysUser">
 	select * from  sys_user  where email = #{email} and del_flag = '0'
 	</select>
-	
+
+
+	<select id="queryPageList" resultType="com.campgem.modules.user.vo.SysUserVo">
+		 select
+			 user.id,
+			 user.username,
+			 user.realname,
+			 user.avatar,
+			 user.birthday,
+			 user.sex,
+			 user.email,
+			 user.phone,
+			 user.status,
+			 user.create_time,
+			 role.id as roleId,
+		     role.role_name
+		 from
+		 sys_user user
+		 left join sys_user_role userRole on  user.id = userRole.user_id
+		 left join sys_role role on  userRole.role_id = role.id
+		 where user.del_flag = 0
+		<if test="accountName!=null and accountName!=''">
+			and user.username = #{accountName}
+		</if>
+	</select>
+
+	<select id="queryUserDetails" resultType="com.campgem.modules.user.vo.SysUserVo">
+		select
+		user.id,
+		user.username,
+		user.realname,
+		user.avatar,
+		user.birthday,
+		user.sex,
+		user.email,
+		user.phone,
+		user.status,
+		user.create_time,
+		role.id as roleId,
+		role.role_name
+		from
+		sys_user user
+		left join sys_user_role userRole on  user.id = userRole.user_id
+		left join sys_role role on  userRole.role_id = role.id
+		where user.del_flag = 0
+		<if test="userId!=null and userId!=''">
+			and user.id = #{userId}
+		</if>
+	</select>
+
 </mapper>
