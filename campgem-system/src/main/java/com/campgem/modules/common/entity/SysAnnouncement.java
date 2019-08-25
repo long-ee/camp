@@ -123,4 +123,8 @@ public class SysAnnouncement implements Serializable {
      * 指定用户
      **/
     private java.lang.String userIds;
+    /**
+     * 指定用户类型
+     */
+    private String userType;
 }

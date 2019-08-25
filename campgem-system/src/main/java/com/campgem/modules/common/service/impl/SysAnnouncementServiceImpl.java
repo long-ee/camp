@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -12,11 +13,14 @@ import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.bbs.dto.TopicLetterDto;
 import com.campgem.modules.common.entity.SysAnnouncement;
 import com.campgem.modules.common.entity.SysAnnouncementSend;
+import com.campgem.modules.common.entity.enums.MsgTypeEnum;
 import com.campgem.modules.common.mapper.SysAnnouncementMapper;
 import com.campgem.modules.common.mapper.SysAnnouncementSendMapper;
 import com.campgem.modules.common.service.ISysAnnouncementService;
 import com.campgem.common.constant.CommonConstant;
 import com.campgem.modules.user.dto.UserMessageReplyDto;
+import com.campgem.modules.user.entity.Member;
+import com.campgem.modules.user.service.IMemberService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,16 +40,33 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
 
 	@Resource
 	private SysAnnouncementMapper sysAnnouncementMapper;
-	
 	@Resource
 	private SysAnnouncementSendMapper sysAnnouncementSendMapper;
+	@Resource
+	private IMemberService memberService;
 	
 	@Transactional
 	@Override
 	public void saveAnnouncement(SysAnnouncement sysAnnouncement) {
-		if(sysAnnouncement.getMsgType().equals(CommonConstant.MSG_TYPE_ALL)) {
+		if(sysAnnouncement.getMsgType().equals(MsgTypeEnum.ALL.code())) {
 			sysAnnouncementMapper.insert(sysAnnouncement);
-		}else {
+		}else if(sysAnnouncement.getMsgType().equals(MsgTypeEnum.USER_TYPE.code())){
+			// 1.插入通告表记录
+			sysAnnouncementMapper.insert(sysAnnouncement);
+			// 2.插入用户通告阅读标记表记录
+			List<Member> memberList = memberService.queryMemberByTypes(sysAnnouncement.getUserType());
+			List<String> userIds = memberList.stream().map(Member::getId).collect(Collectors.toList());
+			String anntId = sysAnnouncement.getId();
+			Date refDate = new Date();
+			userIds.forEach(userId ->{
+				SysAnnouncementSend announcementSend = new SysAnnouncementSend();
+				announcementSend.setAnntId(anntId);
+				announcementSend.setUserId(userId);
+				announcementSend.setReadFlag(CommonConstant.NO_READ_FLAG);
+				announcementSend.setReadTime(refDate);
+				sysAnnouncementSendMapper.insert(announcementSend);
+			});
+		}else{
 			// 1.插入通告表记录
 			sysAnnouncementMapper.insert(sysAnnouncement);
 			// 2.插入用户通告阅读标记表记录
@@ -132,7 +153,7 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
 		SysAnnouncement replyMessage = new SysAnnouncement();
 		replyMessage.setTitile("[回复]" + sysAnnouncement.getTitile());
 		replyMessage.setMsgContent(messageReplyDto.getReplyContent());
-		replyMessage.setMsgType(CommonConstant.MSG_TYPE_UESR);
+		replyMessage.setMsgType(MsgTypeEnum.USER.code());
 		replyMessage.setSendStatus("1");
 		replyMessage.setSendTime(new Date());
 		replyMessage.setSender(messageReplyDto.getMemberId());
@@ -149,7 +170,7 @@ public class SysAnnouncementServiceImpl extends ServiceImpl<SysAnnouncementMappe
 		SysAnnouncement letter = new SysAnnouncement();
 		letter.setTitile("收到一条站内信");
 		letter.setMsgContent(topicLetterDto.getLetterContent());
-		letter.setMsgType(CommonConstant.MSG_TYPE_UESR);
+		letter.setMsgType(MsgTypeEnum.USER.code());
 		letter.setSendStatus("1");
 		letter.setSendTime(new Date());
 		letter.setSender(topicLetterDto.getSenderId());
