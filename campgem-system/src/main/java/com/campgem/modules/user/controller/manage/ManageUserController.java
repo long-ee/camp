@@ -28,18 +28,6 @@ public class ManageUserController {
     @Resource
     private IMemberService memberService;
 
-    @PostMapping(value = "/user/changPassword")
-    @ApiOperation(value="用户密码修改", notes="用户密码修改")
-    public Result<MemberVo> changPassword(@Valid UserPasswordModifyDto passwordModifyDto, HttpServletRequest request) {
-        IdentifyInfo identifyInfo = JwtUtil.getIdentifierByToken(request);
-        passwordModifyDto.setEmail(identifyInfo.getIdentifier());
-        MemberVo memberVo = memberService.modifyPassword(passwordModifyDto);
-        Result<MemberVo> result = new Result<>();
-        result.setSuccess(true);
-        result.setResult(memberVo);
-        return result;
-    }
-
     /**
      * 分页列表查询
      * @param queryDto
