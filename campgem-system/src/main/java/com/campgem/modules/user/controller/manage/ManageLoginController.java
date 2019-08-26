@@ -57,8 +57,8 @@ public class ManageLoginController {
 
 	@PostMapping(value = "/account/login")
 	@ApiOperation(value="用户登录", notes="A1 登录")
-	public Result<?> login(SysLoginModel sysLoginModel) throws Exception {
-		Result<?> result = new Result<>();
+	public Result<JSONObject> login(SysLoginModel sysLoginModel) throws Exception {
+		Result<JSONObject> result = new Result<>();
 		String username = sysLoginModel.getUsername();
 		String password = sysLoginModel.getPassword();
 		//1. 校验用户是否有效
@@ -74,8 +74,35 @@ public class ManageLoginController {
 			result.error500("用户名或密码错误");
 			return result;
 		}
-		result.setSuccess(true);
-		result.setMessage("登录成功");
+
+		//用户登录信息
+		userInfo(sysUser, result);
+		return result;
+	}
+
+
+	/**
+	 * 用户信息
+	 *
+	 * @param sysUser
+	 * @param result
+	 * @return
+	 */
+	private Result<JSONObject> userInfo(SysUser sysUser, Result<JSONObject> result) {
+		String syspassword = sysUser.getPassword();
+		String username = sysUser.getUsername();
+		// 生成token
+		String token = JwtUtil.sign(username, syspassword, IdentityTypeEnum.EMAIL.code(), "");
+		redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, token);
+		// 设置超时时间
+		redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME / 1000);
+
+		// 获取用户部门信息
+		JSONObject obj = new JSONObject();
+		obj.put("token", token);
+		obj.put("userInfo", sysUser);
+		result.setResult(obj);
+		result.success("登录成功");
 		return result;
 	}
 
