@@ -3,12 +3,16 @@ package com.campgem.modules.trade.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.system.base.controller.JeecgController;
 import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.common.entity.enums.AdvertisementLocationEnum;
+import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
 import com.campgem.modules.common.service.IAdvertisementService;
+import com.campgem.modules.common.service.ICategoryService;
 import com.campgem.modules.common.vo.AdvertisementVo;
+import com.campgem.modules.common.vo.CategoryVo;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
@@ -24,10 +28,7 @@ import com.campgem.modules.trade.vo.GoodsDetailVo;
 import com.campgem.modules.trade.vo.GoodsEvaluationVo;
 import com.campgem.modules.trade.vo.GoodsListVo;
 import com.campgem.modules.trade.vo.GoodsReviewsVo;
-import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
-import com.campgem.modules.common.service.ICategoryService;
 import com.campgem.modules.user.service.IUserBaseService;
-import com.campgem.modules.common.vo.CategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -105,7 +106,7 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	@ApiImplicitParam(name = "goodsId", value = "商品ID", required = true, paramType = "path")
 	public Result<GoodsDetailVo> queryGoodsDetail(@PathVariable String goodsId) {
 		if (StringUtils.isEmpty(goodsId)) {
-			throw new JeecgBootException("商品ID不能为空");
+			throw new JeecgBootException(StatusEnum.GoodsIdBlankError);
 		}
 		GoodsDetailVo detail = goodsService.queryGoodsDetail(goodsId);
 		return new Result<GoodsDetailVo>().result(detail);
@@ -133,7 +134,7 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	                                                                     @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
 	                                                                     @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 		if (org.apache.commons.lang.StringUtils.isEmpty(goodsId)) {
-			throw new JeecgBootException("商品ID不能为空");
+			throw new JeecgBootException(StatusEnum.GoodsIdBlankError);
 		}
 		
 		IPage<GoodsEvaluationVo> list = goodsEvaluationService.queryGoodsEvaluationPageList(goodsId, pageNo, pageSize);
@@ -152,7 +153,7 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	                                                               @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
 	                                                               HttpServletRequest request) {
 		if (StringUtils.isEmpty(goodsId)) {
-			throw new JeecgBootException("商品ID不能为空");
+			throw new JeecgBootException(StatusEnum.GoodsIdBlankError);
 		}
 		
 		Page<String> page = new Page<>(pageNo, pageSize);
@@ -172,21 +173,21 @@ public class GoodsController extends JeecgController<SysMessage, ISysMessageServ
 	})
 	public Result addUserReviewShield(@PathVariable String goodsId, String targetId) {
 		if (StringUtils.isEmpty(targetId)) {
-			throw new JeecgBootException("用户ID不能为空");
+			throw new JeecgBootException(StatusEnum.GoodsIdBlankError);
 		}
 		
 		Goods goods = goodsService.getById(goodsId);
 		if (goods == null) {
-			throw new JeecgBootException("商品不存在");
+			throw new JeecgBootException(StatusEnum.GoodsNotExistError);
 		}
 		
 		// 是否是发布者
 		if (!goods.getUid().equals(SecurityUtils.getCurrentUserUid())) {
-			throw new JeecgBootException("不是商品的发布者，不能屏蔽用户");
+			throw new JeecgBootException(StatusEnum.GoodsShieldUsersError);
 		}
 		
 		if (userBaseService.getById(targetId) == null) {
-			throw new JeecgBootException("被屏蔽的用户不存在");
+			throw new JeecgBootException(StatusEnum.ShieldUserNotExistError);
 		}
 		
 		GoodsReviewsShields shields = new GoodsReviewsShields();

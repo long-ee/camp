@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.modules.common.utils.CommonUtils;
@@ -63,7 +64,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 	public GoodsDetailVo queryGoodsDetail(String goodsId, boolean isRelated) {
 		GoodsDetailVo goods = baseMapper.queryGoodsDetail(goodsId);
 		if (goods == null) {
-			throw new JeecgBootException("商品不存在");
+			throw new JeecgBootException(StatusEnum.GoodsNotExistError);
 		}
 		
 		if (isRelated) {
@@ -84,16 +85,16 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 	public List<OrderInfoVo> queryOrderInfo(OrderInfoDto orderInfoDto) {
 		OrderInfoTempVo goodsVo = baseMapper.queryOrderInfo(orderInfoDto.getGoodsId(), orderInfoDto.getSpecificationId());
 		if (goodsVo == null) {
-			throw new JeecgBootException("商品不存在");
+			throw new JeecgBootException(StatusEnum.GoodsNotExistError);
 		}
 		if (CommonUtils.isBusiness(goodsVo.getMemberType())) {
 			// 商家，必须要有规格
 			if (orderInfoDto.getSpecificationId() == null) {
-				throw new JeecgBootException("缺少规格");
+				throw new JeecgBootException(StatusEnum.SpecificationBlankError);
 			} else {
 				// 设置规格数据
 				if (StringUtils.isEmpty(goodsVo.getSpecification())) {
-					throw new JeecgBootException("规格错误");
+					throw new JeecgBootException(StatusEnum.SpecificationBlankError);
 				}
 				String[] spec = goodsVo.getSpecification().split(",");
 				goodsVo.setSalePrice(new BigDecimal(spec[0]));
@@ -137,7 +138,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		goods.setMemberType(member.getMemberType());
 		if (CommonUtils.isBusiness(member.getMemberType())) {
 			if (saveGoods.getSpecs() == null || saveGoods.getSpecs().length == 0) {
-				throw new JeecgBootException("规格不能为空");
+				throw new JeecgBootException(StatusEnum.SpecificationBlankError);
 			}
 		}
 		
@@ -173,12 +174,12 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		goods.setMemberType(memberVo.getMemberType());
 		if (CommonUtils.isBusiness(memberVo.getMemberType())) {
 			if (updateGoods.getSpecs() == null || updateGoods.getSpecs().length == 0) {
-				throw new JeecgBootException("规格不能为空");
+				throw new JeecgBootException(StatusEnum.SpecificationBlankError);
 			}
 		}
 		
 		if (!updateById(goods)) {
-			throw new JeecgBootException("更新失败");
+			throw new JeecgBootException(StatusEnum.InternalError);
 		}
 		
 		// 商品图片

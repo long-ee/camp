@@ -21,6 +21,8 @@ public enum StatusEnum {
     TooManyRequests(10505, "Too many requests", "请求过于频繁,请稍后重试"),
     Conflict(10506, "Conflict", "资源冲突"),
     UnknownError(10600, "Unknown error", "未知错误"),
+    TimeFormatError(10601, "Time format error", "时间格式错误"),
+    UserIdBlankError(10602, "The user id can't empty", "用户ID不能为空"),
 
     // for login
     LoginFailed(20601, "Login failed", "登录信息无效"),
@@ -41,6 +43,34 @@ public enum StatusEnum {
     MemberIsAdminNotAllowDropOut(30603, "You are the administrator. Please transfer the club and then withdraw or disband the club at the personal center.", "你是管理员，请转让社团后再退出或至个人中心解散社团"),
     MemberIsPrimaryAdminNotAllowRemove(30605, "The administrator is the primary administrator, not allow remove.", "该管理员是主管理员，不允许移除"),
 
+    
+    // for trade
+    UnknownPaymentError(40601, "Unknown payment", "未知的支付方式"),
+    GoodsIdAndCartIdBlankError(40602, "Goods id and card id can't empty together", "商品ID和购物车ID不能同时为空"),
+    OrderPaidOrExpiredError(40603, "The order is paid or expired", "订单已支付或已过期"),
+    GoodsNotExistError(40604, "The goods not exist", "商品不存在"),
+    SpecificationBlankError(40605, "The goods specification can't empty", "商品规格不能为空"),
+    SpecificationNotExistError(40606, "The specification not exist", "规格不存在"),
+    SpecificationNotMatchGoodsError(40607, "The specification not belongs to goods", "规格与商品不匹配"),
+    GoodsIdBlankError(40608, "The goods id can't empty", "商品ID不能为空"),
+    GoodsShieldUsersError(40609, "Not a commodity publisher, you can't shield users", "不是商品发布者，不能屏蔽用户"),
+    ShieldUserNotExistError(40610, "The shield user not exist", "被屏蔽的用户不存在"),
+    RequirementImagesMaxError(40611, "Up to 3 requirement images", "需求图片最多3张"),
+    RequirementNotExistError(40612, "The requirement not exist", "需求不存在"),
+    RequirementShieldUsersError(40613, "Not a requirement publisher, you can't shield users", "不是需求发布者，不能屏蔽用户"),
+    CartDataError(40614, "Cart data error", "购物车数据错误"),
+    AppointmentTimeError(40615, "Reservation time format error", "预约时间格式错误"),
+    OrderCreatedError(40616, "Order creation failed", "订单创建失败"),
+    
+    
+    // for service
+    ServiceNotExistError(50601, "The service is not exist", "该服务不存在"),
+    ServiceImagesBlankError(50602, "The service images can't empty", "服务图片不能为空"),
+    ServiceImagesMaxError(50603, "Up to 10 service images", "服务图片最多10张"),
+    ActivityNotExistError(50604, "The activity is not exist", "该活动不存在"),
+    ActivityImagesBlankError(50605, "The activity images can't empty", "活动图片不能为空"),
+    
+    
     ;
 
     private final String enableLanguage = "zh";

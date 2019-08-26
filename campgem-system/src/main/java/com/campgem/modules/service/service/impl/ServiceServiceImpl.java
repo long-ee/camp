@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.modules.service.dto.manage.MServiceQueryDto;
@@ -55,7 +56,7 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, Service> impl
 	public ServiceDetailVo queryServiceDetail(String serviceId) {
 		ServiceDetailVo detail = baseMapper.queryServiceDetail(serviceId);
 		if (detail == null) {
-			throw new JeecgBootException("服务不存在");
+			throw new JeecgBootException(StatusEnum.ServiceNotExistError);
 		}
 		
 		// 关联服务
@@ -97,11 +98,11 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, Service> impl
 	@Transactional
 	public boolean saveOrUpdate(MServiceVo saveService, boolean isUpdate) {
 		if (saveService.getImages().length == 0) {
-			throw new JeecgBootException("服务图片不能为空");
+			throw new JeecgBootException(StatusEnum.ServiceImagesBlankError);
 		}
 		
 		if (saveService.getImages().length > 10) {
-			throw new JeecgBootException("服务图片最多10张");
+			throw new JeecgBootException(StatusEnum.ServiceImagesMaxError);
 		}
 		
 		Service service = BeanConvertUtils.copy(saveService, Service.class);
@@ -140,7 +141,7 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, Service> impl
 	public MServiceDetailVo queryManageServiceDetail(String serviceId) {
 		MServiceDetailVo detail = baseMapper.queryManageServiceDetail(serviceId);
 		if (detail == null) {
-			throw new JeecgBootException("服务不存在");
+			throw new JeecgBootException(StatusEnum.UnknownPaymentError);
 		}
 		return detail;
 	}

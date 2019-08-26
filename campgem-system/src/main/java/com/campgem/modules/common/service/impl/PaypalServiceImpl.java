@@ -1,5 +1,6 @@
 package com.campgem.modules.common.service.impl;
 
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.config.PaypalConfig;
 import com.campgem.config.paypal.PaypalPaymentIntent;
@@ -119,7 +120,7 @@ public class PaypalServiceImpl implements IPaypalService {
 		}
 		
 		if (payment == null) {
-			throw new JeecgBootException("订单支付失败");
+			throw new JeecgBootException(StatusEnum.OrderCreatedError);
 		}
 		
 		// 更新payID
@@ -138,7 +139,7 @@ public class PaypalServiceImpl implements IPaypalService {
 		}
 		
 		if (url == null) {
-			throw new JeecgBootException("订单支付失败");
+			throw new JeecgBootException(StatusEnum.OrderCreatedError);
 		}
 		return url;
 	}

@@ -65,7 +65,7 @@ public class ManageUserController {
         return new Result<MemberVo>().result(memberVo);
     }
 
-    @PostMapping(value = "/user/edit")
+    @PostMapping(value = "/user/edit/status")
     @ApiOperation(value="用户信息-编辑用户信息", notes="B11")
     public Result enable(@Valid MemberDto memberDto) {
         memberService.edit(memberDto);

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.modules.service.dto.manage.MServiceQueryDto;
@@ -73,7 +74,7 @@ public class BusinessActivityServiceImpl extends ServiceImpl<BusinessActivityMap
 	public BusinessActivityDetailVo queryActivityDetail(String activityId) {
 		BusinessActivityDetailVo detail = baseMapper.queryActivityDetail(activityId);
 		if (detail == null) {
-			throw new JeecgBootException("活动不存");
+			throw new JeecgBootException(StatusEnum.ActivityNotExistError);
 		}
 		
 		// 相似活动
@@ -108,7 +109,7 @@ public class BusinessActivityServiceImpl extends ServiceImpl<BusinessActivityMap
 	@Transactional
 	public boolean saveOrUpdate(MBusinessActivityVo activityVo, boolean isUpdate) {
 		if (activityVo.getImages().length == 0) {
-			throw new JeecgBootException("活动图片不能为空");
+			throw new JeecgBootException(StatusEnum.ActivityImagesBlankError);
 		}
 		
 		BusinessActivity businessActivity = BeanConvertUtils.copy(activityVo, BusinessActivity.class);
@@ -123,7 +124,7 @@ public class BusinessActivityServiceImpl extends ServiceImpl<BusinessActivityMap
 			businessActivity.setStartTime(timeFormat.parse(times[0]));
 			businessActivity.setEndTime(timeFormat.parse(times[1]));
 		} catch (ParseException e) {
-			throw new JeecgBootException("时间格式错误");
+			throw new JeecgBootException(StatusEnum.TimeFormatError);
 		}
 		
 		String uuid;

@@ -2,6 +2,7 @@ package com.campgem.modules.trade.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.SecurityUtils;
@@ -53,22 +54,22 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 		
 		Goods goods = goodsService.getById(goodsId);
 		if (goods == null) {
-			throw new JeecgBootException("商品不存在");
+			throw new JeecgBootException(StatusEnum.GoodsNotExistError);
 		}
 		
 		if (CommonUtils.isBusiness(goods.getMemberType())) {
 			// 商家，必须要有规格
 			if (StringUtils.isEmpty(specId)) {
-				throw new JeecgBootException("规格不能为空");
+				throw new JeecgBootException(StatusEnum.SpecificationBlankError);
 			}
 			
 			// 检查规格是否是对应商品的
 			GoodsSpecifications specifications = goodsSpecificationsService.getById(specId);
 			if (specifications == null) {
-				throw new JeecgBootException("规格不存在");
+				throw new JeecgBootException(StatusEnum.SpecificationNotExistError);
 			}
 			if (!specifications.getGoodsId().equals(goodsId)) {
-				throw new JeecgBootException("规格与商品不匹配");
+				throw new JeecgBootException(StatusEnum.SpecificationNotMatchGoodsError);
 			}
 		}
 		

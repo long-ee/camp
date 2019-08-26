@@ -1,6 +1,7 @@
 package com.campgem.modules.trade.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.service.dto.ServiceOrderPayDto;
@@ -69,7 +70,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 				List<OrderInfoVo> orderInfoVos = cartService.queryOrderInfo(cartIds);
 				if (orderInfoVos.size() > 1) {
 					// 数据有错误
-					throw new JeecgBootException("购物车ID数据有误");
+					throw new JeecgBootException(StatusEnum.CartDataError);
 				}
 				// 设置卖家名称，这种情况下，返回的一定会有个key，并且是卖家名称
 				orders.setSellerName(orderInfoVos.get(0).getMemberName());
@@ -155,7 +156,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 			Date appointment = sdf.parse(payDto.getDate() + " " + payDto.getTime());
 			orders.setAppointment(appointment);
 		} catch (ParseException ignore) {
-			throw new JeecgBootException("预约时间格式错误");
+			throw new JeecgBootException(StatusEnum.AppointmentTimeError);
 		}
 		
 		// 设置价格
@@ -169,7 +170,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		
 		if (!save(orders)) {
 			// 添加失败
-			throw new JeecgBootException("订单创建失败");
+			throw new JeecgBootException(StatusEnum.OrderCreatedError);
 		}
 		
 		return orders;

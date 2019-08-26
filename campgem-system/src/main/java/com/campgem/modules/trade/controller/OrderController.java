@@ -2,6 +2,7 @@ package com.campgem.modules.trade.controller;
 
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.constant.CommonConstant;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.common.service.IPaypalService;
 import com.campgem.modules.trade.dto.OrderInfoDto;
@@ -58,7 +59,7 @@ public class OrderController {
 	public Result<List<OrderInfoVo>> queryOrderInfo(OrderInfoDto orderInfoDto) {
 		if (StringUtils.isEmpty(orderInfoDto.getGoodsId()) &&
 				(orderInfoDto.getCartIds() == null || orderInfoDto.getCartIds().length == 0)) {
-			throw new JeecgBootException("商品ID或者购物车ID列表不能同时为空");
+			throw new JeecgBootException(StatusEnum.GoodsIdAndCartIdBlankError);
 		}
 		
 		List<OrderInfoVo> data;
@@ -76,7 +77,7 @@ public class OrderController {
 	@PostMapping("/order/pay")
 	public Result<String> pay(@Valid @RequestBody OrderPayDto payDto) {
 		if (!CommonConstant.payments.containsKey(payDto.getPaymentMethod())) {
-			throw new JeecgBootException("支付方式错误");
+			throw new JeecgBootException(StatusEnum.UnknownPaymentError);
 		}
 		
 		// 创建订单
@@ -101,13 +102,14 @@ public class OrderController {
 		Orders o = orderService.getById(orderId);
 		if (!o.getStatus().equals(OrderStatusEnum.UNPAID.code())) {
 			// 订单已经支付或者过期了
-			throw new JeecgBootException("订单已支付或已过期");
+			throw new JeecgBootException(StatusEnum.OrderPaidOrExpiredError);
 		}
 		
 		// 商品状态
 		List<Goods> goodsList = orderGoodsService.getGoodsInfo(orderId);
 		for (Goods goods : goodsList) {
 			if (!goods.getStatus().equals(GoodsStatusEnum.IN_SALE.code())) {
+				// TODO
 				throw new JeecgBootException("商品'" + goods.getGoodsName() + "'不在销售状态");
 			}
 		}

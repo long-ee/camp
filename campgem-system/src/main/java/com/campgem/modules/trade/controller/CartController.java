@@ -2,6 +2,7 @@ package com.campgem.modules.trade.controller;
 
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.constant.CommonConstant;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.system.base.controller.JeecgController;
 import com.campgem.modules.message.entity.SysMessage;
@@ -45,7 +46,7 @@ public class CartController extends JeecgController<SysMessage, ISysMessageServi
 	})
 	public Result addGoodsToCard(String goodsId, String specId, Integer quantity) {
 		if (StringUtils.isEmpty(goodsId)) {
-			throw new JeecgBootException("商品ID不能为空");
+			throw new JeecgBootException(StatusEnum.GoodsIdBlankError);
 		}
 		Boolean result = cartService.addGoods(goodsId, specId, quantity);
 		return result ? Result.succ : Result.fail;

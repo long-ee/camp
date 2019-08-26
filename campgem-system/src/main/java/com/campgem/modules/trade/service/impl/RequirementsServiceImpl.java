@@ -3,6 +3,7 @@ package com.campgem.modules.trade.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.modules.trade.dto.RequirementsQueryDto;
@@ -60,7 +61,7 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 	@Transactional
 	public boolean save(MRequirementsVo saveRequirements) {
 		if (saveRequirements.getImages().length > 3) {
-			throw new JeecgBootException("图片最多3张");
+			throw new JeecgBootException(StatusEnum.RequirementImagesMaxError);
 		}
 		
 		Requirements requirements = BeanConvertUtils.copy(saveRequirements, Requirements.class);
@@ -86,7 +87,7 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 	@Transactional
 	public boolean update(MRequirementsVo updateRequirements) {
 		if (updateRequirements.getImages().length > 3) {
-			throw new JeecgBootException("图片最多3张");
+			throw new JeecgBootException(StatusEnum.RequirementImagesMaxError);
 		}
 		
 		Requirements requirements = BeanConvertUtils.copy(updateRequirements, Requirements.class);
@@ -107,7 +108,7 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 	public RequirementsDetailVo queryRequirementDetail(String requirementId) {
 		RequirementsDetailVo detail = baseMapper.queryRequirementDetail(requirementId);
 		if (detail == null) {
-			throw new JeecgBootException("需求不存在");
+			throw new JeecgBootException(StatusEnum.RequirementNotExistError);
 		}
 		
 		return detail;

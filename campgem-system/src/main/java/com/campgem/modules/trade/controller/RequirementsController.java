@@ -3,9 +3,13 @@ package com.campgem.modules.trade.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.system.base.controller.JeecgController;
 import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
+import com.campgem.modules.common.service.ICategoryService;
+import com.campgem.modules.common.vo.CategoryVo;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.trade.dto.RequirementReviewDto;
@@ -19,10 +23,7 @@ import com.campgem.modules.trade.service.IRequirementsService;
 import com.campgem.modules.trade.vo.RequirementsDetailVo;
 import com.campgem.modules.trade.vo.RequirementsReviewsVo;
 import com.campgem.modules.trade.vo.RequirementsVo;
-import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
-import com.campgem.modules.common.service.ICategoryService;
 import com.campgem.modules.user.service.IUserBaseService;
-import com.campgem.modules.common.vo.CategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -106,22 +107,22 @@ public class RequirementsController extends JeecgController<SysMessage, ISysMess
 	})
 	public Result addUserReviewShield(@PathVariable String requirementId, String targetId) {
 		if (StringUtils.isEmpty(targetId)) {
-			throw new JeecgBootException("用户ID不能为空");
+			throw new JeecgBootException(StatusEnum.UserIdBlankError);
 		}
 		
 		// 判断当前用户是需求的发布者
 		Requirements requirements = requirementsService.getById(requirementId);
 		if (requirements == null) {
-			throw new JeecgBootException("需求不存在");
+			throw new JeecgBootException(StatusEnum.RequirementNotExistError);
 		}
 		
 		if (!requirements.getUid().equals(SecurityUtils.getCurrentUserUid())) {
-			throw new JeecgBootException("不是需求的发布者，不能屏蔽用户");
+			throw new JeecgBootException(StatusEnum.RequirementShieldUsersError);
 		}
 		
 		// 是否存在被屏蔽用户
 		if (userBaseService.getById(targetId) == null) {
-			throw new JeecgBootException("被屏蔽的用户不存在");
+			throw new JeecgBootException(StatusEnum.ShieldUserNotExistError);
 		}
 		
 		RequirementsReviewsShields shields = new RequirementsReviewsShields();

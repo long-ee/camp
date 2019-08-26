@@ -4,12 +4,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.constant.CommonConstant;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.system.base.controller.JeecgController;
 import com.campgem.modules.common.entity.enums.AdvertisementLocationEnum;
+import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
 import com.campgem.modules.common.service.IAdvertisementService;
+import com.campgem.modules.common.service.ICategoryService;
 import com.campgem.modules.common.service.IPaypalService;
 import com.campgem.modules.common.vo.AdvertisementVo;
+import com.campgem.modules.common.vo.CategoryVo;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.service.dto.ServiceOrderPayDto;
@@ -19,10 +23,7 @@ import com.campgem.modules.service.service.IServiceService;
 import com.campgem.modules.service.vo.*;
 import com.campgem.modules.trade.entity.Orders;
 import com.campgem.modules.trade.service.IOrderService;
-import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
-import com.campgem.modules.common.service.ICategoryService;
 import com.campgem.modules.user.service.IMemberService;
-import com.campgem.modules.common.vo.CategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -167,7 +168,7 @@ public class ServiceController extends JeecgController<SysMessage, ISysMessageSe
 	@PostMapping("/service/order/pay")
 	public Result<String> serviceOrderPay(@Valid @RequestBody ServiceOrderPayDto payDto) {
 		if (!CommonConstant.payments.containsKey(payDto.getPaymentMethod())) {
-			throw new JeecgBootException("支付方式错误");
+			throw new JeecgBootException(StatusEnum.UnknownPaymentError);
 		}
 		
 		Service service = serviceService.getById(payDto.getServiceId());
