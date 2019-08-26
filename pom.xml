@@ -152,12 +152,6 @@
 		    <version>11.2.0.3</version>
 			<scope>runtime</scope>
 		</dependency>
-		
-		 <!-- Quartz定时任务 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
         
 		<!--JWT-->
 		<dependency>
