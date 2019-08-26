@@ -4,7 +4,7 @@ import com.campgem.common.api.vo.Result;
 import com.campgem.common.constant.CommonConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
-import com.campgem.modules.common.service.IPaypalService;
+import com.campgem.modules.common.service.IPaymentService;
 import com.campgem.modules.trade.dto.OrderInfoDto;
 import com.campgem.modules.trade.dto.OrderPayDto;
 import com.campgem.modules.trade.entity.Goods;
@@ -52,7 +52,7 @@ public class OrderController {
 	@Resource
 	private IOrderGoodsService orderGoodsService;
 	@Resource
-	private IPaypalService paypalService;
+	private IPaymentService paypalService;
 
 	@ApiOperation("订单确认")
 	@PostMapping("/order/info")
@@ -73,7 +73,7 @@ public class OrderController {
 		return new Result<List<OrderInfoVo>>().result(data);
 	}
 	
-	@ApiOperation("订单支付，返回URL，需要跳转到这个地址")
+	@ApiOperation("订单支付，如果是PayPal支付，则返回URL，需要跳转到这个地址，如果是信用卡，返回的交易码，调用接口查询支付结果")
 	@PostMapping("/order/pay")
 	public Result<String> pay(@Valid @RequestBody OrderPayDto payDto) {
 		if (!CommonConstant.payments.containsKey(payDto.getPaymentMethod())) {
@@ -88,8 +88,8 @@ public class OrderController {
 			return new Result<String>().result(url);
 		} else {
 			// Visa/Masterd Card 支付
-			
-			return null;
+			String transId = paypalService.payWithCreditCard("");
+			return new Result<String>().result(transId);
 		}
 	}
 	
@@ -120,7 +120,8 @@ public class OrderController {
 			return new Result<String>().result(url);
 		} else {
 			// Visa/Masterd Card 支付
-			return null;
+			String transId = paypalService.payWithCreditCard("");
+			return new Result<String>().result(transId);
 		}
 	}
 	

@@ -14,5 +14,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GoodsSpecificationsServiceImpl extends ServiceImpl<GoodsSpecificationsMapper, GoodsSpecifications> implements IGoodsSpecificationsService {
-
+	
+	@Override
+	public void updateStock(Integer type, String id, Integer stock) {
+		baseMapper.updateStock(type, id, stock);
+	}
 }

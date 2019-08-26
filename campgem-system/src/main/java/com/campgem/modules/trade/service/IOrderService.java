@@ -34,4 +34,9 @@ public interface IOrderService extends IService<Orders> {
 	 * 创建服务订单
 	 */
 	Orders createServiceOrder(Service service, ServiceOrderPayDto payDto);
+	
+	/**
+	 * 处理过期未支付的订单
+	 */
+	void checkOrderStatus();
 }

@@ -18,4 +18,27 @@
 		    o.payment_time = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%m:%s')
 		WHERE pay_id = #{payId}
 	</update>
+	
+	<update id="updateOrderStatusExpiredByIds">
+		UPDATE orders o
+		SET o.status = 4
+		WHERE o.id IN
+		<foreach item="item" index="index" collection="ids"
+		         open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<resultMap id="expiredOrders" type="com.campgem.modules.common.vo.OrdersTaskVo" >
+		<id property="id" column="oid" />
+		<collection property="goods" ofType="com.campgem.modules.common.vo.OrdersGoodsTaskVo"
+		            select="com.campgem.modules.trade.mapper.OrderGoodsMapper.queryOrderGoodsTaskList" column="oid"/>
+	</resultMap>
+	<select id="queryExpiredOrderList" resultMap="expiredOrders">
+		SELECT o.id         AS oid,
+		       o.status
+		FROM orders o
+		WHERE UNIX_TIMESTAMP(o.expired_time) &lt; UNIX_TIMESTAMP(NOW())
+		  AND o.status = 0
+	</select>
 </mapper>

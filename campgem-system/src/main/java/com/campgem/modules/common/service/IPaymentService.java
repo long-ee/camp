@@ -9,7 +9,7 @@ import com.paypal.base.rest.PayPalRESTException;
 
 import java.util.List;
 
-public interface IPaypalService {
+public interface IPaymentService {
 	Payment createPayment(
 			Double total,
 			Details details,
@@ -26,5 +26,8 @@ public interface IPaypalService {
 	
 	String pay(List<Orders> orders);
 	
-	void payWithVisa();
+	/**
+	 * Braintree信用卡支付
+	 */
+	String payWithCreditCard(String nonce);
 }

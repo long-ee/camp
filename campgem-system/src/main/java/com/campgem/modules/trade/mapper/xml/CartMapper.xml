@@ -40,7 +40,7 @@
 				(
 					c.specifications_id IS NULL,
 					g.sale_price,
-					( SELECT concat(specifications_price, ',', specifications_name) FROM goods_specifications gs where gs.id = c.specifications_id )) AS specification,
+					( SELECT concat(gs.id, ',', gs.specifications_price, ',', gs.specifications_name, ',', gs.specifications_stock) FROM goods_specifications gs where gs.id = c.specifications_id )) AS specification,
 			g.taxes,
 		    m.shipping_methods
 		FROM

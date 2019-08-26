@@ -11,4 +11,11 @@
 		WHERE
 			order_id = #{orderId}
 	</select>
+	
+	<select id="queryOrderGoodsTaskList" resultType="com.campgem.modules.common.vo.OrdersGoodsTaskVo">
+		SELECT og.specification_id,
+		       og.quantity
+		FROM orders_goods og
+		WHERE og.order_id = #{orderId}
+	</select>
 </mapper>

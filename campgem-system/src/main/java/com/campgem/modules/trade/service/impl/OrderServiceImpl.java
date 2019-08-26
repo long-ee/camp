@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.common.vo.OrdersGoodsTaskVo;
+import com.campgem.modules.common.vo.OrdersTaskVo;
 import com.campgem.modules.service.dto.ServiceOrderPayDto;
 import com.campgem.modules.trade.dto.OrderPayDto;
 import com.campgem.modules.trade.entity.Orders;
@@ -12,6 +14,7 @@ import com.campgem.modules.trade.entity.enums.OrderStatusEnum;
 import com.campgem.modules.trade.entity.enums.OrderTypeEnum;
 import com.campgem.modules.trade.mapper.OrderMapper;
 import com.campgem.modules.trade.service.ICartService;
+import com.campgem.modules.trade.service.IGoodsSpecificationsService;
 import com.campgem.modules.trade.service.IOrderGoodsService;
 import com.campgem.modules.trade.service.IOrderService;
 import com.campgem.modules.trade.vo.OrderInfoVo;
@@ -39,6 +42,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	private ICartService cartService;
 	@Resource
 	private IOrderGoodsService orderGoodsService;
+	@Resource
+	private IGoodsSpecificationsService goodsSpecificationsService;
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	
@@ -63,6 +68,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 				orders.setOrderType(OrderTypeEnum.PRODUCT.code());
 				orders.setStatus(OrderStatusEnum.UNPAID.code());
 				orders.setCreateTime(createTime);
+				orders.setExpiredTime(getExpiredTime(createTime));
 				
 				// 设置配送方式
 				orders.setShipping(orderInfo.getShipping());
@@ -89,6 +95,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 				double totalAmount = 0;
 				List<OrdersGoods> listOrdersGoods = new ArrayList<>();
 				for (OrderInfoVo.SellerGoods sellerGoods : orderInfoVos.get(0).getGoods()) {
+					// 库存是否足够
+					if (sellerGoods.getQuantity() > sellerGoods.getSpecificationStock()) {
+						throw new JeecgBootException(StatusEnum.GoodsStockNotEnoughError, sellerGoods.getGoodsName());
+					}
+					
+					// 减少库存
+					goodsSpecificationsService.updateStock(2, sellerGoods.getSpecificationId(), sellerGoods.getQuantity());
+					
 					double taxes = sellerGoods.getTaxes().doubleValue() / 100.0 * sellerGoods.getSalePrice().doubleValue();
 					double amount = sellerGoods.getSalePrice().doubleValue() * sellerGoods.getQuantity();
 					totalTaxes += taxes * sellerGoods.getQuantity();
@@ -99,14 +113,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 					ordersGoods.setGoodsName(sellerGoods.getGoodsName());
 					ordersGoods.setGoodsId(sellerGoods.getGoodsId());
 					ordersGoods.setTaxes(new BigDecimal(taxes));
+					ordersGoods.setSpecificationId(sellerGoods.getSpecificationId());
 					ordersGoods.setPrice(sellerGoods.getSalePrice());
 					ordersGoods.setSpecificationName(sellerGoods.getSpecificationName());
 					ordersGoods.setQuantity(sellerGoods.getQuantity());
 					ordersGoods.setOrderId(orderId);
 					
 					listOrdersGoods.add(ordersGoods);
-					
-					// TODO 减少库存
 				}
 				
 				orders.setTaxesAmount(new BigDecimal(totalTaxes));
@@ -137,6 +150,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		baseMapper.paypalSuccess(paymentId);
 	}
 	
+	private Date getExpiredTime(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		
+		// 过期时间 TODO 暂定2个小时
+		calendar.add(Calendar.HOUR, 2);
+		return calendar.getTime();
+	}
+	
 	@Override
 	public Orders createServiceOrder(com.campgem.modules.service.entity.Service service, ServiceOrderPayDto payDto) {
 		String uid = SecurityUtils.getCurrentUserUid();
@@ -151,6 +173,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		orders.setOrderType(OrderTypeEnum.SERVICE.code());
 		orders.setStatus(OrderStatusEnum.UNPAID.code());
 		orders.setCreateTime(createTime);
+		orders.setExpiredTime(getExpiredTime(createTime));
 		
 		try {
 			Date appointment = sdf.parse(payDto.getDate() + " " + payDto.getTime());
@@ -174,5 +197,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		}
 		
 		return orders;
+	}
+	
+	@Override
+	@Transactional
+	public void checkOrderStatus() {
+		List<OrdersTaskVo> orderList = baseMapper.queryExpiredOrderList();
+		log.info("订单数量：" + orderList.size());
+		
+		// 修改订单状态
+		List<String> orderIds = new ArrayList<>();
+		// 库存数据
+		Map<String, Integer> map = new HashMap<>();
+		for (OrdersTaskVo orders : orderList) {
+			orderIds.add(orders.getId());
+			
+			for (OrdersGoodsTaskVo ordersGoods : orders.getGoods()) {
+				if (map.containsKey(ordersGoods.getSpecificationId())) {
+					map.replace(ordersGoods.getSpecificationId(), map.get(ordersGoods.getSpecificationId()) + ordersGoods.getQuantity());
+				} else {
+					map.put(ordersGoods.getSpecificationId(), ordersGoods.getQuantity());
+				}
+			}
+		}
+		
+		// 恢复商品库存
+		for (String key : map.keySet()) {
+			goodsSpecificationsService.updateStock(1, key, map.get(key));
+		}
+		
+		if (orderIds.size() > 0) {
+			// 更新订单状态
+			baseMapper.updateOrderStatusExpiredByIds(orderIds);
+		}
 	}
 }

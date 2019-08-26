@@ -97,8 +97,10 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 					throw new JeecgBootException(StatusEnum.SpecificationBlankError);
 				}
 				String[] spec = goodsVo.getSpecification().split(",");
-				goodsVo.setSalePrice(new BigDecimal(spec[0]));
-				goodsVo.setSpecificationName(spec[1]);
+				goodsVo.setSpecificationId(spec[0]);
+				goodsVo.setSalePrice(new BigDecimal(spec[1]));
+				goodsVo.setSpecificationName(spec[2]);
+				goodsVo.setSpecificationStock(Integer.parseInt(spec[3]));
 				goodsVo.setSpecification(null);
 			}
 		}

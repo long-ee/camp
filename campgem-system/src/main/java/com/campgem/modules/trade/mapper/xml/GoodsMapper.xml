@@ -106,7 +106,7 @@
 				(
 					#{specId} IS NULL or #{specId} = '',
 					g.sale_price,
-					( SELECT concat( specifications_price, ',', specifications_name ) FROM goods_specifications gs WHERE gs.id = #{specId}  AND gs.goods_id = #{goodsId} )) AS specification,
+					( SELECT concat( gs.id, ',', gs.specifications_price, ',', gs.specifications_name, ',', gs.specifications_stock ) FROM goods_specifications gs WHERE gs.id = #{specId}  AND gs.goods_id = #{goodsId} )) AS specification,
 			g.taxes
 		FROM
 			goods g

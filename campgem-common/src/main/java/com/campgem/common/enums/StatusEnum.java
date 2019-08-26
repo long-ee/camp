@@ -23,6 +23,7 @@ public enum StatusEnum {
     UnknownError(10600, "Unknown error", "未知错误"),
     TimeFormatError(10601, "Time format error", "时间格式错误"),
     UserIdBlankError(10602, "The user id can't empty", "用户ID不能为空"),
+	AmountFormatError(10603, "Amount format error", "金额格式错误"),
 
     // for login
     LoginFailed(20601, "Login failed", "登录信息无效"),
@@ -61,6 +62,7 @@ public enum StatusEnum {
     CartDataError(40614, "Cart data error", "购物车数据错误"),
     AppointmentTimeError(40615, "Reservation time format error", "预约时间格式错误"),
     OrderCreatedError(40616, "Order creation failed", "订单创建失败"),
+    GoodsStockNotEnoughError(40617, "\"%s\" is under-stocked", "\"%s\"库存不足"),
     
     
     // for service

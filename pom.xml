@@ -246,12 +246,18 @@
 			<version>0.0.2</version>
 		</dependency>
 		
+		<!-- PayPal 支付 -->
 		<dependency>
 			<groupId>com.paypal.sdk</groupId>
 			<artifactId>rest-api-sdk</artifactId>
 			<version>1.14.0</version>
 		</dependency>
-		
+		<!-- Credit Card -->
+		<dependency>
+			<groupId>com.braintreepayments.gateway</groupId>
+			<artifactId>braintree-java</artifactId>
+			<version>2.103.0</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
