@@ -26,7 +26,7 @@ public class TradeTask {
 	 * 每3分钟执行一次，检查订单状态
 	 */
 	@Async
-	@Scheduled(cron = "*/20 * * * * ?")  //间隔1秒
+	@Scheduled(cron = "0 */3 * * * ?")  //间隔1秒
 	public void checkOrderStatus() {
 		orderService.checkOrderStatus();
 	}

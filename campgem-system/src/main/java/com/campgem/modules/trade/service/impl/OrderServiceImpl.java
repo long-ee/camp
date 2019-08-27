@@ -1,5 +1,8 @@
 package com.campgem.modules.trade.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
@@ -7,6 +10,10 @@ import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.common.vo.OrdersGoodsTaskVo;
 import com.campgem.modules.common.vo.OrdersTaskVo;
 import com.campgem.modules.service.dto.ServiceOrderPayDto;
+import com.campgem.modules.service.entity.OrdersService;
+import com.campgem.modules.service.entity.ServiceImages;
+import com.campgem.modules.service.service.IOrdersServiceService;
+import com.campgem.modules.service.service.IServiceImagesService;
 import com.campgem.modules.trade.dto.OrderPayDto;
 import com.campgem.modules.trade.entity.Orders;
 import com.campgem.modules.trade.entity.OrdersGoods;
@@ -18,6 +25,10 @@ import com.campgem.modules.trade.service.IGoodsSpecificationsService;
 import com.campgem.modules.trade.service.IOrderGoodsService;
 import com.campgem.modules.trade.service.IOrderService;
 import com.campgem.modules.trade.vo.OrderInfoVo;
+import com.campgem.modules.user.service.IMemberService;
+import com.campgem.modules.user.vo.MemberVo;
+import com.campgem.modules.user.vo.OrdersDetailVo;
+import com.campgem.modules.user.vo.OrdersListVo;
 import com.campgem.modules.user.vo.ShippingMethodsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,8 +55,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	private IOrderGoodsService orderGoodsService;
 	@Resource
 	private IGoodsSpecificationsService goodsSpecificationsService;
+	@Resource
+	private IOrdersServiceService ordersServiceService;
+	@Resource
+	private IServiceImagesService serviceImagesService;
+	@Resource
+	private IMemberService memberService;
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private static SimpleDateFormat orderSdf = new SimpleDateFormat("yyyyMMddHHmmss");
 	
 	@Override
 	@Transactional
@@ -63,6 +81,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 				// 设置公共属性
 				orders.setId(orderId);
 				orders.setUid(uid);
+				orders.setOrderNo(getOrderNo(createTime));
 				orders.setAddressId(payDto.getAddressId());
 				orders.setPaymentMethod(payDto.getPaymentMethod());
 				orders.setOrderType(OrderTypeEnum.PRODUCT.code());
@@ -159,7 +178,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		return calendar.getTime();
 	}
 	
+	private String getOrderNo(Date date) {
+		return String.format("%s%04d", orderSdf.format(date), new Random().nextInt(9999));
+	}
+	
 	@Override
+	@Transactional
 	public Orders createServiceOrder(com.campgem.modules.service.entity.Service service, ServiceOrderPayDto payDto) {
 		String uid = SecurityUtils.getCurrentUserUid();
 		Date createTime = new Date();
@@ -169,18 +193,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		// 设置公共属性
 		orders.setId(orderId);
 		orders.setUid(uid);
+		orders.setOrderNo(getOrderNo(createTime));
 		orders.setPaymentMethod(payDto.getPaymentMethod());
 		orders.setOrderType(OrderTypeEnum.SERVICE.code());
 		orders.setStatus(OrderStatusEnum.UNPAID.code());
 		orders.setCreateTime(createTime);
 		orders.setExpiredTime(getExpiredTime(createTime));
 		
+		Date appointment;
 		try {
-			Date appointment = sdf.parse(payDto.getDate() + " " + payDto.getTime());
-			orders.setAppointment(appointment);
+			appointment = sdf.parse(payDto.getDate() + " " + payDto.getTime());
 		} catch (ParseException ignore) {
 			throw new JeecgBootException(StatusEnum.AppointmentTimeError);
 		}
+		orders.setAppointment(appointment);
 		
 		// 设置价格
 		orders.setAmount(service.getSalePrice());
@@ -195,6 +221,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 			// 添加失败
 			throw new JeecgBootException(StatusEnum.OrderCreatedError);
 		}
+		
+		// 查询服务列表图片
+		LambdaQueryWrapper<ServiceImages> query = new LambdaQueryWrapper<>();
+		query.eq(ServiceImages::getServiceId, service.getId());
+		query.eq(ServiceImages::getIsListImage, 1);
+		ServiceImages serviceImages = serviceImagesService.getOne(query);
+		
+		// 添加订单服务表
+		OrdersService ordersService = new OrdersService();
+		ordersService.setOrderId(orderId);
+		ordersService.setServiceId(service.getId());
+		ordersService.setAppointmentTime(appointment);
+		ordersService.setPrice(service.getSalePrice());
+		ordersService.setServiceName(service.getServiceName());
+		ordersService.setTaxes(service.getTaxes());
+		if (serviceImages != null) {
+			ordersService.setServiceIcon(serviceImages.getServiceImage());
+		}
+		// 服务订单，固定数量为1
+		ordersService.setQuantity(1);
+		
+		ordersServiceService.save(ordersService);
 		
 		return orders;
 	}
@@ -230,5 +278,33 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 			// 更新订单状态
 			baseMapper.updateOrderStatusExpiredByIds(orderIds);
 		}
+	}
+	
+	@Override
+	public IPage<OrdersListVo> queryUserOrders(String status, Page page) {
+		String uid = SecurityUtils.getCurrentUserUid();
+		return baseMapper.queryUserOrders(page, uid, status);
+	}
+	
+	@Override
+	public OrdersDetailVo queryUserOrdersDetail(String orderId) {
+		String uid = SecurityUtils.getCurrentUserUid();
+		OrdersDetailVo detail = baseMapper.queryUserOrdersDetail(uid, orderId);
+		if (detail == null) {
+			throw new JeecgBootException(StatusEnum.OrdersNotExistError);
+		}
+		
+		if (detail.getRole().equals("buyer")) {
+			// 设置卖家信息
+			MemberVo member = memberService.getMemberByUserBaseId(detail.getSellerId());
+			detail.setSellerName(member.getMemberName());
+		} else {
+			// 设置买家信息
+			MemberVo member = memberService.getMemberByUserBaseId(detail.getUid());
+			detail.setMemberName(member.getMemberName());
+			detail.setMobile(member.getMobile());
+		}
+		
+		return detail;
 	}
 }

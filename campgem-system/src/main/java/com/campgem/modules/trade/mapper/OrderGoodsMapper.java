@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.campgem.modules.common.vo.OrdersGoodsTaskVo;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.entity.OrdersGoods;
+import com.campgem.modules.user.vo.OrdersGoodsVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface OrderGoodsMapper extends BaseMapper<OrdersGoods> {
 	List<Goods> getGoodsInfo(@Param("orderId") String orderId);
 	
 	List<OrdersGoodsTaskVo> queryOrderGoodsTaskList(@Param("orderId") String orderId);
+	
+	List<OrdersGoodsVo> queryOrderGoods(@Param("orderId") String orderId);
 }

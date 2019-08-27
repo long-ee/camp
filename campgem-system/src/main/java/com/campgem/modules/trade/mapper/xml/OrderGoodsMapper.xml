@@ -18,4 +18,15 @@
 		FROM orders_goods og
 		WHERE og.order_id = #{orderId}
 	</select>
+	
+	<select id="queryOrderGoods" resultType="com.campgem.modules.user.vo.OrdersGoodsVo">
+		SELECT og.goods_id AS id,
+		       og.goods_name,
+		       og.specification_name,
+		       og.price,
+		       og.goods_icon as list_image,
+		       og.quantity
+		FROM orders_goods og
+		WHERE og.order_id = #{orderId}
+	</select>
 </mapper>

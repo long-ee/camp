@@ -49,6 +49,7 @@
 	<select id="getMemberByUserBaseId" resultType="com.campgem.modules.user.vo.MemberVo">
 		SELECT *
 		FROM member m
+		LEFT JOIN user_base ub on ub.id = m.user_base_id
 		WHERE m.user_base_id = #{id}
 	</select>
 

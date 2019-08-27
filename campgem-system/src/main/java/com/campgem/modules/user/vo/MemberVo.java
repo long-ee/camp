@@ -8,4 +8,7 @@ import lombok.Data;
 public class MemberVo extends Member {
     @ApiModelProperty(value = "用户头像")
     private String face;
+    
+    @ApiModelProperty("联系电话")
+    private String mobile;
 }

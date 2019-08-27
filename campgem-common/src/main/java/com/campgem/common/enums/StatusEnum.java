@@ -63,6 +63,8 @@ public enum StatusEnum {
     AppointmentTimeError(40615, "Reservation time format error", "预约时间格式错误"),
     OrderCreatedError(40616, "Order creation failed", "订单创建失败"),
     GoodsStockNotEnoughError(40617, "\"%s\" is under-stocked", "\"%s\"库存不足"),
+    OrdersStatusError(40618, "Order status error", "订单状态错误"),
+    OrdersNotExistError(40619, "Order not exist", "订单不存在"),
     
     
     // for service

@@ -41,4 +41,63 @@
 		WHERE UNIX_TIMESTAMP(o.expired_time) &lt; UNIX_TIMESTAMP(NOW())
 		  AND o.status = 0
 	</select>
+	
+	<select id="queryUserOrders" resultType="com.campgem.modules.user.vo.OrdersListVo">
+		SELECT
+			o.id,
+			o.order_no,
+		    IF(o.uid = #{uid}, 'buyer', 'seller') as role,
+			o.pay_amount,
+			o.`status`,
+			( SELECT GROUP_CONCAT( goods_name ) FROM orders_goods og WHERE og.order_id = o.id ) AS `name`,
+			o.create_time
+		FROM
+			orders o
+		WHERE
+			(o.uid = #{uid}
+		   OR o.seller_id = #{uid})
+		<if test="status == 'unpaid'">
+			AND o.status = 0
+		</if>
+		<if test="status == 'progress'">
+			AND o.status in (1, 2)
+		</if>
+		<if test="status == 'finished'">
+			AND o.status = 3
+		</if>
+		ORDER BY
+			o.create_time DESC
+	</select>
+	
+	<resultMap id="userOrdersDetail" type="com.campgem.modules.user.vo.OrdersDetailVo">
+		<id column="oid" property="id" />
+		<collection property="goods" ofType="com.campgem.modules.user.vo.OrdersGoodsVo"
+		            select="com.campgem.modules.trade.mapper.OrderGoodsMapper.queryOrderGoods" column="oid"/>
+		
+		<collection property="services" ofType="com.campgem.modules.user.vo.OrdersServiceVo"
+		            select="com.campgem.modules.service.mapper.OrdersServiceMapper.queryOrdersService" column="oid"/>
+		
+		<collection property="address" ofType="com.campgem.modules.user.vo.OrdersAddressVo"
+		            select="com.campgem.modules.user.mapper.AddressMapper.queryUserAddress" column="address_id" />
+	</resultMap>
+	<select id="queryUserOrdersDetail" resultMap="userOrdersDetail">
+		SELECT
+			o.id                                   AS oid,
+		    o.address_id                           AS address_id,
+		    o.uid,
+		    o.seller_id,
+			o.order_no,
+			o.order_type,
+			o.pay_amount,
+			o.`status`,
+			o.shipping,
+			o.tracking_number,
+			IF( o.uid = #{uid}, 'buyer', 'seller' ) AS role,
+			o.create_time
+		FROM
+			orders o
+		WHERE
+			o.id = #{orderId}
+		  AND (o.uid = #{uid} OR o.seller_id = #{uid})
+	</select>
 </mapper>
