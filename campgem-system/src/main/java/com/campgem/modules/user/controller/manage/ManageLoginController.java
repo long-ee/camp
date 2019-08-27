@@ -43,8 +43,8 @@ public class ManageLoginController {
 
 	@PostMapping(value = "/account/login")
 	@ApiOperation(value="用户登录", notes="A1 登录")
-	public Result<JSONObject> login(SysLoginModel sysLoginModel) throws Exception {
-		Result<JSONObject> result = new Result<>();
+	public Result<ManageLoginVo> login(SysLoginModel sysLoginModel) throws Exception {
+		Result<ManageLoginVo> result = new Result<>();
 		String username = sysLoginModel.getUsername();
 		String password = sysLoginModel.getPassword();
 		//1. 校验用户是否有效
