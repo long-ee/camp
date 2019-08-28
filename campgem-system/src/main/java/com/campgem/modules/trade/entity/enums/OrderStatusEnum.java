@@ -4,12 +4,13 @@ public enum OrderStatusEnum {
 	UNPAID(0),
 	PAID(1),
 	SHIPPING(2),
-	OFFLINE_TRADING(3),
-	EXPIRED(4);
+	EVALUATED(3),
+	OFFLINE_TRADING(4),
+	EXPIRED(5);
 	
 	private Integer code;
 	
-	private OrderStatusEnum(Integer code) {
+	OrderStatusEnum(Integer code) {
 		this.code = code;
 	}
 	

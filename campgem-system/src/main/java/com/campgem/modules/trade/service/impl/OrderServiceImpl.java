@@ -13,6 +13,7 @@ import com.campgem.modules.service.dto.ServiceOrderPayDto;
 import com.campgem.modules.service.entity.OrdersService;
 import com.campgem.modules.service.entity.ServiceImages;
 import com.campgem.modules.service.service.IOrdersServiceService;
+import com.campgem.modules.service.service.IServiceEvaluationService;
 import com.campgem.modules.service.service.IServiceImagesService;
 import com.campgem.modules.trade.dto.OrderPayDto;
 import com.campgem.modules.trade.entity.Orders;
@@ -20,11 +21,9 @@ import com.campgem.modules.trade.entity.OrdersGoods;
 import com.campgem.modules.trade.entity.enums.OrderStatusEnum;
 import com.campgem.modules.trade.entity.enums.OrderTypeEnum;
 import com.campgem.modules.trade.mapper.OrderMapper;
-import com.campgem.modules.trade.service.ICartService;
-import com.campgem.modules.trade.service.IGoodsSpecificationsService;
-import com.campgem.modules.trade.service.IOrderGoodsService;
-import com.campgem.modules.trade.service.IOrderService;
+import com.campgem.modules.trade.service.*;
 import com.campgem.modules.trade.vo.OrderInfoVo;
+import com.campgem.modules.user.dto.OrdersEvaluationDto;
 import com.campgem.modules.user.service.IMemberService;
 import com.campgem.modules.user.vo.MemberVo;
 import com.campgem.modules.user.vo.OrdersDetailVo;
@@ -61,6 +60,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	private IServiceImagesService serviceImagesService;
 	@Resource
 	private IMemberService memberService;
+	
+	@Resource
+	private IGoodsEvaluationService goodsEvaluationService;
+	@Resource
+	private IServiceEvaluationService serviceEvaluationService;
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static SimpleDateFormat orderSdf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -166,7 +170,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	
 	@Override
 	public void paypalSuccess(String paymentId) {
-		baseMapper.paypalSuccess(paymentId);
+		baseMapper.paypalSuccessByPayId(paymentId, OrderStatusEnum.PAID.code());
 	}
 	
 	private Date getExpiredTime(Date date) {
@@ -250,7 +254,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	@Override
 	@Transactional
 	public void checkOrderStatus() {
-		List<OrdersTaskVo> orderList = baseMapper.queryExpiredOrderList();
+		List<OrdersTaskVo> orderList = baseMapper.queryExpiredOrderList(OrderStatusEnum.UNPAID.code());
 		log.info("订单数量：" + orderList.size());
 		
 		// 修改订单状态
@@ -275,8 +279,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		}
 		
 		if (orderIds.size() > 0) {
-			// 更新订单状态
-			baseMapper.updateOrderStatusExpiredByIds(orderIds);
+			// 更新订单过期状态
+			baseMapper.updateOrderStatusByIds(orderIds, OrderStatusEnum.EXPIRED.code());
 		}
 	}
 	
@@ -306,5 +310,58 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		}
 		
 		return detail;
+	}
+	
+	@Override
+	@Transactional
+	public boolean evaluate(String orderId, OrdersEvaluationDto dto) {
+		String uid = SecurityUtils.getCurrentUserUid();
+		Orders orders = getById(orderId);
+		if (!orders.getUid().equals(uid) && !orders.getSellerId().equals(uid)) {
+			// 不是买家也不是卖家
+			throw new JeecgBootException(StatusEnum.OrdersOwnerError);
+		}
+		
+		Integer status = orders.getStatus();
+		if (status.equals(OrderStatusEnum.UNPAID.code()) || status.equals(OrderStatusEnum.EVALUATED.code()) ||
+				status.equals(OrderStatusEnum.OFFLINE_TRADING.code()) || status.equals(OrderStatusEnum.EXPIRED.code())) {
+			throw new JeecgBootException(StatusEnum.OrdersStatusError);
+		}
+		
+		boolean ok;
+		if (orders.getOrderType().equals(OrderTypeEnum.SERVICE.code())) {
+			// 服务订单
+			ok = serviceEvaluationService.evaluation(uid, dto);
+		} else {
+			// 商品订单
+			ok = goodsEvaluationService.evaluation(uid, dto);
+		}
+		if (ok) {
+			// 更新订单已评价
+			return updateOrderStatusById(orderId, OrderStatusEnum.EVALUATED.code());
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean updateOrderStatusById(String orderId, Integer status) {
+		return baseMapper.updateOrderStatusById(orderId, status);
+	}
+	
+	@Override
+	public boolean finished(String orderId) {
+		String uid = SecurityUtils.getCurrentUserUid();
+		Orders orders = getById(orderId);
+		
+		if (!orders.getUid().equals(uid) && !orders.getSellerId().equals(uid)) {
+			// 不是买家也不是卖家
+			throw new JeecgBootException(StatusEnum.OrdersOwnerError);
+		}
+		return updateOrderStatusById(orderId, OrderStatusEnum.OFFLINE_TRADING.code());
+	}
+	
+	@Override
+	public boolean updateTrackingNumber(String orderId, String trackingNumber) {
+		return baseMapper.updateTrackingNumber(orderId, trackingNumber);
 	}
 }

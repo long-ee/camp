@@ -65,6 +65,9 @@ public enum StatusEnum {
     GoodsStockNotEnoughError(40617, "\"%s\" is under-stocked", "\"%s\"库存不足"),
     OrdersStatusError(40618, "Order status error", "订单状态错误"),
     OrdersNotExistError(40619, "Order not exist", "订单不存在"),
+    GoodsEvaluationNotEmptyError(40620, "Goods evaluation can't empty", "商品评价不能为空"),
+    OrdersOwnerError(40621, "You are not buyer or seller", "您不是买家或者卖家"),
+    TrackingNumberEmptyError(40621, "Tracking number can't empty", "物流单号不能为空"),
     
     
     // for service

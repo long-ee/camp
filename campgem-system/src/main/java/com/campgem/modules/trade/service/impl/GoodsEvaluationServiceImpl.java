@@ -4,12 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.enums.StatusEnum;
+import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.trade.entity.GoodsEvaluation;
 import com.campgem.modules.trade.mapper.GoodsEvaluationMapper;
 import com.campgem.modules.trade.service.IGoodsEvaluationService;
 import com.campgem.modules.trade.vo.GoodsEvaluationVo;
+import com.campgem.modules.user.dto.OrdersEvaluationDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,5 +41,29 @@ public class GoodsEvaluationServiceImpl extends ServiceImpl<GoodsEvaluationMappe
 		page.setTotal(count);
 		
 		return page;
+	}
+	
+	@Override
+	@Transactional
+	public boolean evaluation(String uid, OrdersEvaluationDto dto) {
+		if (dto.getGoodsEvaluations() == null || dto.getGoodsEvaluations().length == 0) {
+			throw new JeecgBootException(StatusEnum.GoodsEvaluationNotEmptyError);
+		}
+		
+		Date createTime = new Date();
+		List<GoodsEvaluation> saves = new ArrayList<>();
+		for (OrdersEvaluationDto.GoodsEvaluationDto goodsDto : dto.getGoodsEvaluations()) {
+			GoodsEvaluation goodsEvaluation = new GoodsEvaluation();
+			goodsEvaluation.setUid(uid);
+			goodsEvaluation.setGoodsId(goodsDto.getGoodsId());
+			goodsEvaluation.setContent(goodsDto.getContent());
+			goodsEvaluation.setDelFlag(0);
+			goodsEvaluation.setCreateTime(createTime);
+			goodsEvaluation.setRating(goodsDto.getRating());
+			
+			saves.add(goodsEvaluation);
+		}
+		
+		return saveBatch(saves);
 	}
 }

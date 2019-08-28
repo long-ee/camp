@@ -7,6 +7,7 @@ import com.campgem.modules.service.dto.ServiceOrderPayDto;
 import com.campgem.modules.service.entity.Service;
 import com.campgem.modules.trade.dto.OrderPayDto;
 import com.campgem.modules.trade.entity.Orders;
+import com.campgem.modules.user.dto.OrdersEvaluationDto;
 import com.campgem.modules.user.vo.OrdersDetailVo;
 import com.campgem.modules.user.vo.OrdersListVo;
 
@@ -53,4 +54,12 @@ public interface IOrderService extends IService<Orders> {
 	 * 用户订单详情
 	 */
 	OrdersDetailVo queryUserOrdersDetail(String orderId);
+	
+	boolean evaluate(String orderId, OrdersEvaluationDto dto);
+	
+	boolean updateOrderStatusById(String orderId, Integer status);
+	
+	boolean finished(String orderId);
+	
+	boolean updateTrackingNumber(String orderId, String trackingNumber);
 }

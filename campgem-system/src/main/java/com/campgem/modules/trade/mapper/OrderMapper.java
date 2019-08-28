@@ -21,16 +21,20 @@ public interface OrderMapper extends BaseMapper<Orders> {
 	
 	void updatePayId(@Param("payId") String payId, @Param("ids") List<String> orderIds);
 	
-	void paypalSuccess(@Param("payId") String payId);
+	void paypalSuccessByPayId(@Param("payId") String payId, @Param("status") Integer status);
 	
-	List<OrdersTaskVo> queryExpiredOrderList();
+	List<OrdersTaskVo> queryExpiredOrderList(@Param("status") Integer status);
 	
 	/**
-	 * 设置订单状态为已过期
+	 * 设置订单状态
 	 */
-	void updateOrderStatusExpiredByIds(@Param("ids") List<String> orderIds);
+	void updateOrderStatusByIds(@Param("ids") List<String> orderIds, @Param("status") Integer status);
 	
 	IPage<OrdersListVo> queryUserOrders(Page page, @Param("uid") String uid, @Param("status") String status);
 	
 	OrdersDetailVo queryUserOrdersDetail(@Param("uid") String uid, @Param("orderId") String orderId);
+	
+	boolean updateOrderStatusById(@Param("orderId") String orderId, @Param("status") Integer status);
+	
+	boolean updateTrackingNumber(@Param("orderId") String orderId, @Param("trackingNumber") String trackingNumber);
 }
