@@ -53,6 +53,7 @@
 		       c.city_name,
 		       u.university_name,
 		       g.end_date,
+		       g.stock,
 		       g.quality,
 		       IF
 			       (g.member_type = 'ONLINE_BUSINESS' or g.member_type = 'LOCAL_BUSINESS', (SELECT specifications_price
@@ -148,5 +149,15 @@
 	            LEFT JOIN city ON city.id = g.city_id
 			<include refid="queryConditions" />
             ORDER BY g.create_time DESC
+	</select>
+	
+	<select id="queryUserOrdersPageList" resultType="com.campgem.modules.user.vo.UserGoodsListVo">
+		SELECT g.id,
+		       g.goods_name,
+		       (SELECT gi.goods_image FROM goods_images gi WHERE gi.goods_id = g.id AND gi.is_list_image = 1) as list_image,
+		       g.sale_price,
+		       g.status
+		FROM goods g
+		ORDER BY g.create_time DESC
 	</select>
 </mapper>

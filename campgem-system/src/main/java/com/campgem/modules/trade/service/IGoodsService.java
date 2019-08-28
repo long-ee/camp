@@ -12,6 +12,9 @@ import com.campgem.modules.trade.vo.GoodsListVo;
 import com.campgem.modules.trade.vo.OrderInfoVo;
 import com.campgem.modules.trade.vo.manage.MGoodsListVo;
 import com.campgem.modules.trade.vo.manage.MGoodsVo;
+import com.campgem.modules.user.vo.UserGoodsDetailVo;
+import com.campgem.modules.user.vo.UserGoodsListVo;
+import com.campgem.modules.user.vo.UserGoodsVo;
 
 import java.util.List;
 
@@ -45,4 +48,17 @@ public interface IGoodsService extends IService<Goods> {
 	boolean save(MGoodsVo goods);
 	
 	boolean update(MGoodsVo updateGoods);
+	
+	IPage<UserGoodsListVo> queryPageList(Page page);
+	
+	/**
+	 * 新增/编辑用户商品
+	 * @param isUpdate true更新，false新增
+	 */
+	boolean addOrUpdateUserGoods(UserGoodsVo userGoodsVo, boolean isUpdate);
+	
+	/**
+	 * 用户商品详情
+	 */
+	UserGoodsDetailVo queryUserGoodsDetail(String goodsId);
 }

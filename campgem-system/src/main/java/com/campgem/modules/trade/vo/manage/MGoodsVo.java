@@ -54,9 +54,6 @@ public class MGoodsVo {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endDate;
 	
-	/**
-	 * 新旧程度
-	 */
 	@ApiModelProperty("新旧程度 identity时2有效 1:Brand new 2:Almost new 3:Gently used")
 	private Integer quality;
 	
