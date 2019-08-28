@@ -9,9 +9,11 @@ import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.DateUtils;
 import com.campgem.modules.university.dto.ClubActivityDto;
 import com.campgem.modules.university.dto.ClubActivityQueryDto;
+import com.campgem.modules.university.entity.Club;
 import com.campgem.modules.university.entity.ClubActivity;
 import com.campgem.modules.university.mapper.ClubActivityMapper;
 import com.campgem.modules.university.service.IClubActivityService;
+import com.campgem.modules.university.service.IClubService;
 import com.campgem.modules.university.vo.ClubActivityCalendarVo;
 import com.campgem.modules.university.vo.ClubActivityVo;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +31,8 @@ import java.util.List;
 @Service
 public class ClubActivityServiceImpl extends ServiceImpl<ClubActivityMapper, ClubActivity> implements IClubActivityService {
 
-
+    @Resource
+    private IClubService clubService;
     @Resource
     private ClubActivityMapper clubActivityMapper;
 
@@ -55,7 +58,12 @@ public class ClubActivityServiceImpl extends ServiceImpl<ClubActivityMapper, Clu
         if(StringUtils.isBlank(clubActivityDto.getPublisherId())){
             throw new JeecgBootException(StatusEnum.BadRequest);
         }
+        Club club = clubService.getById(clubActivityDto.getClubId());
+        if(null == club){
+            throw new JeecgBootException(StatusEnum.BadRequest);
+        }
         ClubActivity clubActivity = BeanConvertUtils.convertBean(clubActivityDto, ClubActivity.class);
+        clubActivity.setUniversityId(club.getUniversityId());
         this.save(clubActivity);
     }
 
