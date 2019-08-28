@@ -241,4 +241,14 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         queryWrapper.in(Member::getMemberType, memberTypes);
         return memberMapper.selectList(queryWrapper);
     }
+
+    @Override
+    public void updateUserMessageChat(String memberId, String allowChat) {
+        Member member = this.getById(memberId);
+        if(null == member){
+            throw new JeecgBootException(StatusEnum.NotFound);
+        }
+        member.setAllowChat(allowChat);
+        this.updateById(member);
+    }
 }

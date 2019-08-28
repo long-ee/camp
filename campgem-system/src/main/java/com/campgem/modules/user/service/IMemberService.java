@@ -96,4 +96,11 @@ public interface IMemberService extends IService<Member> {
      * @return
      */
 	List<Member> queryMemberByTypes(String... memberTypes);
+
+    /**
+     * 论坛设置
+     * @param memberId
+     * @param allowChat
+     */
+	void updateUserMessageChat(String memberId, String allowChat);
 }
