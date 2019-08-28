@@ -38,6 +38,10 @@
             <if test="null != queryDto.endDate and queryDto.endDate != ''">
                 <![CDATA[ AND activity.end_date >= #{queryDto.endDate}  ]]>
             </if>
+
+            <if test="null != queryDto.activityDate and queryDto.activityDate != ''">
+                <![CDATA[ AND activity.start_date = #{queryDto.activityDate}  ]]>
+            </if>
         </where>
     </sql>
 
@@ -81,4 +85,20 @@
             where activity.id = #{activityId}
         ]]>
     </select>
+
+    <select id="queryActivityCalendar" resultType="com.campgem.modules.university.vo.ClubActivityCalendarVo">
+        <![CDATA[
+            SELECT
+                ca.start_date,
+                COUNT(1) as count
+            FROM
+                club_activity ca
+            WHERE
+                ca.university_id = #{universityId}
+              AND ca.start_date >= #{startTime}
+              AND ca.start_date <= #{endTime}
+            GROUP BY ca.start_date;
+        ]]>
+    </select>
+
 </mapper>

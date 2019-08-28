@@ -3,6 +3,7 @@ package com.campgem.modules.university.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
+import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.util.DateUtils;
 import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.university.dto.ClubActivityDto;
@@ -10,14 +11,17 @@ import com.campgem.modules.university.dto.ClubActivityQueryDto;
 import com.campgem.modules.university.entity.ClubActivity;
 import com.campgem.modules.university.service.IClubActivityService;
 import com.campgem.modules.university.service.IClubService;
+import com.campgem.modules.university.vo.ClubActivityCalendarVo;
 import com.campgem.modules.university.vo.ClubActivityVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Slf4j
@@ -29,7 +33,17 @@ public class ClubActivityController {
 	private IClubService clubService;
 	@Resource
 	private IClubActivityService clubActivityService;
-	
+
+	@ApiOperation(value="社团活动信息接口-活动日历查询", notes="E14 参数：当前登录人员所属学校ID")
+	@GetMapping(value = "/university/club/activity/calendar")
+	public Result<?> activityCalendar(@RequestParam(name="universityId",required=true) String universityId) {
+//		String universityId = SecurityUtils.getCurrentUser().getUniversityId();
+		if(StringUtils.isBlank(universityId)){
+			return Result.error(StatusEnum.BadRequest.code(), "校园ID不能为空");
+		}
+		List<ClubActivityCalendarVo> activityCalendarVos = clubActivityService.queryActivityCalendar(universityId);
+		return new Result<List<ClubActivityCalendarVo>>().result(activityCalendarVos);
+	}
 
 	@ApiOperation(value="社团活动信息接口-今天活动列表查询", notes="E1 今天活动列表查询（默认查出条数小于等于10条）")
 	@GetMapping(value = "/university/club/activity/list/today")

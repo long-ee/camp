@@ -6,16 +6,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
+import com.campgem.common.util.DateUtils;
 import com.campgem.modules.university.dto.ClubActivityDto;
 import com.campgem.modules.university.dto.ClubActivityQueryDto;
 import com.campgem.modules.university.entity.ClubActivity;
 import com.campgem.modules.university.mapper.ClubActivityMapper;
 import com.campgem.modules.university.service.IClubActivityService;
+import com.campgem.modules.university.vo.ClubActivityCalendarVo;
 import com.campgem.modules.university.vo.ClubActivityVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Description: 社团活动信息
@@ -67,5 +70,12 @@ public class ClubActivityServiceImpl extends ServiceImpl<ClubActivityMapper, Clu
         }
         clubActivity = BeanConvertUtils.convertBean(clubActivityDto, ClubActivity.class);
         this.updateById(clubActivity);
+    }
+
+    @Override
+    public List<ClubActivityCalendarVo> queryActivityCalendar(String universityId) {
+        String firstDay = DateUtils.getFirstDayOfMonth();
+        String endDay = DateUtils.getEndDayOfNextMonth();
+        return clubActivityMapper.queryActivityCalendar(universityId, firstDay, endDay);
     }
 }
