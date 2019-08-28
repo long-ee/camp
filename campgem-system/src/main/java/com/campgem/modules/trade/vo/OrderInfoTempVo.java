@@ -36,6 +36,9 @@ public class OrderInfoTempVo implements Serializable {
 	@ApiModelProperty("商品名")
 	private String goodsName;
 	
+	@ApiModelProperty("商品库存，学生/一般用户")
+	private Integer stock;
+	
 	@ApiModelProperty("商品数量")
 	private Integer quantity;
 	

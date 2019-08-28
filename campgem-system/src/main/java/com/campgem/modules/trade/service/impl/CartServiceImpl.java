@@ -57,6 +57,10 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 			throw new JeecgBootException(StatusEnum.GoodsNotExistError);
 		}
 		
+		if (goods.getUid().equals(uid)) {
+			throw new JeecgBootException(StatusEnum.GoodsIsBelongYourselfError);
+		}
+		
 		if (CommonUtils.isBusiness(goods.getMemberType())) {
 			// 商家，必须要有规格
 			if (StringUtils.isEmpty(specId)) {

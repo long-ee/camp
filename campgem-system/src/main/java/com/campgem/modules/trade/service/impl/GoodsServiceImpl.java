@@ -329,4 +329,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		GoodsDetailVo goodsDetailVo = queryGoodsDetail(goodsId, false);
 		return BeanConvertUtils.copy(goodsDetailVo, UserGoodsDetailVo.class);
 	}
+	
+	@Override
+	public void updateStock(int type, String id, Integer stock) {
+		baseMapper.updateStock(type, id, stock);
+	}
 }

@@ -46,8 +46,10 @@
 	</resultMap>
 	<select id="queryExpiredOrderList" resultMap="expiredOrders">
 		SELECT o.id         AS oid,
-		       o.status
+		       o.status,
+		       m.member_type
 		FROM orders o
+		LEFT JOIN member m on m.user_base_id = o.seller_id
 		WHERE UNIX_TIMESTAMP(o.expired_time) &lt; UNIX_TIMESTAMP(NOW())
 		  AND o.status = #{status}
 	</select>

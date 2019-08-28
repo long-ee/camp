@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.common.utils.CommonUtils;
 import com.campgem.modules.common.vo.OrdersGoodsTaskVo;
 import com.campgem.modules.common.vo.OrdersTaskVo;
 import com.campgem.modules.service.dto.ServiceOrderPayDto;
@@ -62,6 +63,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	private IMemberService memberService;
 	
 	@Resource
+	private IGoodsService goodsService;
+	@Resource
 	private IGoodsEvaluationService goodsEvaluationService;
 	@Resource
 	private IServiceEvaluationService serviceEvaluationService;
@@ -101,9 +104,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 					// 数据有错误
 					throw new JeecgBootException(StatusEnum.CartDataError);
 				}
+				OrderInfoVo orderInfoVo = orderInfoVos.get(0);
 				// 设置卖家名称，这种情况下，返回的一定会有个key，并且是卖家名称
-				orders.setSellerName(orderInfoVos.get(0).getMemberName());
-				orders.setSellerId(orderInfoVos.get(0).getSellerId());
+				orders.setSellerName(orderInfoVo.getMemberName());
+				orders.setSellerId(orderInfoVo.getSellerId());
 				
 				// 计算金额，包括运费和税金
 				List<ShippingMethodsVo> methods = orderInfoVos.get(0).getShippingMethods();
@@ -117,17 +121,33 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 				double totalTaxes = 0;
 				double totalAmount = 0;
 				List<OrdersGoods> listOrdersGoods = new ArrayList<>();
-				for (OrderInfoVo.SellerGoods sellerGoods : orderInfoVos.get(0).getGoods()) {
-					// 库存是否足够
-					if (sellerGoods.getQuantity() > sellerGoods.getSpecificationStock()) {
-						throw new JeecgBootException(StatusEnum.GoodsStockNotEnoughError, sellerGoods.getGoodsName());
+				for (OrderInfoVo.SellerGoods sellerGoods : orderInfoVo.getGoods()) {
+					double taxes = 0;
+					double amount = 0;
+					if (CommonUtils.isBusiness(orderInfoVo.getMemberType())) {
+						// 商家库存是否足够
+						if (sellerGoods.getQuantity() > sellerGoods.getSpecificationStock()) {
+							throw new JeecgBootException(StatusEnum.GoodsStockNotEnoughError, sellerGoods.getGoodsName());
+						}
+						
+						// 减少商家用户库存
+						goodsSpecificationsService.updateStock(2, sellerGoods.getSpecificationId(), sellerGoods.getQuantity());
+						
+						taxes = sellerGoods.getTaxes().doubleValue() / 100.0 * sellerGoods.getSalePrice().doubleValue();
+						amount = sellerGoods.getSalePrice().doubleValue() * sellerGoods.getQuantity();
+					} else {
+						// 学生/一般用户库存是否足够
+						if (sellerGoods.getQuantity() > sellerGoods.getStock()) {
+							throw new JeecgBootException(StatusEnum.GoodsStockNotEnoughError, sellerGoods.getGoodsName());
+						}
+						// 减少学生/一般用户库存
+						goodsService.updateStock(2, sellerGoods.getGoodsId(), sellerGoods.getQuantity());
+						
+						// 学生/一般用户商品没有税率
+						taxes = 0;
+						amount = sellerGoods.getSalePrice().doubleValue() * sellerGoods.getQuantity();
 					}
 					
-					// 减少库存
-					goodsSpecificationsService.updateStock(2, sellerGoods.getSpecificationId(), sellerGoods.getQuantity());
-					
-					double taxes = sellerGoods.getTaxes().doubleValue() / 100.0 * sellerGoods.getSalePrice().doubleValue();
-					double amount = sellerGoods.getSalePrice().doubleValue() * sellerGoods.getQuantity();
 					totalTaxes += taxes * sellerGoods.getQuantity();
 					totalAmount += amount;
 					
@@ -259,23 +279,41 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		
 		// 修改订单状态
 		List<String> orderIds = new ArrayList<>();
-		// 库存数据
-		Map<String, Integer> map = new HashMap<>();
+		
+		// 商家库存数据
+		Map<String, Integer> businessMap = new HashMap<>();
+		// 学生/一般用户库存
+		Map<String, Integer> generalMap = new HashMap<>();
 		for (OrdersTaskVo orders : orderList) {
 			orderIds.add(orders.getId());
 			
-			for (OrdersGoodsTaskVo ordersGoods : orders.getGoods()) {
-				if (map.containsKey(ordersGoods.getSpecificationId())) {
-					map.replace(ordersGoods.getSpecificationId(), map.get(ordersGoods.getSpecificationId()) + ordersGoods.getQuantity());
-				} else {
-					map.put(ordersGoods.getSpecificationId(), ordersGoods.getQuantity());
+			if (CommonUtils.isBusiness(orders.getMemberType())) {
+				for (OrdersGoodsTaskVo ordersGoods : orders.getGoods()) {
+					if (businessMap.containsKey(ordersGoods.getSpecificationId())) {
+						businessMap.replace(ordersGoods.getSpecificationId(), businessMap.get(ordersGoods.getSpecificationId()) + ordersGoods.getQuantity());
+					} else {
+						businessMap.put(ordersGoods.getSpecificationId(), ordersGoods.getQuantity());
+					}
+				}
+			} else {
+				for (OrdersGoodsTaskVo ordersGoods : orders.getGoods()) {
+					if (generalMap.containsKey(ordersGoods.getGoodsId())) {
+						generalMap.replace(ordersGoods.getGoodsId(), generalMap.get(ordersGoods.getGoodsId()) + ordersGoods.getQuantity());
+					} else {
+						generalMap.put(ordersGoods.getGoodsId(), ordersGoods.getQuantity());
+					}
 				}
 			}
 		}
 		
-		// 恢复商品库存
-		for (String key : map.keySet()) {
-			goodsSpecificationsService.updateStock(1, key, map.get(key));
+		// 恢复商家商品库存
+		for (String key : businessMap.keySet()) {
+			goodsSpecificationsService.updateStock(1, key, businessMap.get(key));
+		}
+		
+		// 回复学生/一般用户商品库存
+		for (String key : generalMap.keySet()) {
+			goodsService.updateStock(1, key, generalMap.get(key));
 		}
 		
 		if (orderIds.size() > 0) {

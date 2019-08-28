@@ -23,9 +23,15 @@ public class OrdersTaskVo {
 	@ApiModelProperty(value = "id")
 	private String id;
 	
+	@ApiModelProperty("商品ID")
+	private String goodsId;
+	
 	@Excel(name = "状态，0Unpaid，1Paid，2Shipping，3Offline Trading", width = 15)
 	@ApiModelProperty(value = "状态，0Unpaid，1Paid，2Shipping，3Offline Trading")
 	private Integer status;
+	
+	@ApiModelProperty("用户类型")
+	private String memberType;
 	
 	@ApiModelProperty("订单商品列表")
 	private List<OrdersGoodsTaskVo> goods;

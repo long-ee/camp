@@ -70,7 +70,8 @@ public enum StatusEnum {
     TrackingNumberEmptyError(40621, "Tracking number can't empty", "物流单号不能为空"),
     UserGoodsPropertyError(40622, "Goods properties not complete", "商品属性不全"),
     GoodsImagesEmptyError(40623, "Goods images can't empty", "商品图片不能为空"),
-    GoodsOwnError(40623, "You are not the publisher of the goods", "您不是商品的发布者"),
+    GoodsOwnError(40624, "You are not the publisher of the goods", "您不是商品的发布者"),
+    GoodsIsBelongYourselfError(40625, "You can't buy your goods", "不能购买您的商品"),
     
     
     // for service

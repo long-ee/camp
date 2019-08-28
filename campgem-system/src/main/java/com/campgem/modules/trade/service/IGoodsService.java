@@ -61,4 +61,10 @@ public interface IGoodsService extends IService<Goods> {
 	 * 用户商品详情
 	 */
 	UserGoodsDetailVo queryUserGoodsDetail(String goodsId);
+	
+	/**
+	 * 更新商品库存，针对学生/一般用户发布的商品
+	 * @param type 类型，1添加，2减少
+	 */
+	void updateStock(int type, String id, Integer stock);
 }

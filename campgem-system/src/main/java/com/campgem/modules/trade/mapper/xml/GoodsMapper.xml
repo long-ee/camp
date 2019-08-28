@@ -5,6 +5,17 @@
 		update goods set review_count = review_count + 1 where id = #{goodsId}
 	</update>
 	
+	<update id="updateStock">
+		UPDATE goods SET
+		<if test="type == 1">
+			stock = stock + #{stock}
+		</if>
+		<if test="type == 2">
+			stock = stock - #{stock}
+		</if>
+		WHERE id = #{id}
+	</update>
+	
 	<select id="queryPageList" resultType="com.campgem.modules.trade.vo.GoodsListVo">
 		select
 		g.id,g.goods_name,g.member_type,g.taxes,g.origin_price,g.category_id,

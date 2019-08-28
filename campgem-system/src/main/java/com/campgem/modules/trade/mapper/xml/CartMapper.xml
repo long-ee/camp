@@ -34,6 +34,7 @@
 			g.member_type,
 		    g.uid as seller_id,
 			g.member_name,
+		    g.stock,
 			c.quantity,
 			(SELECT goods_image FROM goods_images gi WHERE gi.goods_id = c.goods_id LIMIT 1) AS goods_icon,
 			IF

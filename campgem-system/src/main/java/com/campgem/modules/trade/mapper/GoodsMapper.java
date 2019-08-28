@@ -37,4 +37,6 @@ public interface GoodsMapper extends BaseMapper<Goods> {
 	IPage<MGoodsListVo> queryManagePageList(Page page, @Param("queryDto") MGoodsQueryDto queryDto);
 	
 	IPage<UserGoodsListVo> queryUserOrdersPageList(Page page);
+	
+	void updateStock(@Param("type") int type, @Param("id") String id, @Param("stock") Integer stock);
 }
