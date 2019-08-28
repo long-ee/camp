@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @Description: 社团活动信息
  * @Author: campgem
@@ -31,6 +33,11 @@ public class ClubActivity {
 	@Excel(name = "社团ID", width = 15)
     @ApiModelProperty(value = "社团ID")
 	private String clubId;
+	/**所属大学*/
+	@Excel(name = "所属大学", width = 15)
+	@ApiModelProperty(value = "所属大学")
+	@NotBlank(message = "请选择社团所属大学")
+	private String universityId;
 	/**社团活动内容*/
 	@Excel(name = "社团活动内容", width = 15)
     @ApiModelProperty(value = "社团活动内容")

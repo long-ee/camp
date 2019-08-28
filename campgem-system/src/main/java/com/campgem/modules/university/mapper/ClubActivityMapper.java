@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.modules.university.dto.ClubActivityQueryDto;
 import com.campgem.modules.university.entity.ClubActivity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.campgem.modules.university.vo.ClubActivityCalendarVo;
 import com.campgem.modules.university.vo.ClubActivityVo;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @Description: 社团活动信息
@@ -30,4 +33,15 @@ public interface ClubActivityMapper extends BaseMapper<ClubActivity> {
      * @return
      */
     ClubActivityVo queryDetails(@Param("activityId") String activityId);
+
+    /**
+     * 查询社团活动日历
+     * @param universityId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<ClubActivityCalendarVo> queryActivityCalendar(@Param("universityId") String universityId,
+                                                       @Param("startDate") String startDate,
+                                                       @Param("endDate") String endDate);
 }

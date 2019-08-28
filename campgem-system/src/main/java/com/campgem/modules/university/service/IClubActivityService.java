@@ -3,10 +3,13 @@ package com.campgem.modules.university.service;
 import com.campgem.modules.university.dto.ClubActivityDto;
 import com.campgem.modules.university.dto.ClubActivityQueryDto;
 import com.campgem.modules.university.entity.ClubActivity;
+import com.campgem.modules.university.vo.ClubActivityCalendarVo;
 import com.campgem.modules.university.vo.ClubActivityVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @Description: 社团活动信息
@@ -41,4 +44,11 @@ public interface IClubActivityService extends IService<ClubActivity> {
      * @param clubActivityDto
      */
     public void edit(ClubActivityDto clubActivityDto);
+
+    /**
+     * 查询社团活动日历
+     * @param universityId
+     * @return
+     */
+    public List<ClubActivityCalendarVo> queryActivityCalendar(String universityId);
 }

@@ -25,6 +25,8 @@ public class ClubActivityQueryDto implements Serializable {
     /** 学校ID **/
     @ApiModelProperty(value = "学校ID")
     private String universityId;
+    @ApiModelProperty(value = "活动日期")
+    private String activityDate;
     /** 活动开始日期 **/
     @ApiModelProperty(value = "活动开始日期" , hidden = true)
     private String startDate;

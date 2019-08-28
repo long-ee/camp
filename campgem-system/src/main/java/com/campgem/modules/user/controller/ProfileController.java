@@ -34,6 +34,14 @@ public class ProfileController {
 	private IAddressService addressService;
 	@Resource
 	private IMemberService memberService;
+
+	@ApiOperation(value = "更新用户配送方式", notes = "G23 论坛设置")
+	@PutMapping(value = "/user/message/chat")
+	public Result updateUserMessageChat(@RequestParam(name = "allowChat", defaultValue = "1") String allowChat) {
+		String memberId = SecurityUtils.getCurrentUserMemberId();
+		memberService.updateUserMessageChat(memberId, allowChat);
+		return Result.ok();
+	}
 	
 	@ApiOperation(value = "用户配送方式数据", notes = "G24 运费设置")
 	@GetMapping(value = "/user/shopping/methods")

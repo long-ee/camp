@@ -675,5 +675,52 @@ public class DateUtils extends PropertyEditorSupport {
 		return day.getTime();
 	}
 
+	/**
+	 * 获取当月第一天
+	 * @return
+	 */
+	public static String getFirstDayOfMonth() {
+		Calendar cale = Calendar.getInstance();
+		cale.add(Calendar.MONTH, 0);
+		cale.set(Calendar.DAY_OF_MONTH, 1);
+		String firstDay = date_sdf.format(cale.getTime());
+		return firstDay;
+	}
+
+	/**
+	 * 获取当月最后一天
+	 * @return
+	 */
+	public static String getEndDayOfMonth() {
+		Calendar cale = Calendar.getInstance();
+		cale.add(Calendar.MONTH, 1);
+		cale.set(Calendar.DAY_OF_MONTH, 0);
+		String firstDay = date_sdf.format(cale.getTime());
+		return firstDay;
+	}
+
+	/**
+	 * 获取下一个月的第一天
+	 * @return
+	 */
+	public static String getFirstDayOfNextMonth() {
+		Calendar cale = Calendar.getInstance();
+		cale.add(Calendar.MONTH, 1);
+		cale.set(Calendar.DAY_OF_MONTH, 1);
+		String firstDay = date_sdf.format(cale.getTime());
+		return firstDay;
+	}
+
+	/**
+	 * 获取下一个月的最后一天
+	 * @return
+	 */
+	public static String getEndDayOfNextMonth() {
+		Calendar cale = Calendar.getInstance();
+		cale.add(Calendar.MONTH, 2);
+		cale.set(Calendar.DAY_OF_MONTH, 0);
+		String firstDay = date_sdf.format(cale.getTime());
+		return firstDay;
+	}
 
 }
