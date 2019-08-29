@@ -2,6 +2,10 @@ package com.campgem.modules.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.campgem.modules.user.entity.Address;
+import com.campgem.modules.user.vo.OrdersAddressVo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @Description: 用户地址管理
@@ -10,5 +14,5 @@ import com.campgem.modules.user.entity.Address;
  * @Version: V1.0
  */
 public interface AddressMapper extends BaseMapper<Address> {
-
+	List<OrdersAddressVo> queryUserAddress(@Param("addressId") String addressId);
 }

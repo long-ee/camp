@@ -7,7 +7,9 @@ import com.campgem.common.system.util.JwtUtil;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.RedisUtil;
 import com.campgem.common.util.oConvertUtils;
+import com.campgem.modules.user.entity.SysUser;
 import com.campgem.modules.user.entity.enums.UserStatusEnum;
+import com.campgem.modules.user.service.ISysUserService;
 import com.campgem.modules.user.service.IUserBaseService;
 import com.campgem.modules.user.vo.UserBaseVo;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import com.campgem.common.constant.IdentityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -40,6 +43,9 @@ public class ShiroRealm extends AuthorizingRealm {
 	@Autowired
 	@Lazy
 	private RedisUtil redisUtil;
+	@Autowired
+	@Lazy
+	private ISysUserService sysUserService;
 
 	/**
 	 * 必须重写此方法，不然Shiro会报错
@@ -91,21 +97,30 @@ public class ShiroRealm extends AuthorizingRealm {
 		return new SimpleAuthenticationInfo(loginUser, token, getName());
 	}
 
-	/**
-	 * 校验token的有效性
-	 *
-	 * @param token
-	 */
-	public LoginUserVo checkUserTokenIsEffect(String token) throws AuthenticationException {
-		// 解密获得username，用于和数据库进行对比
+	public LoginUserVo checkUserTokenIsEffect(String token) throws AuthenticationException{
 		IdentifyInfo identifyInfo = JwtUtil.getIdentifierInfo(token);
 		if (null == identifyInfo || StringUtils.isBlank(identifyInfo.getIdentityType())
 				|| StringUtils.isBlank(identifyInfo.getIdentifier())) {
 			throw new AuthenticationException("token非法无效!");
 		}
+		if(StringUtils.equalsIgnoreCase(IdentityConstant.IDENTITY_SERVICE_APP, identifyInfo.getServiceId())){
+			return checkAppUserTokenIsEffect(token, identifyInfo);
+		}else if(StringUtils.equalsIgnoreCase(IdentityConstant.IDENTITY_SERVICE_MANAGE, identifyInfo.getServiceId())){
+			return checkManageUserTokenIsEffect(token, identifyInfo);
+		}else{
+		    throw new AuthenticationException("用户来源非法，请联系管理员!");
+		}
+	}
 
+	/**
+	 * 校验token的有效性
+	 *
+	 * @param token
+	 */
+	public LoginUserVo checkAppUserTokenIsEffect(String token, IdentifyInfo identifyInfo) throws AuthenticationException {
+		// 解密获得username，用于和数据库进行对比
 		// 查询用户信息
-		LoginUserVo loginUser = null;
+		LoginUserVo loginUser = new LoginUserVo();
 		UserBaseVo userBaseVo = userBaseService.getUserByIdentifyInfo(identifyInfo);
 		if (userBaseVo == null) {
 			throw new AuthenticationException("用户不存在!");
@@ -126,6 +141,35 @@ public class ShiroRealm extends AuthorizingRealm {
 			throw new AuthenticationException("账号已被冻结, 请联系管理员!");
 		}
 		loginUser = BeanConvertUtils.convertBean(userBaseVo, LoginUserVo.class);
+		return loginUser;
+	}
+
+
+	public LoginUserVo checkManageUserTokenIsEffect(String token, IdentifyInfo identifyInfo) throws AuthenticationException {
+		// 查询用户信息
+		LoginUserVo loginUser = new LoginUserVo();
+		SysUser sysUser = sysUserService.getUserByName(identifyInfo.getIdentifier());
+		if (sysUser == null) {
+			throw new AuthenticationException("用户不存在!");
+		}
+		// 校验token是否超时失效 & 或者账号密码是否错误
+		if (!jwtTokenRefresh(token, sysUser.getUsername(),sysUser.getPassword(), identifyInfo.getIdentityType(), identifyInfo.getServiceId())) {
+			throw new AuthenticationException("Token失效，请重新登录!");
+		}
+		// 判断用户状态
+		if (sysUser.getStatus() != 1) {
+			throw new AuthenticationException("账号已被锁定,请联系管理员!");
+		}
+		loginUser.setBirthday(sysUser.getBirthday());
+		loginUser.setCityId(sysUser.getCityIds());
+		loginUser.setEmail(sysUser.getEmail());
+		loginUser.setGender(String.valueOf(sysUser.getSex()));
+		loginUser.setMemberId(sysUser.getId());
+		loginUser.setUid(sysUser.getId());
+		loginUser.setMobile(sysUser.getPhone());
+		loginUser.setUsername(sysUser.getUsername());
+		loginUser.setNickName(sysUser.getRealname());
+		loginUser.setUserStatus(String.valueOf(sysUser.getStatus()));
 		return loginUser;
 	}
 

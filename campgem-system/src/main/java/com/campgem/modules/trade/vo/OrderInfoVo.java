@@ -48,8 +48,17 @@ public class OrderInfoVo implements Serializable {
 		@ApiModelProperty("商品数量")
 		private Integer quantity;
 		
+		@ApiModelProperty("商品库存，学生/一般用户")
+		private Integer stock;
+		
+		@ApiModelProperty("规格ID")
+		private String specificationId;
+		
 		@ApiModelProperty("规格名称")
 		private String specificationName;
+		
+		@ApiModelProperty("规格数量")
+		private Integer specificationStock;
 		
 		@ApiModelProperty("税率")
 		private BigDecimal taxes;

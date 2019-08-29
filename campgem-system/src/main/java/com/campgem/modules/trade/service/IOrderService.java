@@ -1,10 +1,15 @@
 package com.campgem.modules.trade.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.service.dto.ServiceOrderPayDto;
 import com.campgem.modules.service.entity.Service;
 import com.campgem.modules.trade.dto.OrderPayDto;
 import com.campgem.modules.trade.entity.Orders;
+import com.campgem.modules.user.dto.OrdersEvaluationDto;
+import com.campgem.modules.user.vo.OrdersDetailVo;
+import com.campgem.modules.user.vo.OrdersListVo;
 
 import java.util.List;
 
@@ -34,4 +39,27 @@ public interface IOrderService extends IService<Orders> {
 	 * 创建服务订单
 	 */
 	Orders createServiceOrder(Service service, ServiceOrderPayDto payDto);
+	
+	/**
+	 * 处理过期未支付的订单
+	 */
+	void checkOrderStatus();
+	
+	/**
+	 * 查询用户订单
+	 */
+	IPage<OrdersListVo> queryUserOrders(String s, Page page);
+	
+	/**
+	 * 用户订单详情
+	 */
+	OrdersDetailVo queryUserOrdersDetail(String orderId);
+	
+	boolean evaluate(String orderId, OrdersEvaluationDto dto);
+	
+	boolean updateOrderStatusById(String orderId, Integer status);
+	
+	boolean finished(String orderId);
+	
+	boolean updateTrackingNumber(String orderId, String trackingNumber);
 }

@@ -35,6 +35,6 @@ public class GoodsImages {
 	@Excel(name = "图片地址", width = 15)
     @ApiModelProperty(value = "图片地址")
 	private java.lang.String goodsImage;
-	@ApiModelProperty("是否列表图片")
-	private Integer isListImage;
+	@ApiModelProperty("是否列表图片，默认0")
+	private Integer isListImage = 0;
 }

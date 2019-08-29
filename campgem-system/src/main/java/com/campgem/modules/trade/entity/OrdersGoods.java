@@ -43,6 +43,8 @@ public class OrdersGoods {
 	@Excel(name = "商品图标", width = 15)
     @ApiModelProperty(value = "商品图标")
 	private java.lang.String goodsIcon;
+	@ApiModelProperty("规格ID")
+	private String specificationId;
 	/**规格名称*/
 	@Excel(name = "规格名称", width = 15)
     @ApiModelProperty(value = "规格名称")

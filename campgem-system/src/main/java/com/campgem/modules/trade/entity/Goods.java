@@ -78,9 +78,6 @@ public class Goods {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endDate;
 	
-	/**
-	 * 新旧程度
-	 */
 	@ApiModelProperty("新旧程度 identity时2有效 1:Brand new 2:Almost new 3:Gently used")
 	private Integer quality;
 	
@@ -95,6 +92,9 @@ public class Goods {
 	 */
 	@ApiModelProperty("现价")
 	private BigDecimal salePrice;
+	
+	@ApiModelProperty("商品库存，学生/普通会员商品")
+	private Integer stock;
 	
 	/**
 	 * 商品名

@@ -1,45 +1,31 @@
 package com.campgem.modules.user.controller.manage;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.campgem.modules.shiro.vo.DefContants;
-import com.campgem.modules.user.entity.SysDepart;
-import com.campgem.modules.user.entity.SysUser;
-import com.campgem.modules.common.dto.SysLoginModel;
-import com.campgem.modules.user.service.ISysDepartService;
-import com.campgem.modules.common.service.ISysLogService;
-import com.campgem.modules.user.service.ISysUserService;
-import com.campgem.modules.user.entity.enums.IdentityTypeEnum;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import com.alibaba.fastjson.JSONObject;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.constant.CommonConstant;
-import com.campgem.common.system.api.ISysBaseAPI;
 import com.campgem.common.system.util.JwtUtil;
 import com.campgem.common.system.vo.LoginUser;
-import com.campgem.common.util.DySmsHelper;
 import com.campgem.common.util.PasswordUtil;
 import com.campgem.common.util.RedisUtil;
-import com.campgem.common.util.encryption.EncryptedString;
-import com.campgem.common.util.oConvertUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.alibaba.fastjson.JSONObject;
-import com.aliyuncs.exceptions.ClientException;
-
-import cn.hutool.core.util.RandomUtil;
+import com.campgem.modules.common.dto.SysLoginModel;
+import com.campgem.modules.shiro.vo.DefContants;
+import com.campgem.modules.user.entity.SysUser;
+import com.campgem.modules.user.entity.enums.IdentityTypeEnum;
+import com.campgem.modules.user.service.ISysUserService;
+import com.campgem.common.constant.IdentityConstant;
+import com.campgem.modules.user.vo.ManageLoginVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Author: campgem
@@ -57,8 +43,8 @@ public class ManageLoginController {
 
 	@PostMapping(value = "/account/login")
 	@ApiOperation(value="用户登录", notes="A1 登录")
-	public Result<JSONObject> login(SysLoginModel sysLoginModel) throws Exception {
-		Result<JSONObject> result = new Result<>();
+	public Result<ManageLoginVo> login(SysLoginModel sysLoginModel) throws Exception {
+		Result<ManageLoginVo> result = new Result<>();
 		String username = sysLoginModel.getUsername();
 		String password = sysLoginModel.getPassword();
 		//1. 校验用户是否有效
@@ -88,21 +74,20 @@ public class ManageLoginController {
 	 * @param result
 	 * @return
 	 */
-	private Result<JSONObject> userInfo(SysUser sysUser, Result<JSONObject> result) {
-		String syspassword = sysUser.getPassword();
+	private Result<ManageLoginVo> userInfo(SysUser sysUser, Result<ManageLoginVo> result) {
+		String password = sysUser.getPassword();
 		String username = sysUser.getUsername();
 		// 生成token
-		String token = JwtUtil.sign(username, syspassword, IdentityTypeEnum.EMAIL.code(), "");
+		String token = JwtUtil.sign(username, password, IdentityTypeEnum.USERNAME.code(), IdentityConstant.IDENTITY_SERVICE_MANAGE);
 		redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, token);
 		// 设置超时时间
 		redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME / 1000);
 
 		// 获取用户部门信息
-		JSONObject obj = new JSONObject();
-		obj.put("token", token);
-		obj.put("userInfo", sysUser);
-		result.setResult(obj);
-		result.success("登录成功");
+		ManageLoginVo loginVo = new ManageLoginVo();
+		loginVo.setToken(token);
+		result.setSuccess(true);
+		result.setResult(loginVo);
 		return result;
 	}
 

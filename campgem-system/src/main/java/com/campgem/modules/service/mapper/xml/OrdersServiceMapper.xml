@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campgem.modules.service.mapper.OrdersServiceMapper">
+	
+	<select id="queryOrdersService" resultType="com.campgem.modules.user.vo.OrdersServiceVo">
+		SELECT os.service_id as id,
+		       os.service_name,
+		       os.service_icon as list_image,
+		       os.price,
+		       os.quantity
+		FROM orders_service os
+		WHERE os.order_id = #{orderId}
+	</select>
+</mapper>

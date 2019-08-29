@@ -1,11 +1,16 @@
 package com.campgem.modules.common.service.impl;
 
+import com.braintreegateway.Result;
+import com.braintreegateway.Transaction.Status;
+import com.braintreegateway.TransactionRequest;
+import com.braintreegateway.ValidationError;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
+import com.campgem.config.BraintreeConfig;
 import com.campgem.config.PaypalConfig;
 import com.campgem.config.paypal.PaypalPaymentIntent;
 import com.campgem.config.paypal.PaypalPaymentMethod;
-import com.campgem.modules.common.service.IPaypalService;
+import com.campgem.modules.common.service.IPaymentService;
 import com.campgem.modules.trade.entity.Orders;
 import com.campgem.modules.trade.service.IOrderService;
 import com.paypal.api.payments.*;
@@ -14,20 +19,34 @@ import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PaypalServiceImpl implements IPaypalService {
+public class PaymentServiceImpl implements IPaymentService {
 	@Resource
 	private APIContext apiContext;
 	@Resource
 	private PaypalConfig paypalConfig;
 	@Resource
 	private IOrderService orderService;
+	@Resource
+	private BraintreeConfig braintreeConfig;
 	
 	private static DecimalFormat df = new DecimalFormat("#.00");
+	
+	private Status[] TRANSACTION_SUCCESS_STATUSES = new Status[]{
+			com.braintreegateway.Transaction.Status.AUTHORIZED,
+			com.braintreegateway.Transaction.Status.AUTHORIZING,
+			com.braintreegateway.Transaction.Status.SETTLED,
+			com.braintreegateway.Transaction.Status.SETTLEMENT_CONFIRMED,
+			com.braintreegateway.Transaction.Status.SETTLEMENT_PENDING,
+			com.braintreegateway.Transaction.Status.SETTLING,
+			com.braintreegateway.Transaction.Status.SUBMITTED_FOR_SETTLEMENT
+	};
+	
 	
 	@Override
 	public Payment createPayment(
@@ -131,8 +150,8 @@ public class PaypalServiceImpl implements IPaypalService {
 		orderService.updatePayId(payment.getId(), orderIds);
 		
 		String url = null;
-		for(Links links : payment.getLinks()){
-			if(links.getRel().equals("approval_url")){
+		for (Links links : payment.getLinks()) {
+			if (links.getRel().equals("approval_url")) {
 				url = links.getHref();
 				break;
 			}
@@ -145,49 +164,36 @@ public class PaypalServiceImpl implements IPaypalService {
 	}
 	
 	@Override
-	public void payWithVisa() {
-		CreditCard card = new CreditCard();
-		card.setNumber("4877598910495584");
-		card.setType("visa");
-		card.setExpireMonth(1);
-		card.setExpireYear(2024);
-		card.setCvv2("627");
-		
-		Amount amount = new Amount();
-		amount.setCurrency("USD");
-		amount.setTotal(String.format("%.2f", 9.99));
-		
-		Transaction transaction = new Transaction();
-		transaction.setDescription("this is visa card");
-		transaction.setAmount(amount);
-		
-		List<Transaction> transactions = new ArrayList<>();
-		transactions.add(transaction);
-		
-		FundingInstrument instrument = new FundingInstrument();
-		instrument.setCreditCard(card);
-		List<FundingInstrument> fundingInstruments = new ArrayList<>();
-		fundingInstruments.add(instrument);
-		
-		Payer payer = new Payer();
-		payer.setFundingInstruments(fundingInstruments);
-		payer.setPaymentMethod(PaypalPaymentMethod.credit_card.toString());
-		
-		Payment payment = new Payment();
-		payment.setIntent(PaypalPaymentIntent.sale.toString());
-		payment.setPayer(payer);
-		payment.setTransactions(transactions);
-		RedirectUrls redirectUrls = new RedirectUrls();
-		redirectUrls.setCancelUrl(paypalConfig.getCancelUrl());
-		redirectUrls.setReturnUrl(paypalConfig.getProcessUrl());
-		payment.setRedirectUrls(redirectUrls);
-		
+	public String payWithCreditCard(String nonce) {
+		BigDecimal decimalAmount;
 		try {
-			Payment payment1 = payment.create(apiContext);
-//			payment1.execute(apiContext, )
-			System.out.println(payment1);
-		} catch (PayPalRESTException e) {
-			e.printStackTrace();
+			decimalAmount = new BigDecimal("10.00");
+		} catch (NumberFormatException e) {
+			throw new JeecgBootException(StatusEnum.AmountFormatError);
+		}
+		
+		TransactionRequest request = new TransactionRequest()
+				.amount(decimalAmount)
+				.paymentMethodNonce(nonce)
+				.options()
+				.submitForSettlement(true)
+				.done();
+		
+		Result<com.braintreegateway.Transaction> result = braintreeConfig.getGateway().transaction().sale(request);
+		
+		if (result.isSuccess()) {
+			com.braintreegateway.Transaction transaction = result.getTarget();
+			return transaction.getId();
+		} else if (result.getTransaction() != null) {
+			com.braintreegateway.Transaction transaction = result.getTransaction();
+			return transaction.getId();
+		} else {
+			String errorString = "";
+			for (ValidationError error : result.getErrors().getAllDeepValidationErrors()) {
+				errorString += "Error: " + error.getCode() + ": " + error.getMessage() + "\n";
+			}
+			
+			return errorString;
 		}
 	}
 }

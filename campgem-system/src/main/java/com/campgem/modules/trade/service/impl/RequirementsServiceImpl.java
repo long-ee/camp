@@ -20,6 +20,7 @@ import com.campgem.modules.trade.vo.manage.MRequirementsListVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsVo;
 import com.campgem.modules.user.service.IMemberService;
 import com.campgem.modules.user.vo.MemberVo;
+import com.campgem.modules.user.vo.UserRequirementListVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,14 +61,14 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 	@Override
 	@Transactional
 	public boolean save(MRequirementsVo saveRequirements) {
-		if (saveRequirements.getImages().length > 3) {
+		if (saveRequirements.getRequirementsImages().length > 3) {
 			throw new JeecgBootException(StatusEnum.RequirementImagesMaxError);
 		}
 		
 		Requirements requirements = BeanConvertUtils.copy(saveRequirements, Requirements.class);
 		
 		MemberVo member = memberService.getMemberByUserBaseId(requirements.getUid());
-		requirements.setBusinessName(member.getBusinessName());
+		requirements.setSellerName(member.getBusinessNameCommon());
 		
 		
 		String uuid = UUID.randomUUID().toString().replaceAll("-", "");
@@ -75,10 +76,10 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 		requirements.setCreateTime(new Date());
 		save(requirements);
 		
-		for (RequirementsImages image : saveRequirements.getImages()) {
+		for (RequirementsImages image : saveRequirements.getRequirementsImages()) {
 			image.setRequirementId(uuid);
 		}
-		requirementsImagesService.saveBatch(Arrays.asList(saveRequirements.getImages()));
+		requirementsImagesService.saveBatch(Arrays.asList(saveRequirements.getRequirementsImages()));
 		
 		return true;
 	}
@@ -86,20 +87,20 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 	@Override
 	@Transactional
 	public boolean update(MRequirementsVo updateRequirements) {
-		if (updateRequirements.getImages().length > 3) {
+		if (updateRequirements.getRequirementsImages().length > 3) {
 			throw new JeecgBootException(StatusEnum.RequirementImagesMaxError);
 		}
 		
 		Requirements requirements = BeanConvertUtils.copy(updateRequirements, Requirements.class);
 		updateById(requirements);
 		
-		for (RequirementsImages image : updateRequirements.getImages()) {
+		for (RequirementsImages image : updateRequirements.getRequirementsImages()) {
 			image.setRequirementId(requirements.getId());
 		}
 		
 		// 删除原来的
 		requirementsImagesService.deleteByRequirementId(requirements.getId());
-		requirementsImagesService.saveBatch(Arrays.asList(updateRequirements.getImages()));
+		requirementsImagesService.saveBatch(Arrays.asList(updateRequirements.getRequirementsImages()));
 		
 		return true;
 	}
@@ -117,5 +118,25 @@ public class RequirementsServiceImpl extends ServiceImpl<RequirementsMapper, Req
 	@Override
 	public MRequirementsDetailVo queryManageRequirementDetail(String id) {
 		return baseMapper.queryManageRequirementDetail(id);
+	}
+	
+	@Override
+	public IPage<UserRequirementListVo> queryPageList(Page page) {
+		return baseMapper.queryUserPageList(page);
+	}
+	
+	@Override
+	public boolean updateStatusById(String requirementId, String status) {
+		Requirements requirements = new Requirements();
+		requirements.setId(requirementId);
+		if ("ENABLE".equals(status.toUpperCase())) {
+			requirements.setStatus(0);
+		} else if ("DISABLE".equals(status.toUpperCase())) {
+			requirements.setStatus(-1);
+		} else {
+			return false;
+		}
+		
+		return updateById(requirements);
 	}
 }

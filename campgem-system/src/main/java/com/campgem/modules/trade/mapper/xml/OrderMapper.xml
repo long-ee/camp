@@ -12,10 +12,104 @@
 		</foreach>
 	</update>
 	
-	<update id="paypalSuccess">
+	<update id="paypalSuccessByPayId">
 		UPDATE orders o
-		SET o.status       = 1,
+		SET o.status       = #{status},
 		    o.payment_time = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%m:%s')
 		WHERE pay_id = #{payId}
 	</update>
+	
+	<update id="updateOrderStatusByIds">
+		UPDATE orders o
+		SET o.status = #{status}
+		WHERE o.id IN
+		<foreach item="item" index="index" collection="ids"
+		         open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	<update id="updateOrderStatusById">
+		UPDATE orders o
+		SET o.status = #{status}
+		WHERE o.id = #{orderId}
+	</update>
+	<update id="updateTrackingNumber">
+		UPDATE orders o
+		SET o.tracking_number = #{trackingNumber}
+		WHERE o.id = #{orderId}
+	</update>
+	
+	<resultMap id="expiredOrders" type="com.campgem.modules.common.vo.OrdersTaskVo" >
+		<id property="id" column="oid" />
+		<collection property="goods" ofType="com.campgem.modules.common.vo.OrdersGoodsTaskVo"
+		            select="com.campgem.modules.trade.mapper.OrderGoodsMapper.queryOrderGoodsTaskList" column="oid"/>
+	</resultMap>
+	<select id="queryExpiredOrderList" resultMap="expiredOrders">
+		SELECT o.id         AS oid,
+		       o.status,
+		       m.member_type
+		FROM orders o
+		LEFT JOIN member m on m.user_base_id = o.seller_id
+		WHERE UNIX_TIMESTAMP(o.expired_time) &lt; UNIX_TIMESTAMP(NOW())
+		  AND o.status = #{status}
+	</select>
+	
+	<select id="queryUserOrders" resultType="com.campgem.modules.user.vo.OrdersListVo">
+		SELECT
+			o.id,
+			o.order_no,
+		    IF(o.uid = #{uid}, 'buyer', 'seller') as role,
+			o.pay_amount,
+			o.`status`,
+			( SELECT GROUP_CONCAT( goods_name ) FROM orders_goods og WHERE og.order_id = o.id ) AS `name`,
+			o.create_time
+		FROM
+			orders o
+		WHERE
+			(o.uid = #{uid}
+		   OR o.seller_id = #{uid})
+		<if test="status == 'unpaid'">
+			AND o.status = 0
+		</if>
+		<if test="status == 'progress'">
+			AND o.status in (1, 2, 3)
+		</if>
+		<if test="status == 'finished'">
+			AND o.status = 4
+		</if>
+		ORDER BY
+			o.create_time DESC
+	</select>
+	
+	<resultMap id="userOrdersDetail" type="com.campgem.modules.user.vo.OrdersDetailVo">
+		<id column="oid" property="id" />
+		<collection property="goods" ofType="com.campgem.modules.user.vo.OrdersGoodsVo"
+		            select="com.campgem.modules.trade.mapper.OrderGoodsMapper.queryOrderGoods" column="oid"/>
+		
+		<collection property="services" ofType="com.campgem.modules.user.vo.OrdersServiceVo"
+		            select="com.campgem.modules.service.mapper.OrdersServiceMapper.queryOrdersService" column="oid"/>
+		
+		<collection property="address" ofType="com.campgem.modules.user.vo.OrdersAddressVo"
+		            select="com.campgem.modules.user.mapper.AddressMapper.queryUserAddress" column="address_id" />
+	</resultMap>
+	<select id="queryUserOrdersDetail" resultMap="userOrdersDetail">
+		SELECT
+			o.id                                   AS oid,
+		    o.address_id                           AS address_id,
+		    o.uid,
+		    o.seller_id,
+			o.order_no,
+			o.order_type,
+			o.pay_amount,
+			o.`status`,
+			o.shipping,
+			o.tracking_number,
+			IF( o.uid = #{uid}, 'buyer', 'seller' ) AS role,
+			o.create_time
+		FROM
+			orders o
+		WHERE
+			o.id = #{orderId}
+		  AND (o.uid = #{uid} OR o.seller_id = #{uid})
+	</select>
 </mapper>

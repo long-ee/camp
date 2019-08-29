@@ -33,6 +33,9 @@ public class GoodsDetailVo implements Serializable {
 	@ApiModelProperty("留言数")
 	private Integer reviewCount;
 	
+	@ApiModelProperty("商品库存，学生/普通用户发布的商品有此属性")
+	private Integer stock;
+	
 	@ApiModelProperty("城市名")
 	private String cityName;
 	

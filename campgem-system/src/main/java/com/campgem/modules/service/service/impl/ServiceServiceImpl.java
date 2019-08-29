@@ -20,6 +20,7 @@ import com.campgem.modules.service.vo.manage.MServiceListVo;
 import com.campgem.modules.service.vo.manage.MServiceVo;
 import com.campgem.modules.user.service.IMemberService;
 import com.campgem.modules.user.vo.MemberVo;
+import com.campgem.modules.user.vo.UserServiceListVo;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -97,11 +98,11 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, Service> impl
 	@Override
 	@Transactional
 	public boolean saveOrUpdate(MServiceVo saveService, boolean isUpdate) {
-		if (saveService.getImages().length == 0) {
+		if (saveService.getServiceImages().length == 0) {
 			throw new JeecgBootException(StatusEnum.ServiceImagesBlankError);
 		}
 		
-		if (saveService.getImages().length > 10) {
+		if (saveService.getServiceImages().length > 10) {
 			throw new JeecgBootException(StatusEnum.ServiceImagesMaxError);
 		}
 		
@@ -127,12 +128,12 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, Service> impl
 			serviceImagesService.remove(new LambdaQueryWrapper<ServiceImages>().eq(ServiceImages::getServiceId, uuid));
 		}
 		
-		for (ServiceImages image : saveService.getImages()) {
+		for (ServiceImages image : saveService.getServiceImages()) {
 			image.setServiceId(uuid);
 		}
 		
 		// 添加
-		serviceImagesService.saveBatch(Arrays.asList(saveService.getImages()));
+		serviceImagesService.saveBatch(Arrays.asList(saveService.getServiceImages()));
 		
 		return true;
 	}
@@ -144,5 +145,25 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, Service> impl
 			throw new JeecgBootException(StatusEnum.UnknownPaymentError);
 		}
 		return detail;
+	}
+	
+	@Override
+	public IPage<UserServiceListVo> queryPageList(Page page) {
+		return baseMapper.queryPageList(page);
+	}
+	
+	@Override
+	public boolean updateStatusById(String serviceId, String status) {
+		Service service = new Service();
+		service.setId(serviceId);
+		if ("ENABLE".equals(status.toUpperCase())) {
+			service.setStatus(0);
+		} else if ("DISABLE".equals(status.toUpperCase())) {
+			service.setStatus(-1);
+		} else {
+			return false;
+		}
+		
+		return updateById(service);
 	}
 }

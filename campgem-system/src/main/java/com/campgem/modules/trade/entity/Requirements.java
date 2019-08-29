@@ -34,7 +34,7 @@ public class Requirements {
 	private java.lang.String uid;
 	
 	@ApiModelProperty("卖家名称")
-	private String businessName;
+	private String sellerName;
 	
 	@Excel(name = "分类ID", width = 15)
 	@ApiModelProperty(value = "分类ID")

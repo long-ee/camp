@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
+import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.common.utils.CommonUtils;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
 import com.campgem.modules.trade.dto.OrderInfoDto;
@@ -14,6 +15,7 @@ import com.campgem.modules.trade.dto.manage.MGoodsQueryDto;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.entity.GoodsImages;
 import com.campgem.modules.trade.entity.GoodsSpecifications;
+import com.campgem.modules.trade.entity.enums.GoodsStatusEnum;
 import com.campgem.modules.trade.mapper.GoodsMapper;
 import com.campgem.modules.trade.service.IGoodsImagesService;
 import com.campgem.modules.trade.service.IGoodsService;
@@ -23,6 +25,9 @@ import com.campgem.modules.trade.vo.manage.MGoodsListVo;
 import com.campgem.modules.trade.vo.manage.MGoodsVo;
 import com.campgem.modules.user.service.IMemberService;
 import com.campgem.modules.user.vo.MemberVo;
+import com.campgem.modules.user.vo.UserGoodsDetailVo;
+import com.campgem.modules.user.vo.UserGoodsListVo;
+import com.campgem.modules.user.vo.UserGoodsVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -97,8 +102,10 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 					throw new JeecgBootException(StatusEnum.SpecificationBlankError);
 				}
 				String[] spec = goodsVo.getSpecification().split(",");
-				goodsVo.setSalePrice(new BigDecimal(spec[0]));
-				goodsVo.setSpecificationName(spec[1]);
+				goodsVo.setSpecificationId(spec[0]);
+				goodsVo.setSalePrice(new BigDecimal(spec[1]));
+				goodsVo.setSpecificationName(spec[2]);
+				goodsVo.setSpecificationStock(Integer.parseInt(spec[3]));
 				goodsVo.setSpecification(null);
 			}
 		}
@@ -203,5 +210,128 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public IPage<UserGoodsListVo> queryPageList(Page page) {
+		return baseMapper.queryUserOrdersPageList(page);
+	}
+	
+	@Override
+	@Transactional
+	public boolean addOrUpdateUserGoods(UserGoodsVo userGoodsVo, boolean isUpdate) {
+		String uid = SecurityUtils.getCurrentUserUid();
+		Goods goods = BeanConvertUtils.copy(userGoodsVo, Goods.class);
+		
+		if (userGoodsVo.getGoodsImages().length == 0) {
+			throw new JeecgBootException(StatusEnum.GoodsImagesEmptyError);
+		}
+		
+		String goodsId;
+		if (!isUpdate) {
+			goodsId  = UUID.randomUUID().toString().replaceAll("-", "");
+			goods.setId(goodsId);
+		} else {
+			// 是否是商品所有者
+			goodsId = goods.getId();
+			Goods goodsConfirm = getById(goodsId);
+			if (!goodsConfirm.getUid().equals(uid)) {
+				throw new JeecgBootException(StatusEnum.GoodsOwnError);
+			}
+		}
+		
+		MemberVo member = memberService.getMemberByUserBaseId(uid);
+		// 公共属性
+		goods.setUid(uid);
+		goods.setMemberName(member.getMemberName());
+		goods.setMemberType(member.getMemberType());
+		goods.setCreateTime(new Date());
+		goods.setDelFlag(0);
+		goods.setStatus(GoodsStatusEnum.IN_SALE.code());
+		
+		
+		if (CommonUtils.isBusiness(member.getMemberType())) {
+			// 商家
+			UserGoodsVo.BusinessProperty businessProperty = userGoodsVo.getBusinessProperty();
+			if (businessProperty.getTaxes() == null || businessProperty.getGoodsSpecifications() == null
+					|| businessProperty.getGoodsSpecifications().length == 0) {
+				throw new JeecgBootException(StatusEnum.UserGoodsPropertyError);
+			}
+			
+			goods.setTaxes(businessProperty.getTaxes());
+			goods.setCityId(member.getCityId());
+			
+			if (isUpdate) {
+				// 删除原来的规格
+				goodsSpecificationsService.remove(new LambdaQueryWrapper<GoodsSpecifications>().eq(GoodsSpecifications::getGoodsId, goodsId));
+			}
+			
+			if (businessProperty.getGoodsSpecifications().length == 0) {
+				throw new JeecgBootException(StatusEnum.SpecificationBlankError);
+			}
+			
+			for (GoodsSpecifications spec : businessProperty.getGoodsSpecifications()) {
+				if (spec.getSpecificationsStock() == null || spec.getSpecificationsName() == null || spec.getSpecificationsPrice() == null) {
+					throw new JeecgBootException(StatusEnum.SpecificationBlankError);
+				}
+				
+				spec.setGoodsId(goodsId);
+			}
+			
+			// 添加规格钱，保存/更新商品
+			if (isUpdate) {
+				updateById(goods);
+			} else {
+				save(goods);
+			}
+			
+			// 添加规格
+			goodsSpecificationsService.saveBatch(Arrays.asList(businessProperty.getGoodsSpecifications()));
+		} else {
+			UserGoodsVo.GeneralProperty generalProperty = userGoodsVo.getGeneralProperty();
+			if (generalProperty == null || generalProperty.getStock() == null || generalProperty.getSalePrice() == null) {
+				throw new JeecgBootException(StatusEnum.UserGoodsPropertyError);
+			}
+			
+			goods.setSalePrice(generalProperty.getSalePrice());
+			goods.setStock(generalProperty.getStock());
+			goods.setEndDate(generalProperty.getEndDate());
+			goods.setOriginPrice(generalProperty.getOriginPrice());
+			goods.setQuality(generalProperty.getQuality());
+			
+			goods.setUniversityId(member.getUniversityId());
+			
+			if (isUpdate) {
+				updateById(goods);
+			} else {
+				save(goods);
+			}
+		}
+		
+		if (isUpdate) {
+			// 删除图片
+			goodsImagesService.remove(new LambdaQueryWrapper<GoodsImages>().eq(GoodsImages::getGoodsId, goodsId));
+		}
+		for (GoodsImages images : userGoodsVo.getGoodsImages()) {
+			if (images.getGoodsImage() == null) {
+				throw new JeecgBootException(StatusEnum.GoodsImagesEmptyError);
+			}
+			images.setGoodsId(goodsId);
+		}
+		// 添加图片
+		goodsImagesService.saveBatch(Arrays.asList(userGoodsVo.getGoodsImages()));
+		
+		return true;
+	}
+	
+	@Override
+	public UserGoodsDetailVo queryUserGoodsDetail(String goodsId) {
+		GoodsDetailVo goodsDetailVo = queryGoodsDetail(goodsId, false);
+		return BeanConvertUtils.copy(goodsDetailVo, UserGoodsDetailVo.class);
+	}
+	
+	@Override
+	public void updateStock(int type, String id, Integer stock) {
+		baseMapper.updateStock(type, id, stock);
 	}
 }

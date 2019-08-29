@@ -15,8 +15,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
- * @Description: 需求
- * @Author: campgem
+ * @Description: 需求添加/编辑模型
+ * @Author: ling
  * @Date: 2019-08-17
  * @Version: V1.0
  */
@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 @TableName("requirements")
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value = "requirements对象", description = "需求")
+@ApiModel(value = "需求添加/编辑模型", description = "需求添加/编辑模型")
 public class MRequirementsVo {
 	
 	@TableId(type = IdType.UUID)
@@ -33,7 +33,6 @@ public class MRequirementsVo {
 	
 	@Excel(name = "用户ID", width = 15)
 	@ApiModelProperty(value = "用户ID")
-	@NotBlank(message = "发布人不能为空")
 	private String uid;
 	
 	@Excel(name = "分类ID", width = 15)
@@ -57,5 +56,5 @@ public class MRequirementsVo {
 	private String requirementDescription;
 	
 	@ApiModelProperty("需求图片")
-	private RequirementsImages[] images;
+	private RequirementsImages[] requirementsImages;
 }

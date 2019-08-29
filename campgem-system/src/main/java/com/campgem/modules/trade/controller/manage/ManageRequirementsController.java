@@ -78,17 +78,7 @@ public class ManageRequirementsController {
 			@ApiImplicitParam(name = "status", value = "状态，不区分大小写", allowableValues = "ENABLE, DISABLE", required = true)
 	})
 	public Result updateStatus(String id, String status) {
-		Requirements requirements = new Requirements();
-		requirements.setId(id);
-		if ("ENABLE".equals(status.toUpperCase())) {
-			requirements.setStatus(0);
-		} else if ("DISABLE".equals(status.toUpperCase())) {
-			requirements.setStatus(-1);
-		} else {
-			return new Result().error500("状态错误");
-		}
-		
-		boolean ok = requirementsService.updateById(requirements);
+		boolean ok = requirementsService.updateStatusById(id, status);
 		return ok ? Result.succ : Result.fail;
 	}
 	

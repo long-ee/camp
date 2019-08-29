@@ -11,7 +11,7 @@ import com.campgem.modules.common.entity.enums.AdvertisementLocationEnum;
 import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
 import com.campgem.modules.common.service.IAdvertisementService;
 import com.campgem.modules.common.service.ICategoryService;
-import com.campgem.modules.common.service.IPaypalService;
+import com.campgem.modules.common.service.IPaymentService;
 import com.campgem.modules.common.vo.AdvertisementVo;
 import com.campgem.modules.common.vo.CategoryVo;
 import com.campgem.modules.message.entity.SysMessage;
@@ -60,7 +60,7 @@ public class ServiceController extends JeecgController<SysMessage, ISysMessageSe
 	@Resource
 	private IOrderService orderService;
 	@Resource
-	private IPaypalService paypalService;
+	private IPaymentService paypalService;
 	
 	@ApiOperation(value = "服务分类查询", notes = "D1 生活圈")
 	@GetMapping(value = "/service/category")
@@ -180,8 +180,8 @@ public class ServiceController extends JeecgController<SysMessage, ISysMessageSe
 			return new Result<String>().result(url);
 		} else {
 			// Visa/Masterd Card 支付
-			paypalService.payWithVisa();
-			return null;
+			String transId = paypalService.payWithCreditCard("");
+			return new Result<String>().result(transId);
 		}
 	}
 }

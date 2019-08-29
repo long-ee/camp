@@ -145,4 +145,11 @@ public class Member {
 	@Excel(name = "updateBy", width = 15)
     @ApiModelProperty(value = "updateBy")
 	private String updateBy;
+	
+	/**
+	 * 获取商家名，如果是普通会员/学生，返回用户名
+	 */
+	public String getBusinessNameCommon() {
+		return businessName == null ? memberName : businessName;
+	}
 }

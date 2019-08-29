@@ -14,5 +14,7 @@ import java.util.List;
  * @Version: V1.0
  */
 public interface GoodsSpecificationsMapper extends BaseMapper<GoodsSpecifications> {
-	public List<GoodsSpecificationsVo> queryGoodsSpecifications(@Param("goodsId") String goodsId);
+	List<GoodsSpecificationsVo> queryGoodsSpecifications(@Param("goodsId") String goodsId);
+	
+	void updateStock(@Param("type") Integer type, @Param("id") String id, @Param("stock") Integer stock);
 }

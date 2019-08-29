@@ -11,6 +11,7 @@ import com.campgem.modules.trade.vo.GoodsListVo;
 import com.campgem.modules.trade.vo.GoodsRelatedVo;
 import com.campgem.modules.trade.vo.OrderInfoTempVo;
 import com.campgem.modules.trade.vo.manage.MGoodsListVo;
+import com.campgem.modules.user.vo.UserGoodsListVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -34,4 +35,8 @@ public interface GoodsMapper extends BaseMapper<Goods> {
 	OrderInfoTempVo queryOrderInfo(@Param("goodsId") String goodsId, @Param("specId") String specId);
 	
 	IPage<MGoodsListVo> queryManagePageList(Page page, @Param("queryDto") MGoodsQueryDto queryDto);
+	
+	IPage<UserGoodsListVo> queryUserOrdersPageList(Page page);
+	
+	void updateStock(@Param("type") int type, @Param("id") String id, @Param("stock") Integer stock);
 }

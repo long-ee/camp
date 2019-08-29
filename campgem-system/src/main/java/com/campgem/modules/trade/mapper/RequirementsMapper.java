@@ -10,6 +10,7 @@ import com.campgem.modules.trade.vo.RequirementsDetailVo;
 import com.campgem.modules.trade.vo.RequirementsVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsDetailVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsListVo;
+import com.campgem.modules.user.vo.UserRequirementListVo;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -36,4 +37,6 @@ public interface RequirementsMapper extends BaseMapper<Requirements> {
 	RequirementsDetailVo queryRequirementDetail(@Param("requirementId") String requirementId);
 	
 	MRequirementsDetailVo queryManageRequirementDetail(@Param("requirementId") String requirementId);
+	
+	IPage<UserRequirementListVo> queryUserPageList(Page page);
 }

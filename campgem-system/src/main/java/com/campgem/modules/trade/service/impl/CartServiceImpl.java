@@ -57,6 +57,10 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 			throw new JeecgBootException(StatusEnum.GoodsNotExistError);
 		}
 		
+		if (goods.getUid().equals(uid)) {
+			throw new JeecgBootException(StatusEnum.GoodsIsBelongYourselfError);
+		}
+		
 		if (CommonUtils.isBusiness(goods.getMemberType())) {
 			// 商家，必须要有规格
 			if (StringUtils.isEmpty(specId)) {
@@ -137,8 +141,10 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 			if (info.getSpecification().contains(",")) {
 				// 有规格数据
 				String[] spec = info.getSpecification().split(",");
-				info.setSalePrice(new BigDecimal(spec[0]));
-				info.setSpecificationName(spec[1]);
+				info.setSpecificationId(spec[0]);
+				info.setSalePrice(new BigDecimal(spec[1]));
+				info.setSpecificationName(spec[2]);
+				info.setSpecificationStock(Integer.parseInt(spec[3]));
 			} else {
 				// 没有，直接设置价格
 				info.setSalePrice(new BigDecimal(info.getSpecification()));

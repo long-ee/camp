@@ -6,9 +6,14 @@ public class JeecgBootException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	private StatusEnum statusEnum;
-
+	
 	public JeecgBootException(String message){
 		super(message);
+	}
+	
+	public JeecgBootException(StatusEnum statusEnum, String... args) {
+		super(String.format(statusEnum.msg(), args));
+		this.statusEnum = statusEnum;
 	}
 
 	public JeecgBootException(StatusEnum statusEnum){

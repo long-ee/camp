@@ -23,6 +23,7 @@ public enum StatusEnum {
     UnknownError(10600, "Unknown error", "未知错误"),
     TimeFormatError(10601, "Time format error", "时间格式错误"),
     UserIdBlankError(10602, "The user id can't empty", "用户ID不能为空"),
+	AmountFormatError(10603, "Amount format error", "金额格式错误"),
 
     // for login
     LoginFailed(20601, "Login failed", "登录信息无效"),
@@ -61,6 +62,16 @@ public enum StatusEnum {
     CartDataError(40614, "Cart data error", "购物车数据错误"),
     AppointmentTimeError(40615, "Reservation time format error", "预约时间格式错误"),
     OrderCreatedError(40616, "Order creation failed", "订单创建失败"),
+    GoodsStockNotEnoughError(40617, "\"%s\" is under-stocked", "\"%s\"库存不足"),
+    OrdersStatusError(40618, "Order status error", "订单状态错误"),
+    OrdersNotExistError(40619, "Order not exist", "订单不存在"),
+    GoodsEvaluationNotEmptyError(40620, "Goods evaluation can't empty", "商品评价不能为空"),
+    OrdersOwnerError(40621, "You are not buyer or seller", "您不是买家或者卖家"),
+    TrackingNumberEmptyError(40621, "Tracking number can't empty", "物流单号不能为空"),
+    UserGoodsPropertyError(40622, "Goods properties not complete", "商品属性不全"),
+    GoodsImagesEmptyError(40623, "Goods images can't empty", "商品图片不能为空"),
+    GoodsOwnError(40624, "You are not the publisher of the goods", "您不是商品的发布者"),
+    GoodsIsBelongYourselfError(40625, "You can't buy your goods", "不能购买您的商品"),
     
     
     // for service

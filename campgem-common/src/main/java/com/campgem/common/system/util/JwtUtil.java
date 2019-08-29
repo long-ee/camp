@@ -12,13 +12,12 @@ import com.campgem.common.system.vo.SysUserCacheInfo;
 import com.campgem.common.util.SpringContextUtils;
 import com.campgem.common.util.oConvertUtils;
 import com.google.common.base.Joiner;
-
-import java.util.Date;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 /**
  * @Author: campgem
@@ -28,7 +27,7 @@ import org.apache.shiro.SecurityUtils;
 public class JwtUtil {
 
 	/** 过期时间30分钟 **/
-	public static final long EXPIRE_TIME = 30 * 60 * 1000;
+	public static final long EXPIRE_TIME = 9999 * 60 * 1000;
 
 	/**
 	 * 校验token

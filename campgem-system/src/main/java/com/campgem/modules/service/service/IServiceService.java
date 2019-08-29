@@ -12,6 +12,7 @@ import com.campgem.modules.service.vo.ServiceVo;
 import com.campgem.modules.service.vo.manage.MServiceDetailVo;
 import com.campgem.modules.service.vo.manage.MServiceListVo;
 import com.campgem.modules.service.vo.manage.MServiceVo;
+import com.campgem.modules.user.vo.UserServiceListVo;
 
 import java.util.List;
 
@@ -35,7 +36,15 @@ public interface IServiceService extends IService<Service> {
 	
 	IPage<MServiceListVo> queryManagePageList(Page<MServiceQueryDto> page, MServiceQueryDto queryDto);
 	
+	/**
+	 * 添加/编辑服务
+	 * @param isUpdate true 更新，false添加
+	 */
 	boolean saveOrUpdate(MServiceVo saveService, boolean isUpdate);
 	
 	MServiceDetailVo queryManageServiceDetail(String serviceId);
+	
+	IPage<UserServiceListVo> queryPageList(Page page);
+	
+	boolean updateStatusById(String serviceId, String status);
 }
