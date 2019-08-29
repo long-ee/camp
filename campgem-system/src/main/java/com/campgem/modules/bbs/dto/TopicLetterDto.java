@@ -12,10 +12,8 @@ import javax.validation.constraints.NotBlank;
 public class TopicLetterDto extends BaseDto {
     @ApiModelProperty(value = "接受者会员ID")
     @NotBlank(message = "接受者会员ID不能为空")
-    private String receiverId;
+    private String receiver;
     @ApiModelProperty(value = "信息内容")
     @NotBlank(message = "信息内容不能为空")
-    private String letterContent;
-    @ApiModelProperty(value = "发送者会员ID", hidden = true)
-    private String senderId;
+    private String msgContent;
 }

@@ -2,6 +2,9 @@ package com.campgem.modules.message.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.constant.CommonConstant;
+import com.campgem.common.enums.StatusEnum;
+import com.campgem.common.enums.YesOrNoEnum;
+import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.modules.message.dto.MsgDto;
 import com.campgem.modules.message.entity.SysMessage;
@@ -82,13 +85,22 @@ public class SysMessageServiceImpl extends ServiceImpl<SysMessageMapper, SysMess
 		msgDto.setMsgType(MsgTemplateEnum.NOTICE.msgType());
 		msgDto.setMsgTitle(sysMessage.getMsgTitle());
 		msgDto.setMsgContent(sysMessage.getMsgContent());
+		msgDto.setNeedAssemble(false);
 		SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.PLATFORM_MSG).send(msgDto);
 	}
 
 	@Override
 	public void sendTopicLetter(SysMessage sysMessage) {
+		Member receiver =  memberService.getById(sysMessage.getReceiver());
+		if(null == receiver){
+			throw new JeecgBootException(StatusEnum.BadRequest);
+		}
+		if(StringUtils.equalsIgnoreCase(YesOrNoEnum.NO.code(), receiver.getAllowChat())){
+			throw new JeecgBootException(StatusEnum.BadRequest);
+		}
 		MsgDto msgDto = BeanConvertUtils.copy(sysMessage, MsgDto.class);
 		msgDto.setMsgType(MsgTemplateEnum.TOPIC_LETTER.msgType());
+		msgDto.setScope(MsgScopeTypeEnum.CUSTOM_ASSIGN_USER.code());
 		msgDto.setParams(new Object[]{sysMessage.getSenderName(), sysMessage.getMsgContent()});
 		SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.PLATFORM_MSG).send(msgDto);
 	}

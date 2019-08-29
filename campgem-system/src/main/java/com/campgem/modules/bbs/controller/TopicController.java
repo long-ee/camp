@@ -3,7 +3,9 @@ package com.campgem.modules.bbs.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.campgem.common.api.vo.LoginUserVo;
 import com.campgem.common.api.vo.Result;
+import com.campgem.common.system.vo.LoginUser;
 import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.bbs.dto.*;
 import com.campgem.modules.bbs.entity.Topic;
@@ -11,6 +13,8 @@ import com.campgem.modules.bbs.service.IReplyService;
 import com.campgem.modules.bbs.service.ITopicService;
 import com.campgem.modules.bbs.vo.ReplyVo;
 import com.campgem.modules.bbs.vo.TopicVo;
+import com.campgem.modules.message.dto.MsgDto;
+import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.service.ISysMessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -121,9 +125,12 @@ public class TopicController {
 	@ApiOperation(value="话题信息管理-发送站内信", notes="F14 发送站内信")
 	@PostMapping(value = "/post/topic/letter/send")
 	public Result sendLetter(@Valid TopicLetterDto letterDto) {
-//		sysAnnouncementService
-		//TODO
-//	    sysMessageService.sendTopicLetter(letterDto);
+		LoginUserVo loginUserVo = SecurityUtils.getCurrentUser();
+		SysMessage sysMessage = new SysMessage();
+		sysMessage.setSender(loginUserVo.getMemberId());
+		sysMessage.setReceiver(letterDto.getReceiver());
+		sysMessage.setMsgContent(letterDto.getMsgContent());
+	    sysMessageService.sendTopicLetter(sysMessage);
 		return Result.ok();
 	}
 

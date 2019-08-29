@@ -15,6 +15,10 @@ import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.PasswordUtils;
 import com.campgem.common.util.RandomUtils;
 import com.campgem.common.util.RedisUtil;
+import com.campgem.modules.message.dto.MsgDto;
+import com.campgem.modules.message.entity.enums.MsgSendTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
+import com.campgem.modules.message.strategy.SendMsgStrategyFactory;
 import com.campgem.modules.user.dto.LocalLoginDto;
 import com.campgem.modules.user.dto.PasswordResetCodeVerifyDto;
 import com.campgem.modules.user.dto.PasswordResetDto;
@@ -169,10 +173,11 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         // 1、生成随机验证码
         String validityCode = RandomUtils.generateStr(4);
         // 2、邮件发送
-//        String esReceiver = email;
-//        String esTitle = "Campgem密码重置";
-//        String esContent = "您的账户正在申请重置密码，验证码为"+ validityCode+"，请在操作页面中输入此验证码后，重新设置新密码.";
-//        emailSendMsgHandle.SendMsg(esReceiver, esTitle, esContent);
+        MsgDto msgDto = new MsgDto();
+        msgDto.setMsgType(MsgTemplateEnum.RESET_PASSWORD_EMAIL_CODE.msgType());
+        msgDto.setReceiver(email);
+        msgDto.setParams(new Object[]{validityCode});
+        SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.EMAIL).send(msgDto);
         // 3、将验证码存入缓存(超时5分钟)
         redisUtil.set(CacheConstant.PASSWORD_RESET_EMAIL_VALIDITY_CACHE_PRFIX + email, validityCode, 600);
 

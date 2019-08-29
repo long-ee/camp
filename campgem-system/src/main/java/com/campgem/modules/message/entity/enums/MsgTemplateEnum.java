@@ -10,8 +10,10 @@ import java.util.List;
 public enum MsgTemplateEnum {
     NOTICE("NOTICE", "", "%s"),
     TOPIC_LETTER("TOPIC_LETTER", "收到一条站内信", "%s:%s"),
-    REGISTER_EMAIL_CODE("REGISTER_EMAIL_CODE", "Campgem新用户注册", "您的注册验证码为%s，请在操作页面中输入此验证码后完成注册。")
-   ;
+    REGISTER_EMAIL_CODE("REGISTER_EMAIL_CODE", "Campgem新用户注册", "您的注册验证码为%s，请在操作页面中输入此验证码后完成注册。"),
+    RESET_PASSWORD_EMAIL_CODE("RESET_PASSWORD_EMAIL_CODE", "Campgem密码重置", "您的账户正在申请重置密码，验证码为%s，请在操作页面中输入此验证码后，重新设置新密码。")
+
+    ;
     /**
      * 消息类型
      */

@@ -2,6 +2,7 @@ package com.campgem.modules.message.strategy;
 
 import com.campgem.modules.message.dto.MsgDto;
 import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  *
@@ -16,6 +17,9 @@ public abstract class AbstractSendMsgStrategy implements ISendMsgStrategy {
      */
     @Override
     public MsgDto assemble(MsgDto msgDto){
+        if(!msgDto.isNeedAssemble()){
+            return msgDto;
+        }
         MsgTemplateEnum templateEnum = MsgTemplateEnum.getByMsgType(msgDto.getMsgType());
         if(null == templateEnum){
             return msgDto;

@@ -42,5 +42,9 @@ public class MsgDto {
      * 消息内容
      */
     private String msgContent;
+    /**
+     * 是否需要组装(默认需要)
+     */
+    private boolean needAssemble = true;
 
 }

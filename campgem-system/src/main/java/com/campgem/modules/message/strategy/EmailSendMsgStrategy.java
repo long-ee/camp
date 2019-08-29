@@ -18,6 +18,7 @@ public class EmailSendMsgStrategy extends AbstractSendMsgStrategy {
 
     @Override
     public void send(MsgDto msgDto) {
+        assemble(msgDto);
         JavaMailSender mailSender = (JavaMailSender) SpringContextUtils.getBean("mailSender");
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(username);
