@@ -36,7 +36,6 @@ public class MBusinessActivityVo {
 	
 	@Excel(name = "商家ID", width = 15)
 	@ApiModelProperty(value = "商家ID")
-	@NotBlank(message = "商家不能为空")
 	private String uid;
 	
 	@ApiModelProperty(value = "分类ID")
@@ -70,7 +69,7 @@ public class MBusinessActivityVo {
 	
 	@ApiModelProperty("活动图片")
 	@NotEmpty(message = "活动图片不能为空")
-	private BusinessActivityImages[] images;
+	private BusinessActivityImages[] businessActivityImages;
 	
 	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

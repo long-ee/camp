@@ -80,7 +80,7 @@ public enum StatusEnum {
     ServiceImagesMaxError(50603, "Up to 10 service images", "服务图片最多10张"),
     ActivityNotExistError(50604, "The activity is not exist", "该活动不存在"),
     ActivityImagesBlankError(50605, "The activity images can't empty", "活动图片不能为空"),
-    
+    ActivityNeedLocationBusiness(50606, "Only location business can publish", "只有本地商家才能发布"),
     
     ;
 

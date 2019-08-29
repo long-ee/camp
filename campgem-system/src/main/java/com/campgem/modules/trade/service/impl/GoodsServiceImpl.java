@@ -334,4 +334,19 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 	public void updateStock(int type, String id, Integer stock) {
 		baseMapper.updateStock(type, id, stock);
 	}
+	
+	@Override
+	public boolean updateStatusById(String goodsId, String status) {
+		Goods goods = new Goods();
+		goods.setId(goodsId);
+		if ("ENABLE".equals(status.toUpperCase())) {
+			goods.setStatus(0);
+		} else if ("DISABLE".equals(status.toUpperCase())) {
+			goods.setStatus(-1);
+		} else {
+			return false;
+		}
+		
+		return updateById(goods);
+	}
 }

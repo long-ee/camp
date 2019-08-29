@@ -17,6 +17,7 @@ import com.campgem.modules.service.vo.*;
 import com.campgem.modules.service.vo.manage.MBusinessActivityDetailVo;
 import com.campgem.modules.service.vo.manage.MBusinessActivityListVo;
 import com.campgem.modules.service.vo.manage.MBusinessActivityVo;
+import com.campgem.modules.user.vo.UserBusinessActivityListVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,7 +109,7 @@ public class BusinessActivityServiceImpl extends ServiceImpl<BusinessActivityMap
 	@Override
 	@Transactional
 	public boolean saveOrUpdate(MBusinessActivityVo activityVo, boolean isUpdate) {
-		if (activityVo.getImages().length == 0) {
+		if (activityVo.getBusinessActivityImages().length == 0) {
 			throw new JeecgBootException(StatusEnum.ActivityImagesBlankError);
 		}
 		
@@ -144,12 +145,12 @@ public class BusinessActivityServiceImpl extends ServiceImpl<BusinessActivityMap
 					.eq(BusinessActivityImages::getBusinessActivityId, uuid));
 		}
 		
-		for (BusinessActivityImages image : activityVo.getImages()) {
+		for (BusinessActivityImages image : activityVo.getBusinessActivityImages()) {
 			image.setBusinessActivityId(uuid);
 		}
 		
 		// 添加
-		businessActivityImagesService.saveBatch(Arrays.asList(activityVo.getImages()));
+		businessActivityImagesService.saveBatch(Arrays.asList(activityVo.getBusinessActivityImages()));
 		
 		return true;
 	}
@@ -157,5 +158,10 @@ public class BusinessActivityServiceImpl extends ServiceImpl<BusinessActivityMap
 	@Override
 	public MBusinessActivityDetailVo queryManageBusinessActivityDetail(String id) {
 		return baseMapper.queryManageBusinessActivityDetail(id);
+	}
+	
+	@Override
+	public IPage<UserBusinessActivityListVo> queryPageList(Page page) {
+		return baseMapper.queryPageList(page);
 	}
 }

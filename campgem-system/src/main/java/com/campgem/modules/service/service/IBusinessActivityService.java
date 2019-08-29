@@ -9,6 +9,7 @@ import com.campgem.modules.service.vo.*;
 import com.campgem.modules.service.vo.manage.MBusinessActivityDetailVo;
 import com.campgem.modules.service.vo.manage.MBusinessActivityListVo;
 import com.campgem.modules.service.vo.manage.MBusinessActivityVo;
+import com.campgem.modules.user.vo.UserBusinessActivityListVo;
 
 import java.util.List;
 
@@ -35,4 +36,6 @@ public interface IBusinessActivityService extends IService<BusinessActivity> {
 	boolean saveOrUpdate(MBusinessActivityVo activity, boolean isUpdate);
 	
 	MBusinessActivityDetailVo queryManageBusinessActivityDetail(String id);
+	
+	IPage<UserBusinessActivityListVo> queryPageList(Page page);
 }

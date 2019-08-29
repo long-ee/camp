@@ -67,4 +67,6 @@ public interface IGoodsService extends IService<Goods> {
 	 * @param type 类型，1添加，2减少
 	 */
 	void updateStock(int type, String id, Integer stock);
+	
+	boolean updateStatusById(String goodsId, String status);
 }

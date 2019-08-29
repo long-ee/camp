@@ -159,4 +159,12 @@
 		WHERE ba.del_flag = 0
 		  AND ba.id = #{activityId}
 	</select>
+	
+	<select id="queryPageList" resultType="com.campgem.modules.user.vo.UserBusinessActivityListVo">
+		SELECT ba.id,
+		       ba.title,
+		       ba.create_time
+		 FROM business_activity ba
+		ORDER BY ba.create_time DESC
+	</select>
 </mapper>

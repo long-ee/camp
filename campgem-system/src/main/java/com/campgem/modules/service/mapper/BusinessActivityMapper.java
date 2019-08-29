@@ -8,6 +8,7 @@ import com.campgem.modules.service.entity.BusinessActivity;
 import com.campgem.modules.service.vo.*;
 import com.campgem.modules.service.vo.manage.MBusinessActivityDetailVo;
 import com.campgem.modules.service.vo.manage.MBusinessActivityListVo;
+import com.campgem.modules.user.vo.UserBusinessActivityListVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -43,4 +44,6 @@ public interface BusinessActivityMapper extends BaseMapper<BusinessActivity> {
 	IPage<MBusinessActivityListVo> queryManagePageList(Page page, @Param("queryDto") MServiceQueryDto queryDto);
 	
 	MBusinessActivityDetailVo queryManageBusinessActivityDetail(@Param("activityId") String activityId);
+	
+	IPage<UserBusinessActivityListVo> queryPageList(Page page);
 }
