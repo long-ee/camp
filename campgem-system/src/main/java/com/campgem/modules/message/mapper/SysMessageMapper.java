@@ -1,13 +1,12 @@
 package com.campgem.modules.message.mapper;
 
-import com.campgem.modules.message.entity.SysMessage;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.campgem.modules.message.entity.SysMessage;
+
 
 /**
- * @Description: 消息
- * @Author: campgem
- * @Date:  2019-04-09
- * @Version: V1.0
+ * 系统消息
+ * @author: X.Tony
  */
 public interface SysMessageMapper extends BaseMapper<SysMessage> {
 

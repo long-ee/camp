@@ -1,22 +1,20 @@
-package com.campgem.modules.message.handle.enums;
+package com.campgem.modules.message.entity.enums;
 
 import com.campgem.common.util.oConvertUtils;
 
 /**
  * 发送消息类型枚举
  */
-public enum SendMsgTypeEnum {
-
-//推送方式：1短信 2邮件 3微信
-	SMS("1", "SmsSendMsgHandle"),
-	EMAIL("2", "EmailSendMsgHandle"),
-	WX("3","WxSendMsgHandle");
+public enum MsgSendTypeEnum {
+	//推送方式：1邮件 2平台消息
+	EMAIL("EMAIL", "emailSendMsgStrategy"),
+	PLATFORM_MSG("PLATFORM_MSG", "platformServiceSendMsgStrategy");
 
 	private String type;
 
 	private String implClass;
 
-	private SendMsgTypeEnum(String type, String implClass) {
+	private MsgSendTypeEnum(String type, String implClass) {
 		this.type = type;
 		this.implClass = implClass;
 	}
@@ -37,11 +35,11 @@ public enum SendMsgTypeEnum {
 		this.implClass = implClass;
 	}
 
-	public static SendMsgTypeEnum getByType(String type) {
+	public static MsgSendTypeEnum getByType(String type) {
 		if (oConvertUtils.isEmpty(type)) {
 			return null;
 		}
-		for (SendMsgTypeEnum val : values()) {
+		for (MsgSendTypeEnum val : values()) {
 			if (val.getType().equals(type)) {
 				return val;
 			}

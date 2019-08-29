@@ -15,8 +15,9 @@ import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.PasswordUtils;
 import com.campgem.common.util.RandomUtils;
 import com.campgem.common.util.RedisUtil;
-import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
 import com.campgem.modules.user.dto.LocalLoginDto;
+import com.campgem.modules.user.dto.PasswordResetCodeVerifyDto;
+import com.campgem.modules.user.dto.PasswordResetDto;
 import com.campgem.modules.user.dto.ThirdPartyLoginDto;
 import com.campgem.modules.user.entity.UserAuth;
 import com.campgem.modules.user.entity.UserBase;
@@ -27,8 +28,6 @@ import com.campgem.modules.user.service.IUserAuthService;
 import com.campgem.modules.user.service.IUserBaseService;
 import com.campgem.modules.user.vo.LoginVo;
 import com.campgem.modules.user.vo.UserBaseVo;
-import com.campgem.modules.user.dto.PasswordResetCodeVerifyDto;
-import com.campgem.modules.user.dto.PasswordResetDto;
 import com.xkcoding.justauth.AuthRequestFactory;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.config.AuthSource;
@@ -60,8 +59,6 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
     private AuthRequestFactory authRequestFactory;
     @Resource
     private RedisUtil redisUtil;
-    @Resource
-    private EmailSendMsgHandle emailSendMsgHandle;
 
     @Override
     @Transactional
@@ -172,10 +169,10 @@ public class UserAuthServiceImpl extends ServiceImpl<UserAuthMapper, UserAuth> i
         // 1、生成随机验证码
         String validityCode = RandomUtils.generateStr(4);
         // 2、邮件发送
-        String esReceiver = email;
-        String esTitle = "Campgem密码重置";
-        String esContent = "您的账户正在申请重置密码，验证码为"+ validityCode+"，请在操作页面中输入此验证码后，重新设置新密码.";
-        emailSendMsgHandle.SendMsg(esReceiver, esTitle, esContent);
+//        String esReceiver = email;
+//        String esTitle = "Campgem密码重置";
+//        String esContent = "您的账户正在申请重置密码，验证码为"+ validityCode+"，请在操作页面中输入此验证码后，重新设置新密码.";
+//        emailSendMsgHandle.SendMsg(esReceiver, esTitle, esContent);
         // 3、将验证码存入缓存(超时5分钟)
         redisUtil.set(CacheConstant.PASSWORD_RESET_EMAIL_VALIDITY_CACHE_PRFIX + email, validityCode, 600);
 

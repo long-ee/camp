@@ -1,13 +1,13 @@
-package com.campgem.modules.common.service.impl;
+package com.campgem.modules.message.service.impl;
 
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.campgem.modules.common.entity.SysAnnouncementSend;
-import com.campgem.modules.common.mapper.SysAnnouncementSendMapper;
+import com.campgem.modules.message.entity.SysMessageSend;
+import com.campgem.modules.message.mapper.SysMessageSendMapper;
 import com.campgem.modules.common.dto.AnnouncementSendModel;
-import com.campgem.modules.common.service.ISysAnnouncementSendService;
+import com.campgem.modules.message.service.ISysMessageSendService;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -20,10 +20,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  * @Version: V1.0
  */
 @Service
-public class SysAnnouncementSendServiceImpl extends ServiceImpl<SysAnnouncementSendMapper, SysAnnouncementSend> implements ISysAnnouncementSendService {
+public class SysMessageSendServiceImpl extends ServiceImpl<SysMessageSendMapper, SysMessageSend> implements ISysMessageSendService {
 
 	@Resource
-	private SysAnnouncementSendMapper sysAnnouncementSendMapper;
+	private SysMessageSendMapper sysAnnouncementSendMapper;
 	
 	@Override
 	public List<String> queryByUserId(String userId) {

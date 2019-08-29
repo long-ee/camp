@@ -7,6 +7,8 @@ import java.util.Map;
 
 public interface CommonConstant {
 
+    public static String SYSTEM_ACCOUNT_NAME = "Campgem";
+
 	/**
 	 * 正常状态
 	 */

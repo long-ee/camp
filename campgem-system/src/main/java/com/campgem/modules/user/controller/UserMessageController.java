@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.common.dto.AnnouncementSendModel;
-import com.campgem.modules.common.entity.SysAnnouncement;
-import com.campgem.modules.common.service.ISysAnnouncementSendService;
-import com.campgem.modules.common.service.ISysAnnouncementService;
+import com.campgem.modules.message.entity.SysMessage;
+import com.campgem.modules.message.service.ISysMessageSendService;
+import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.user.dto.UserMessageReplyDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,9 +26,9 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1")
 public class UserMessageController {
     @Resource
-    private ISysAnnouncementSendService sysAnnouncementSendService;
+    private ISysMessageSendService sysMessageSendService;
     @Resource
-    private ISysAnnouncementService  sysAnnouncementService;
+    private ISysMessageService sysMessageService;
 
     @ApiOperation(value="用户消息管理-我的消息", notes="G11 我的消息")
     @GetMapping(value = "/user/message/list")
@@ -36,16 +36,20 @@ public class UserMessageController {
                                                                       @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
                                                                       @RequestParam(name="pageSize", defaultValue="10") Integer pageSize) {
         Page<AnnouncementSendModel> page = new Page<>(pageNo, pageSize);
-        IPage<AnnouncementSendModel> announcementSendModels = sysAnnouncementSendService.getMyAnnouncementSendPage(page, announcementSendModel);
+        IPage<AnnouncementSendModel> announcementSendModels = sysMessageSendService.getMyAnnouncementSendPage(page, announcementSendModel);
         return new Result<IPage<AnnouncementSendModel>>().result(announcementSendModels);
     }
 
     @ApiOperation(value="用户消息管理-消息回复", notes="G111 消息回复")
     @GetMapping(value = "/user/message/reply")
     public Result messageReply(@Valid UserMessageReplyDto messageReplyDto) {
+        SysMessage sysMessage = sysMessageService.getById(messageReplyDto.getMsgId());
         String memberId = SecurityUtils.getCurrentUserMemberId();
-        messageReplyDto.setMemberId(memberId);
-        sysAnnouncementService.messageReply(messageReplyDto);
+        String oldSender = sysMessage.getSender();
+        sysMessage.setSender(memberId);
+        sysMessage.setReceiver(oldSender);
+        sysMessage.setMsgContent(messageReplyDto.getReplyContent());
+        sysMessageService.sendTopicLetter(sysMessage);
         return Result.ok();
     }
 

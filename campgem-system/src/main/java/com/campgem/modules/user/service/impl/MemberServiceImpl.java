@@ -11,7 +11,6 @@ import com.campgem.common.constant.CacheConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.*;
-import com.campgem.modules.message.handle.impl.EmailSendMsgHandle;
 import com.campgem.modules.service.service.IBusinessActivityService;
 import com.campgem.modules.service.vo.BusinessActivityInProgressVo;
 import com.campgem.modules.service.vo.BusinessDetailVo;
@@ -29,8 +28,8 @@ import com.campgem.modules.user.service.IMemberService;
 import com.campgem.modules.user.service.IUserAuthService;
 import com.campgem.modules.user.service.IUserBaseService;
 import com.campgem.modules.user.vo.MemberVo;
-import com.campgem.modules.user.vo.UserBaseVo;
 import com.campgem.modules.user.vo.ShippingMethodsVo;
+import com.campgem.modules.user.vo.UserBaseVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,8 +49,6 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     @Resource
     private RedisUtil redisUtil;
-    @Resource
-    private EmailSendMsgHandle emailSendMsgHandle;
     @Resource
     private IUserBaseService userBaseService;
     @Resource
@@ -92,10 +89,10 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         String validityCode = RandomUtils.generateStr(4);
         // TODO 后优化为异步任务发送方式
         // 2、邮件发送
-        String esReceiver = email;
-        String esTitle = "Campgem新用户注册";
-        String esContent = "您的注册验证码为"+ validityCode+"，请在操作页面中输入此验证码后完成注册";
-        emailSendMsgHandle.SendMsg(esReceiver, esTitle, esContent);
+//        String esReceiver = email;
+//        String esTitle = "Campgem新用户注册";
+//        String esContent = "您的注册验证码为"+ validityCode+"，请在操作页面中输入此验证码后完成注册";
+//        emailSendMsgHandle.SendMsg(esReceiver, esTitle, esContent);
         // 3、将验证码存入缓存(超时10分钟)
         redisUtil.set(CacheConstant.REGISTER_EMAIL_VALIDITY_CACHE_PRFIX + email, validityCode, 600);
     }

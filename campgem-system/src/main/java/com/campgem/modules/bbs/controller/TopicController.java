@@ -11,7 +11,7 @@ import com.campgem.modules.bbs.service.IReplyService;
 import com.campgem.modules.bbs.service.ITopicService;
 import com.campgem.modules.bbs.vo.ReplyVo;
 import com.campgem.modules.bbs.vo.TopicVo;
-import com.campgem.modules.common.service.ISysAnnouncementService;
+import com.campgem.modules.message.service.ISysMessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class TopicController {
 	@Resource
 	private IReplyService replyService;
 	@Resource
-	private ISysAnnouncementService sysAnnouncementService;
+	private ISysMessageService sysMessageService;
 
 	@ApiOperation(value="话题信息管理-热门话题列表查询", notes="F1 热门话题列表查询")
 	@GetMapping(value = "/post/topic/hot/list")
@@ -121,7 +121,9 @@ public class TopicController {
 	@ApiOperation(value="话题信息管理-发送站内信", notes="F14 发送站内信")
 	@PostMapping(value = "/post/topic/letter/send")
 	public Result sendLetter(@Valid TopicLetterDto letterDto) {
-		sysAnnouncementService.sendTopicLetter(letterDto);
+//		sysAnnouncementService
+		//TODO
+//	    sysMessageService.sendTopicLetter(letterDto);
 		return Result.ok();
 	}
 

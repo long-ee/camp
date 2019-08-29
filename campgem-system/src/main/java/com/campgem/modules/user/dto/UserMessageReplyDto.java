@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 public class UserMessageReplyDto extends BaseDto {
     @ApiModelProperty(value = "被回复的消息ID")
     @NotBlank(message = "被回复的消息ID不能为空")
-    private String anntId;
+    private String msgId;
     @ApiModelProperty(value = "回复内容")
     @NotBlank(message = "回复内容不能为空")
     private String replyContent;

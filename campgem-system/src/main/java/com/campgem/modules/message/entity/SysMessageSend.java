@@ -1,4 +1,4 @@
-package com.campgem.modules.common.entity;
+package com.campgem.modules.message.entity;
 
 import java.io.Serializable;
 
@@ -16,15 +16,15 @@ import org.springframework.format.annotation.DateTimeFormat;
  * @Version: V1.0
  */
 @Data
-@TableName("sys_announcement_send")
-public class SysAnnouncementSend implements Serializable {
+@TableName("sys_message_send")
+public class SysMessageSend implements Serializable {
     private static final long serialVersionUID = 1L;
     
 	/**id*/
 	@TableId(type = IdType.UUID)
 	private java.lang.String id;
 	/**通告id*/
-	private java.lang.String anntId;
+	private java.lang.String msgId;
 	/**用户id*/
 	private java.lang.String userId;
 	/**阅读状态（0未读，1已读）*/

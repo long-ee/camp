@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.campgem.modules.common.mapper.SysAnnouncementSendMapper">
+<mapper namespace="com.campgem.modules.message.mapper.SysMessageSendMapper">
 
 	<select id="queryByUserId" parameterType="String"  resultType="String">
 	   select sas.annt_id from sys_announcement_send sas 
