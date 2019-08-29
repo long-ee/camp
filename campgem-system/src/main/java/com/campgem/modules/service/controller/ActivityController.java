@@ -3,12 +3,9 @@ package com.campgem.modules.service.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
-import com.campgem.common.system.base.controller.JeecgController;
 import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
 import com.campgem.modules.common.service.ICategoryService;
 import com.campgem.modules.common.vo.CategoryVo;
-import com.campgem.modules.message.entity.SysMessage;
-import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.service.service.IBusinessActivityService;
 import com.campgem.modules.service.vo.BusinessActivityCalendarVo;
 import com.campgem.modules.service.vo.BusinessActivityDetailVo;
@@ -34,7 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 @Api(tags = "活动信息管理接口")
-public class ActivityController extends JeecgController<SysMessage, ISysMessageService> {
+public class ActivityController {
 	@Resource
 	private ICategoryService categoryService;
 	

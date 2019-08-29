@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
-import com.campgem.common.system.base.controller.JeecgController;
 import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.common.entity.enums.AdvertisementLocationEnum;
 import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
@@ -13,8 +12,6 @@ import com.campgem.modules.common.service.IAdvertisementService;
 import com.campgem.modules.common.service.ICategoryService;
 import com.campgem.modules.common.vo.AdvertisementVo;
 import com.campgem.modules.common.vo.CategoryVo;
-import com.campgem.modules.message.entity.SysMessage;
-import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.trade.dto.GoodsQueryDto;
 import com.campgem.modules.trade.dto.GoodsReviewDto;
 import com.campgem.modules.trade.entity.Goods;
@@ -53,7 +50,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 @Api(tags = "商品信息管理接口")
-public class GoodsController extends JeecgController<SysMessage, ISysMessageService> {
+public class GoodsController {
 	@Resource
 	private ICategoryService categoryService;
 	@Resource

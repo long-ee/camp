@@ -4,9 +4,6 @@ import com.campgem.common.api.vo.Result;
 import com.campgem.common.constant.CommonConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
-import com.campgem.common.system.base.controller.JeecgController;
-import com.campgem.modules.message.entity.SysMessage;
-import com.campgem.modules.message.service.ISysMessageService;
 import com.campgem.modules.trade.service.ICartService;
 import com.campgem.modules.trade.vo.CartGoodsVo;
 import io.swagger.annotations.Api;
@@ -30,7 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 @Api(tags = "购物车管理接口")
-public class CartController extends JeecgController<SysMessage, ISysMessageService> {
+public class CartController {
 	@Resource
 	private ICartService cartService;
 	
