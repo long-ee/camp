@@ -7,8 +7,7 @@ import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.service.service.IServiceService;
 import com.campgem.modules.service.vo.manage.MServiceDetailVo;
 import com.campgem.modules.service.vo.manage.MServiceVo;
-import com.campgem.modules.trade.service.IGoodsService;
-import com.campgem.modules.user.vo.*;
+import com.campgem.modules.user.vo.UserServiceListVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -26,8 +25,6 @@ public class UserServiceController {
 	
 	@Resource
 	private IServiceService serviceService;
-	
-	private IGoodsService goodsService;
 	
 	@ApiOperation(value = "用户服务列表", notes = "G13")
 	@GetMapping("/user/service/list")

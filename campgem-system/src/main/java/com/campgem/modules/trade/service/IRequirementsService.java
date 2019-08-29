@@ -11,6 +11,7 @@ import com.campgem.modules.trade.vo.RequirementsVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsDetailVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsListVo;
 import com.campgem.modules.trade.vo.manage.MRequirementsVo;
+import com.campgem.modules.user.vo.UserRequirementListVo;
 
 /**
  * @Description: 需求
@@ -33,4 +34,8 @@ public interface IRequirementsService extends IService<Requirements> {
 	RequirementsDetailVo queryRequirementDetail(String requirementId);
 	
 	MRequirementsDetailVo queryManageRequirementDetail(String id);
+	
+	IPage<UserRequirementListVo> queryPageList(Page page);
+	
+	boolean updateStatusById(String requirementId, String status);
 }
