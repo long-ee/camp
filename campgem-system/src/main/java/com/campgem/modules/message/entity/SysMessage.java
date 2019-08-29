@@ -81,6 +81,10 @@ public class SysMessage implements Serializable {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private java.util.Date sendTime;
+    /**拓展字段1(订单详情ID、社团ID等等)*/
+    @Excel(name = "拓展字段1", width = 15)
+    @ApiModelProperty(value = "拓展字段1")
+    private String extend_1;
     /**删除状态*/
     @Excel(name = "删除状态", width = 15)
     @ApiModelProperty(value = "删除状态", hidden = true)

@@ -42,7 +42,7 @@ public class SysMessageServiceImpl extends ServiceImpl<SysMessageMapper, SysMess
 	@Resource
 	private SysMessageMapper sysMessageMapper;
 	@Resource
-	private SysMessageSendMapper sysAnnouncementSendMapper;
+	private SysMessageSendMapper sysMessageSendMapper;
 	@Resource
 	private IMemberService memberService;
 
@@ -50,7 +50,7 @@ public class SysMessageServiceImpl extends ServiceImpl<SysMessageMapper, SysMess
 	@Override
 	public void saveMsg(SysMessage sysMessage) {
 		Member member = memberService.getById(sysMessage.getSender());
-		sysMessage.setSenderName(member.getMemberName());
+		sysMessage.setSenderName(member.getBusinessNameCommon());
 		if(StringUtils.equalsIgnoreCase(MsgScopeTypeEnum.ALL.code(), sysMessage.getScope())) {
 			// 发送全部
 			sysMessageMapper.insert(sysMessage);
@@ -72,11 +72,10 @@ public class SysMessageServiceImpl extends ServiceImpl<SysMessageMapper, SysMess
 				announcementSend.setUserId(userId);
 				announcementSend.setReadFlag(CommonConstant.NO_READ_FLAG);
 //				announcementSend.setReadTime(refDate);
-				sysAnnouncementSendMapper.insert(announcementSend);
+				sysMessageSendMapper.insert(announcementSend);
 			});
 		}
 	}
-	
 
 	@Override
 	public void sendNoticeMessage(SysMessage sysMessage) {

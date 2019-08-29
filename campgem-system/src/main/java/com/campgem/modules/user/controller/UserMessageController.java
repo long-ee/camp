@@ -7,7 +7,7 @@ import com.campgem.common.api.vo.Result;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.SecurityUtils;
-import com.campgem.modules.common.dto.AnnouncementSendModel;
+import com.campgem.modules.message.dto.MessageVo;
 import com.campgem.modules.message.dto.MsgDto;
 import com.campgem.modules.message.entity.SysMessage;
 import com.campgem.modules.message.entity.enums.MsgScopeTypeEnum;
@@ -39,12 +39,35 @@ public class UserMessageController {
 
     @ApiOperation(value="用户消息管理-我的消息", notes="G11 我的消息")
     @GetMapping(value = "/user/message/list")
-    public Result<IPage<AnnouncementSendModel>> getUserMessageList(AnnouncementSendModel announcementSendModel,
-                                                                      @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-                                                                      @RequestParam(name="pageSize", defaultValue="10") Integer pageSize) {
-        Page<AnnouncementSendModel> page = new Page<>(pageNo, pageSize);
-        IPage<AnnouncementSendModel> announcementSendModels = sysMessageSendService.getMyAnnouncementSendPage(page, announcementSendModel);
-        return new Result<IPage<AnnouncementSendModel>>().result(announcementSendModels);
+    public Result<IPage<MessageVo>> getUserMessageList(MessageVo messageVo,
+                                                       @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+                                                       @RequestParam(name="pageSize", defaultValue="10") Integer pageSize) {
+        Page<MessageVo> page = new Page<>(pageNo, pageSize);
+        IPage<MessageVo> announcementSendModels = sysMessageSendService.queryUserMessageList(page, messageVo);
+        return new Result<IPage<MessageVo>>().result(announcementSendModels);
+    }
+
+    @ApiOperation(value="用户消息管理-标记消息已读", notes="G11 标记消息已读")
+    @GetMapping(value = "/user/message/read/flag")
+    public Result flagMessageRead( @RequestParam(name="msgId") String msgId) {
+        sysMessageSendService.flagReadTag(msgId);
+        return Result.ok();
+    }
+
+    @ApiOperation(value="用户消息管理-全部标记消息已读", notes="G11 全部标记消息已读")
+    @GetMapping(value = "/user/message/read/flag/all")
+    public Result flagMessageReadAll() {
+        String memberId = SecurityUtils.getCurrentUserMemberId();
+        sysMessageSendService.flagReadTagOfUserAllMessage(memberId);
+        return Result.ok();
+    }
+
+    @ApiOperation(value="用户消息管理-未读消息数量查询", notes="G11 未读消息数量查询")
+    @GetMapping(value = "/user/message/unRead/count")
+    public Result queryUnReadMessageCount() {
+        String memberId = SecurityUtils.getCurrentUserMemberId();
+        sysMessageSendService.countUserUnReadMessage(memberId);
+        return Result.ok();
     }
 
     @ApiOperation(value="用户消息管理-消息回复", notes="G111 消息回复")

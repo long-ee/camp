@@ -26,7 +26,7 @@ public class SysMessageSend implements Serializable {
 	/**通告id*/
 	private java.lang.String msgId;
 	/**用户id*/
-	private java.lang.String userId;
+	private java.lang.String memberId;
 	/**阅读状态（0未读，1已读）*/
 	private java.lang.String readFlag;
 	/**阅读时间*/

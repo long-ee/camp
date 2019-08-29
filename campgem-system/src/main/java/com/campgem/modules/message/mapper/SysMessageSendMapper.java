@@ -3,7 +3,7 @@ package com.campgem.modules.message.mapper;
 import java.util.List;
 
 import com.campgem.modules.message.entity.SysMessageSend;
-import com.campgem.modules.common.dto.AnnouncementSendModel;
+import com.campgem.modules.message.dto.MessageVo;
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -16,20 +16,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
  * @Version: V1.0
  */
 public interface SysMessageSendMapper extends BaseMapper<SysMessageSend> {
-
-	/**
-	 *
-	 * @param userId
-	 * @return
-	 */
-	public List<String> queryByUserId(@Param("userId") String userId);
-
 	/**
 	 * 获取我的消息
 	 * @param page
-	 * @param announcementSendModel
+	 * @param messageVo
 	 * @return
 	 */
-	public List<AnnouncementSendModel> getMyAnnouncementSendList(Page page, @Param("queryObj") AnnouncementSendModel announcementSendModel);
+	public List<MessageVo> queryUserMessageList(Page page, @Param("queryObj") MessageVo messageVo);
 
 }

@@ -25,7 +25,8 @@ public interface ISysMessageService extends IService<SysMessage> {
 	 * 消息持久化
 	 * @param sysMessage
 	 */
-	public void saveMsg(SysMessage sysMessage);
+	void saveMsg(SysMessage sysMessage);
+
 
 
 }
