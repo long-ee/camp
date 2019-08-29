@@ -8,6 +8,7 @@ import com.campgem.modules.service.entity.Service;
 import com.campgem.modules.service.vo.*;
 import com.campgem.modules.service.vo.manage.MServiceDetailVo;
 import com.campgem.modules.service.vo.manage.MServiceListVo;
+import com.campgem.modules.user.vo.UserServiceListVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -42,4 +43,6 @@ public interface ServiceMapper extends BaseMapper<Service> {
 	IPage<MServiceListVo> queryManagePageList(Page<MServiceQueryDto> page, @Param("queryDto") MServiceQueryDto queryDto);
 	
 	MServiceDetailVo queryManageServiceDetail(@Param("serviceId") String serviceId);
+	
+	IPage<UserServiceListVo> queryPageList(Page page);
 }
