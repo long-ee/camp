@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.campgem.common.system.base.entity.JeecgEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -21,13 +20,13 @@ import java.io.Serializable;
  */
 @Data
 @TableName("sys_message")
-public class SysMessage extends JeecgEntity implements Serializable {
+public class SysMessage implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * id
      */
-//    @TableId(type = IdType.UUID)
-//    private java.lang.String id;
+    @TableId(type = IdType.UUID)
+    private java.lang.String id;
     /**
      * 标题
      */

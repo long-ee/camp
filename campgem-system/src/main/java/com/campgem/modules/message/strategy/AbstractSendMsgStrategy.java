@@ -16,13 +16,13 @@ public abstract class AbstractSendMsgStrategy implements ISendMsgStrategy {
      */
     @Override
     public MsgDto assemble(MsgDto msgDto){
-        MsgTemplateEnum templateEnum = MsgTemplateEnum.getByCode(msgDto.getMsgTemplateCode());
+        MsgTemplateEnum templateEnum = MsgTemplateEnum.getByMsgType(msgDto.getMsgType());
         if(null == templateEnum){
             return msgDto;
         }
-        msgDto.setMsgType(templateEnum.getMsgType().code());
-        msgDto.setMsgTitle(templateEnum.getMsgTitle());
-        String content = String.format(templateEnum.getMsgContent(), msgDto.getParams());
+        msgDto.setMsgType(templateEnum.msgType());
+        msgDto.setMsgTitle(templateEnum.msgTitle());
+        String content = String.format(templateEnum.msgContent(), msgDto.getParams());
         msgDto.setMsgContent(content);
         return msgDto;
     }

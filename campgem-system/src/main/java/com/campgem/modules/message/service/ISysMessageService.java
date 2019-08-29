@@ -1,13 +1,13 @@
 package com.campgem.modules.message.service;
 
-import com.campgem.common.system.base.service.JeecgService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.message.entity.SysMessage;
 
 /**
  * 消息管理
  * @author X.Tony
  */
-public interface ISysMessageService extends JeecgService<SysMessage> {
+public interface ISysMessageService extends IService<SysMessage> {
 
 	/**
 	 * 添加系统通告消息

@@ -9,7 +9,6 @@ import com.campgem.modules.message.entity.SysMessageSend;
 import com.campgem.modules.message.entity.enums.MsgScopeTypeEnum;
 import com.campgem.modules.message.entity.enums.MsgSendTypeEnum;
 import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
-import com.campgem.modules.message.entity.enums.MsgTypeEnum;
 import com.campgem.modules.message.mapper.SysMessageMapper;
 import com.campgem.modules.message.mapper.SysMessageSendMapper;
 import com.campgem.modules.message.service.ISysMessageService;
@@ -80,7 +79,7 @@ public class SysMessageServiceImpl extends ServiceImpl<SysMessageMapper, SysMess
 	public void sendNoticeMessage(SysMessage sysMessage) {
 		MsgDto msgDto = BeanConvertUtils.copy(sysMessage, MsgDto.class);
 		msgDto.setSender(CommonConstant.SYSTEM_ACCOUNT_NAME);
-		msgDto.setMsgType(MsgTypeEnum.NOTICE.code());
+		msgDto.setMsgType(MsgTemplateEnum.NOTICE.msgType());
 		msgDto.setMsgTitle(sysMessage.getMsgTitle());
 		msgDto.setMsgContent(sysMessage.getMsgContent());
 		SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.PLATFORM_MSG).send(msgDto);
@@ -89,7 +88,7 @@ public class SysMessageServiceImpl extends ServiceImpl<SysMessageMapper, SysMess
 	@Override
 	public void sendTopicLetter(SysMessage sysMessage) {
 		MsgDto msgDto = BeanConvertUtils.copy(sysMessage, MsgDto.class);
-		msgDto.setMsgTemplateCode(MsgTemplateEnum.TOPIC_LETTER.getCode());
+		msgDto.setMsgType(MsgTemplateEnum.TOPIC_LETTER.msgType());
 		msgDto.setParams(new Object[]{sysMessage.getSenderName(), sysMessage.getMsgContent()});
 		SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.PLATFORM_MSG).send(msgDto);
 	}

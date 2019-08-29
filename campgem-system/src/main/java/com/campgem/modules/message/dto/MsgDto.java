@@ -26,17 +26,14 @@ public class MsgDto {
     /**
      * 消息模板code
      */
-    @ApiModelProperty(value = "消息模板code")
-    private String msgTemplateCode;
+    @ApiModelProperty(value = "消息类型")
+    private String msgType;
     /**
      * 消息模板参数
      */
     @ApiModelProperty(value = "消息模板参数")
     private Object[] params;
-    /**
-     * 消息类型
-     */
-    private String msgType;
+
     /**
      * 消息标题
      */

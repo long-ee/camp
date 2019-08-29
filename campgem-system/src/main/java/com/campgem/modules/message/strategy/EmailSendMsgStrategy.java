@@ -23,7 +23,7 @@ public class EmailSendMsgStrategy extends AbstractSendMsgStrategy {
         message.setFrom(username);
         message.setTo(msgDto.getReceiver());
         message.setSubject(msgDto.getMsgTitle());
-        message.setText(msgDto.getReceiver());
+        message.setText(msgDto.getMsgContent());
         mailSender.send(message);
     }
 

@@ -8,13 +8,14 @@ import java.util.List;
  * @author: X.Tony
  */
 public enum MsgTemplateEnum {
-
-    TOPIC_LETTER("TOPIC_LETTER", MsgTypeEnum.TOPIC_LETTER, "收到一条站内信", "%s:%s")
+    NOTICE("NOTICE", "", "%s"),
+    TOPIC_LETTER("TOPIC_LETTER", "收到一条站内信", "%s:%s"),
+    REGISTER_EMAIL_CODE("REGISTER_EMAIL_CODE", "Campgem新用户注册", "您的注册验证码为%s，请在操作页面中输入此验证码后完成注册。")
    ;
     /**
-     * 枚举值
+     * 消息类型
      */
-    private final String code;
+    private final String msgType;
 
     /**
      * 枚举描述(默认为消息标题)
@@ -27,41 +28,33 @@ public enum MsgTemplateEnum {
     private final String msgContent;
 
 
-    private final MsgTypeEnum msgType;
-
-
-    MsgTemplateEnum(String code, MsgTypeEnum msgType, String msgTitle, String msgContent) {
-        this.code = code;
+    MsgTemplateEnum(String msgType, String msgTitle, String msgContent) {
         this.msgTitle = msgTitle;
         this.msgContent = msgContent;
         this.msgType = msgType;
     }
 
-    public String getCode() {
-        return code;
+    public String msgType() {
+        return msgType;
     }
 
-    public String getMsgTitle() {
+    public String msgTitle() {
         return msgTitle;
     }
 
-    public String getMsgContent() {
+    public String msgContent() {
         return msgContent;
-    }
-
-    public MsgTypeEnum getMsgType() {
-        return msgType;
     }
 
     /**
      * 通过枚举<code>code</code>获得枚举
      *
-     * @param code
-     * @return SmsVerifyCodeTypeEnum
+     * @param msgType
+     * @return MsgTemplateEnum
      */
-    public static MsgTemplateEnum getByCode(String code) {
+    public static MsgTemplateEnum getByMsgType(String msgType) {
         for (MsgTemplateEnum _enum : values()) {
-            if (_enum.getCode().equals(code)) {
+            if (_enum.msgType().equals(msgType)) {
                 return _enum;
             }
         }
@@ -71,7 +64,7 @@ public enum MsgTemplateEnum {
     /**
      * 获取全部枚举
      *
-     * @return List<SmsVerifyCodeTypeEnum>
+     * @return List<MsgTemplateEnum>
      */
     public List<MsgTemplateEnum> getAllEnum() {
         List<MsgTemplateEnum> list = new ArrayList<MsgTemplateEnum>();
@@ -89,7 +82,7 @@ public enum MsgTemplateEnum {
     public List<String> getAllEnumCode() {
         List<String> list = new ArrayList<String>();
         for (MsgTemplateEnum _enum : values()) {
-            list.add(_enum.getCode());
+            list.add(_enum.msgType());
         }
         return list;
     }

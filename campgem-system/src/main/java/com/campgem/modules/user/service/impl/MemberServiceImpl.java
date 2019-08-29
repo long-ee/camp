@@ -11,6 +11,10 @@ import com.campgem.common.constant.CacheConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.*;
+import com.campgem.modules.message.dto.MsgDto;
+import com.campgem.modules.message.entity.enums.MsgSendTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
+import com.campgem.modules.message.strategy.SendMsgStrategyFactory;
 import com.campgem.modules.service.service.IBusinessActivityService;
 import com.campgem.modules.service.vo.BusinessActivityInProgressVo;
 import com.campgem.modules.service.vo.BusinessDetailVo;
@@ -87,12 +91,12 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         }
         // 1、生成随机验证码
         String validityCode = RandomUtils.generateStr(4);
-        // TODO 后优化为异步任务发送方式
         // 2、邮件发送
-//        String esReceiver = email;
-//        String esTitle = "Campgem新用户注册";
-//        String esContent = "您的注册验证码为"+ validityCode+"，请在操作页面中输入此验证码后完成注册";
-//        emailSendMsgHandle.SendMsg(esReceiver, esTitle, esContent);
+        MsgDto msgDto = new MsgDto();
+        msgDto.setMsgType(MsgTemplateEnum.REGISTER_EMAIL_CODE.msgType());
+        msgDto.setReceiver(email);
+        msgDto.setParams(new Object[]{validityCode});
+        SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.EMAIL).send(msgDto);
         // 3、将验证码存入缓存(超时10分钟)
         redisUtil.set(CacheConstant.REGISTER_EMAIL_VALIDITY_CACHE_PRFIX + email, validityCode, 600);
     }

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.modules.message.entity.SysMessage;
-import com.campgem.modules.message.entity.enums.MsgTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
 import com.campgem.modules.message.service.ISysMessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +30,7 @@ public class ManageMessageController {
 												   HttpServletRequest req) {
 		Result<IPage<SysMessage>> result = new Result<>();
 		LambdaQueryWrapper<SysMessage> queryWrapper = new LambdaQueryWrapper<>();
-		queryWrapper.eq(SysMessage::getMsgType, MsgTypeEnum.NOTICE.code());
+		queryWrapper.eq(SysMessage::getMsgType, MsgTemplateEnum.NOTICE.msgType());
 		Page<SysMessage> page = new Page<>(pageNo, pageSize);
 		IPage<SysMessage> pageList = sysMessageService.page(page, queryWrapper);
 		result.setSuccess(true);
@@ -48,7 +48,7 @@ public class ManageMessageController {
 	public Result<SysMessage> add(SysMessage sysMessage) {
 		Result<SysMessage> result = new Result<SysMessage>();
 		try {
-			sysMessage.setMsgType(MsgTypeEnum.NOTICE.code());
+			sysMessage.setMsgType(MsgTemplateEnum.NOTICE.msgType());
 			sysMessageService.sendNoticeMessage(sysMessage);
 			result.success("添加成功！");
 		} catch (Exception e) {
