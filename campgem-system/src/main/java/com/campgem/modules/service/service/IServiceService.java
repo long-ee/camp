@@ -45,4 +45,6 @@ public interface IServiceService extends IService<Service> {
 	MServiceDetailVo queryManageServiceDetail(String serviceId);
 	
 	IPage<UserServiceListVo> queryPageList(Page page);
+	
+	boolean updateStatusById(String serviceId, String status);
 }

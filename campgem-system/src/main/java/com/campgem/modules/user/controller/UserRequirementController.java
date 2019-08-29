@@ -50,7 +50,7 @@ public class UserRequirementController {
 	@ApiOperation(value = "需求状态修改", notes = "G14")
 	@GetMapping("user/requirements/{requirementId}/status")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "serviceId", value = "需求ID", paramType = "path"),
+			@ApiImplicitParam(name = "requirementId", value = "需求ID", paramType = "path"),
 			@ApiImplicitParam(name = "status", value = "状态，不区分大小写", allowableValues = "ENABLE, DISABLE", required = true)
 	})
 	public Result userServiceStatus(@PathVariable String requirementId, String status) {

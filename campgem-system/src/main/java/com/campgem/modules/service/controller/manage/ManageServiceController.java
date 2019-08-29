@@ -55,17 +55,7 @@ public class ManageServiceController {
 			@ApiImplicitParam(name = "status", value = "状态，不区分大小写", allowableValues = "ENABLE, DISABLE", required = true)
 	})
 	public Result updateServiceStatus(String id, String status) {
-		Service service = new Service();
-		service.setId(id);
-		if ("ENABLE".equals(status.toUpperCase())) {
-			service.setStatus(0);
-		} else if ("DISABLE".equals(status.toUpperCase())) {
-			service.setStatus(-1);
-		} else {
-			return new Result().error500("状态错误");
-		}
-		
-		boolean ok = serviceService.updateById(service);
+		boolean ok = serviceService.updateStatusById(id, status);
 		return ok ? Result.succ : Result.fail;
 	}
 	

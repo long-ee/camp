@@ -151,4 +151,19 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceMapper, Service> impl
 	public IPage<UserServiceListVo> queryPageList(Page page) {
 		return baseMapper.queryPageList(page);
 	}
+	
+	@Override
+	public boolean updateStatusById(String serviceId, String status) {
+		Service service = new Service();
+		service.setId(serviceId);
+		if ("ENABLE".equals(status.toUpperCase())) {
+			service.setStatus(0);
+		} else if ("DISABLE".equals(status.toUpperCase())) {
+			service.setStatus(-1);
+		} else {
+			return false;
+		}
+		
+		return updateById(service);
+	}
 }

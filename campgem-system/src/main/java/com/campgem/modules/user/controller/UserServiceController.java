@@ -10,6 +10,7 @@ import com.campgem.modules.service.vo.manage.MServiceVo;
 import com.campgem.modules.user.vo.UserServiceListVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,17 @@ public class UserServiceController {
 	public Result<MServiceDetailVo> userServiceDetail(@PathVariable String serviceId) {
 		MServiceDetailVo service = serviceService.queryManageServiceDetail(serviceId);
 		return new Result<MServiceDetailVo>().result(service);
+	}
+	
+	@ApiOperation(value = "需求状态修改", notes = "G14")
+	@GetMapping("user/service/{serviceId}/status")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "serviceId", value = "需求ID", paramType = "path"),
+			@ApiImplicitParam(name = "status", value = "状态，不区分大小写", allowableValues = "ENABLE, DISABLE", required = true)
+	})
+	public Result userServiceStatus(@PathVariable String serviceId, String status) {
+		boolean ok = serviceService.updateStatusById(serviceId, status);
+		return ok ? Result.succ : Result.fail;
 	}
 	
 	@ApiOperation(value = "添加服务", notes = "G131")
