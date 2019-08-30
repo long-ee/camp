@@ -46,12 +46,6 @@ public class Feedback {
 	@ApiModelProperty(value = "举报分类，Suggestion, Tip-off")
 	private String category;
 	/**
-	 * 举报类型，Product，Service，Requirement，Product Review，Service Evaluation
-	 */
-	@Excel(name = "举报类型，Product，Service，Requirement，Product Review，Service Evaluation", width = 15)
-	@ApiModelProperty(value = "举报类型，Product，Service，Requirement，Product Review，Service Evaluation")
-	private String type;
-	/**
 	 * 被举报人ID
 	 */
 	@Excel(name = "被举报人ID", width = 15)
