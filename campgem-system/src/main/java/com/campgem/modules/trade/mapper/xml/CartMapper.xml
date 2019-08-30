@@ -21,7 +21,7 @@
 		WHERE c.uid = #{uid};
 	</select>
 	
-	<resultMap id="goodsOrderInfoMap" type="com.campgem.modules.trade.vo.OrderInfoTempVo">
+	<resultMap id="goodsOrderInfoMap" type="com.campgem.modules.order.vo.OrderInfoTempVo">
 		<result property="shippingMethods" column="shipping_methods"
 		        javaType="com.campgem.modules.user.vo.ShippingMethodsVo" typeHandler="com.campgem.common.typehandler.JsonListTypeHandler" />
 	</resultMap>

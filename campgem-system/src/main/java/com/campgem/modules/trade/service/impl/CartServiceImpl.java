@@ -7,6 +7,8 @@ import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.common.utils.CommonUtils;
+import com.campgem.modules.order.vo.OrderInfoTempVo;
+import com.campgem.modules.order.vo.OrderInfoVo;
 import com.campgem.modules.trade.entity.Cart;
 import com.campgem.modules.trade.entity.Goods;
 import com.campgem.modules.trade.entity.GoodsSpecifications;
@@ -16,8 +18,6 @@ import com.campgem.modules.trade.service.IGoodsService;
 import com.campgem.modules.trade.service.IGoodsSpecificationsService;
 import com.campgem.modules.trade.vo.CartGoodsTempVo;
 import com.campgem.modules.trade.vo.CartGoodsVo;
-import com.campgem.modules.trade.vo.OrderInfoTempVo;
-import com.campgem.modules.trade.vo.OrderInfoVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -135,6 +135,9 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
 	@Override
 	public List<OrderInfoVo> queryOrderInfo(String[] cartIds) {
 		List<OrderInfoTempVo> infos = baseMapper.queryOrderInfo(SecurityUtils.getCurrentUserUid(), cartIds);
+		if (infos.size() == 0) {
+			throw new JeecgBootException(StatusEnum.CartEmptyError);
+		}
 		Map<String, List<OrderInfoTempVo>> map = new HashMap<>();
 		for (OrderInfoTempVo info : infos) {
 			// 处理规格和价格

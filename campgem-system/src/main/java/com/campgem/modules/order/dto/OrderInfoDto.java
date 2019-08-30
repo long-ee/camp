@@ -1,4 +1,4 @@
-package com.campgem.modules.trade.dto;
+package com.campgem.modules.order.dto;
 
 import com.campgem.common.api.dto.BaseDto;
 import io.swagger.annotations.ApiModel;

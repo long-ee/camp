@@ -1,4 +1,4 @@
-package com.campgem.modules.common.service.impl;
+package com.campgem.modules.order.service.impl;
 
 import com.braintreegateway.Result;
 import com.braintreegateway.Transaction.Status;
@@ -10,9 +10,9 @@ import com.campgem.config.BraintreeConfig;
 import com.campgem.config.PaypalConfig;
 import com.campgem.config.paypal.PaypalPaymentIntent;
 import com.campgem.config.paypal.PaypalPaymentMethod;
-import com.campgem.modules.common.service.IPaymentService;
-import com.campgem.modules.trade.entity.Orders;
-import com.campgem.modules.trade.service.IOrderService;
+import com.campgem.modules.order.entity.Orders;
+import com.campgem.modules.order.service.IOrderService;
+import com.campgem.modules.order.service.IPaymentService;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
@@ -48,8 +48,7 @@ public class PaymentServiceImpl implements IPaymentService {
 	};
 	
 	
-	@Override
-	public Payment createPayment(
+	private Payment createPayment(
 			Double total,
 			Details details,
 			String currency,
@@ -85,8 +84,7 @@ public class PaymentServiceImpl implements IPaymentService {
 		return payment.create(apiContext);
 	}
 	
-	@Override
-	public Payment createPayment(List<Orders> ordersList) throws PayPalRESTException {
+	private Payment createPayment(List<Orders> ordersList) throws PayPalRESTException {
 		// 总运费
 		double freight = 0;
 		// 总税金
@@ -112,7 +110,7 @@ public class PaymentServiceImpl implements IPaymentService {
 				details,
 				"USD",
 				PaypalPaymentMethod.paypal,
-				PaypalPaymentIntent.sale,
+				PaypalPaymentIntent.order,
 				"this is description",
 				paypalConfig.getCancelUrl(),
 				paypalConfig.getProcessUrl()
@@ -195,5 +193,10 @@ public class PaymentServiceImpl implements IPaymentService {
 			
 			return errorString;
 		}
+	}
+	
+	@Override
+	public String getToken() {
+		return braintreeConfig.getGateway().clientToken().generate();
 	}
 }

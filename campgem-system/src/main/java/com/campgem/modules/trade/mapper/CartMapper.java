@@ -1,9 +1,9 @@
 package com.campgem.modules.trade.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.campgem.modules.order.vo.OrderInfoTempVo;
 import com.campgem.modules.trade.entity.Cart;
 import com.campgem.modules.trade.vo.CartGoodsTempVo;
-import com.campgem.modules.trade.vo.OrderInfoTempVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

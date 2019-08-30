@@ -1,8 +1,8 @@
-package com.campgem.modules.trade.service;
+package com.campgem.modules.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.campgem.modules.trade.entity.Goods;
-import com.campgem.modules.trade.entity.OrdersGoods;
+import com.campgem.modules.order.entity.OrdersGoods;
+import com.campgem.modules.order.vo.OrderGoodsOrServiceStatusVo;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ import java.util.List;
  */
 public interface IOrderGoodsService extends IService<OrdersGoods> {
 	
-	List<Goods> getGoodsInfo(String orderId);
+	List<OrderGoodsOrServiceStatusVo> getGoodsInfo(String orderId);
 }

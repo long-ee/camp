@@ -1,4 +1,4 @@
-package com.campgem.modules.trade.entity;
+package com.campgem.modules.order.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

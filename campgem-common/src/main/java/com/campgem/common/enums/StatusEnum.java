@@ -68,11 +68,14 @@ public enum StatusEnum {
     OrdersNotExistError(40619, "Order not exist", "订单不存在"),
     GoodsEvaluationNotEmptyError(40620, "Goods evaluation can't empty", "商品评价不能为空"),
     OrdersOwnerError(40621, "You are not buyer or seller", "您不是买家或者卖家"),
-    TrackingNumberEmptyError(40621, "Tracking number can't empty", "物流单号不能为空"),
-    UserGoodsPropertyError(40622, "Goods properties not complete", "商品属性不全"),
-    GoodsImagesEmptyError(40623, "Goods images can't empty", "商品图片不能为空"),
-    GoodsOwnError(40624, "You are not the publisher of the goods", "您不是商品的发布者"),
-    GoodsIsBelongYourselfError(40625, "You can't buy your goods", "不能购买您的商品"),
+    TrackingNumberEmptyError(40622, "Tracking number can't empty", "物流单号不能为空"),
+    UserGoodsPropertyError(40623, "Goods properties not complete", "商品属性不全"),
+    GoodsImagesEmptyError(40624, "Goods images can't empty", "商品图片不能为空"),
+    GoodsOwnError(40625, "You are not the publisher of the goods", "您不是商品的发布者"),
+    GoodsIsBelongYourselfError(40626, "You can't buy your goods", "不能购买您的商品"),
+    CartEmptyError(40627, "Your cart is empty", "您的购物车没有商品"),
+    GoodsStatusError(40628, "The goods '%s' is off sale", "商品'%s'不在销售状态"),
+    ServiceStatusError(40628, "The service '%s' is disable", "服务'%s'已下架"),
     
     
     // for service

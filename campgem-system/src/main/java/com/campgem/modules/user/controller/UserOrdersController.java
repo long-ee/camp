@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
-import com.campgem.modules.trade.service.IOrderService;
+import com.campgem.modules.order.service.IOrderService;
 import com.campgem.modules.user.dto.OrdersEvaluationDto;
 import com.campgem.modules.user.vo.OrdersDetailVo;
 import com.campgem.modules.user.vo.OrdersListVo;

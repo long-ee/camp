@@ -3,23 +3,15 @@ package com.campgem.modules.service.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
-import com.campgem.common.constant.CommonConstant;
-import com.campgem.common.enums.StatusEnum;
-import com.campgem.common.exception.JeecgBootException;
 import com.campgem.modules.common.entity.enums.AdvertisementLocationEnum;
 import com.campgem.modules.common.entity.enums.CategoryTypeEnum;
 import com.campgem.modules.common.service.IAdvertisementService;
 import com.campgem.modules.common.service.ICategoryService;
-import com.campgem.modules.common.service.IPaymentService;
 import com.campgem.modules.common.vo.AdvertisementVo;
 import com.campgem.modules.common.vo.CategoryVo;
-import com.campgem.modules.service.dto.ServiceOrderPayDto;
-import com.campgem.modules.service.entity.Service;
 import com.campgem.modules.service.service.IServiceEvaluationService;
 import com.campgem.modules.service.service.IServiceService;
 import com.campgem.modules.service.vo.*;
-import com.campgem.modules.trade.entity.Orders;
-import com.campgem.modules.trade.service.IOrderService;
 import com.campgem.modules.user.service.IMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -29,8 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,10 +44,6 @@ public class ServiceController {
 	private IServiceEvaluationService serviceEvaluationService;
 	@Resource
 	private IMemberService memberService;
-	@Resource
-	private IOrderService orderService;
-	@Resource
-	private IPaymentService paypalService;
 	
 	@ApiOperation(value = "服务分类查询", notes = "D1 生活圈")
 	@GetMapping(value = "/service/category")
@@ -159,26 +145,5 @@ public class ServiceController {
 	public Result<ServiceOrderVo> queryServiceOrder(@PathVariable String serviceId) {
 		ServiceOrderVo orderVo = serviceService.queryServiceOrder(serviceId);
 		return new Result<ServiceOrderVo>().result(orderVo);
-	}
-	
-	@ApiOperation(value = "支付", notes = "D16 确认下单")
-	@PostMapping("/service/order/pay")
-	public Result<String> serviceOrderPay(@Valid @RequestBody ServiceOrderPayDto payDto) {
-		if (!CommonConstant.payments.containsKey(payDto.getPaymentMethod())) {
-			throw new JeecgBootException(StatusEnum.UnknownPaymentError);
-		}
-		
-		Service service = serviceService.getById(payDto.getServiceId());
-		Orders orders = orderService.createServiceOrder(service, payDto);
-		
-		if (CommonConstant.payments.get(payDto.getPaymentMethod()).equals("PayPal")) {
-			// PayPal支付
-			String url = paypalService.pay(Collections.singletonList(orders));
-			return new Result<String>().result(url);
-		} else {
-			// Visa/Masterd Card 支付
-			String transId = paypalService.payWithCreditCard("");
-			return new Result<String>().result(transId);
-		}
 	}
 }

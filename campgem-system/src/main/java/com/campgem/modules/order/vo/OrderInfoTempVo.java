@@ -1,4 +1,4 @@
-package com.campgem.modules.trade.vo;
+package com.campgem.modules.order.vo;
 
 import com.campgem.modules.user.vo.ShippingMethodsVo;
 import io.swagger.annotations.ApiModel;

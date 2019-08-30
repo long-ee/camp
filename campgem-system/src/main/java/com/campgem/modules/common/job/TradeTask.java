@@ -1,6 +1,6 @@
 package com.campgem.modules.common.job;
 
-import com.campgem.modules.trade.service.IOrderService;
+import com.campgem.modules.order.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;

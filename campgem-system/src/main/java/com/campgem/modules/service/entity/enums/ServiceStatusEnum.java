@@ -1,12 +1,12 @@
 package com.campgem.modules.service.entity.enums;
 
 public enum ServiceStatusEnum {
-	DISABLE(0),
-	ENABLE(1);
+	DISABLE(-1),
+	ENABLE(0);
 	
 	private Integer code;
 	
-	private ServiceStatusEnum(Integer code) {
+	ServiceStatusEnum(Integer code) {
 		this.code = code;
 	}
 	

@@ -11,4 +11,11 @@
 		FROM orders_service os
 		WHERE os.order_id = #{orderId}
 	</select>
+	
+	<select id="getServiceInfo" resultType="com.campgem.modules.order.vo.OrderGoodsOrServiceStatusVo">
+		SELECT s.service_name       AS name,
+		       s.status
+		  FROM orders_service os
+		LEFT JOIN service s ON s.id = os.service_id
+	</select>
 </mapper>

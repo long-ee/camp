@@ -1,6 +1,7 @@
 package com.campgem.modules.service.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.campgem.modules.order.vo.OrderGoodsOrServiceStatusVo;
 import com.campgem.modules.service.entity.OrdersService;
 import com.campgem.modules.user.vo.OrdersServiceVo;
 import org.apache.ibatis.annotations.Param;
@@ -15,4 +16,6 @@ import java.util.List;
  */
 public interface OrdersServiceMapper extends BaseMapper<OrdersService> {
 	List<OrdersServiceVo> queryOrdersService(@Param("orderId") String orderId);
+	
+	List<OrderGoodsOrServiceStatusVo> getServiceInfo(@Param("orderId") String orderId);
 }

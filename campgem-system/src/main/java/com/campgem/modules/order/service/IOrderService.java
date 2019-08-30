@@ -1,12 +1,12 @@
-package com.campgem.modules.trade.service;
+package com.campgem.modules.order.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.order.dto.OrderPayDto;
+import com.campgem.modules.order.entity.Orders;
 import com.campgem.modules.service.dto.ServiceOrderPayDto;
 import com.campgem.modules.service.entity.Service;
-import com.campgem.modules.trade.dto.OrderPayDto;
-import com.campgem.modules.trade.entity.Orders;
 import com.campgem.modules.user.dto.OrdersEvaluationDto;
 import com.campgem.modules.user.vo.OrdersDetailVo;
 import com.campgem.modules.user.vo.OrdersListVo;

@@ -1,10 +1,10 @@
-package com.campgem.modules.trade.service.impl;
+package com.campgem.modules.order.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.campgem.modules.trade.entity.Goods;
-import com.campgem.modules.trade.entity.OrdersGoods;
-import com.campgem.modules.trade.mapper.OrderGoodsMapper;
-import com.campgem.modules.trade.service.IOrderGoodsService;
+import com.campgem.modules.order.entity.OrdersGoods;
+import com.campgem.modules.order.mapper.OrderGoodsMapper;
+import com.campgem.modules.order.service.IOrderGoodsService;
+import com.campgem.modules.order.vo.OrderGoodsOrServiceStatusVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 public class OrderGoodsServiceImpl extends ServiceImpl<OrderGoodsMapper, OrdersGoods> implements IOrderGoodsService {
 	
 	@Override
-	public List<Goods> getGoodsInfo(String orderId) {
+	public List<OrderGoodsOrServiceStatusVo> getGoodsInfo(String orderId) {
 		return baseMapper.getGoodsInfo(orderId);
 	}
 }

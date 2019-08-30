@@ -1,4 +1,4 @@
-package com.campgem.modules.trade.dto;
+package com.campgem.modules.order.dto;
 
 import com.campgem.common.api.dto.BaseDto;
 import io.swagger.annotations.ApiModel;
@@ -22,6 +22,9 @@ public class OrderPayDto extends BaseDto {
 	@ApiModelProperty("支付方式，1PayPal，2Visa/Masterd Card")
 	@NotNull(message = "支付方式不能为空")
 	private Integer paymentMethod;
+	
+	@ApiModelProperty("如果是Visa/Masterd Card，必填")
+	private String nonce;
 	
 	@ApiModelProperty("选择的收货地址ID")
 	@NotBlank(message = "收货地址不能为空")

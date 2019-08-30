@@ -1,4 +1,4 @@
-package com.campgem.modules.trade.service.impl;
+package com.campgem.modules.order.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -10,20 +10,25 @@ import com.campgem.common.util.SecurityUtils;
 import com.campgem.modules.common.utils.CommonUtils;
 import com.campgem.modules.common.vo.OrdersGoodsTaskVo;
 import com.campgem.modules.common.vo.OrdersTaskVo;
+import com.campgem.modules.order.dto.OrderPayDto;
+import com.campgem.modules.order.entity.Orders;
+import com.campgem.modules.order.entity.OrdersGoods;
+import com.campgem.modules.order.mapper.OrderMapper;
+import com.campgem.modules.order.service.IOrderGoodsService;
+import com.campgem.modules.order.service.IOrderService;
+import com.campgem.modules.order.vo.OrderInfoVo;
 import com.campgem.modules.service.dto.ServiceOrderPayDto;
 import com.campgem.modules.service.entity.OrdersService;
 import com.campgem.modules.service.entity.ServiceImages;
 import com.campgem.modules.service.service.IOrdersServiceService;
 import com.campgem.modules.service.service.IServiceEvaluationService;
 import com.campgem.modules.service.service.IServiceImagesService;
-import com.campgem.modules.trade.dto.OrderPayDto;
-import com.campgem.modules.trade.entity.Orders;
-import com.campgem.modules.trade.entity.OrdersGoods;
 import com.campgem.modules.trade.entity.enums.OrderStatusEnum;
 import com.campgem.modules.trade.entity.enums.OrderTypeEnum;
-import com.campgem.modules.trade.mapper.OrderMapper;
-import com.campgem.modules.trade.service.*;
-import com.campgem.modules.trade.vo.OrderInfoVo;
+import com.campgem.modules.trade.service.ICartService;
+import com.campgem.modules.trade.service.IGoodsEvaluationService;
+import com.campgem.modules.trade.service.IGoodsService;
+import com.campgem.modules.trade.service.IGoodsSpecificationsService;
 import com.campgem.modules.user.dto.OrdersEvaluationDto;
 import com.campgem.modules.user.service.IMemberService;
 import com.campgem.modules.user.vo.MemberVo;
@@ -222,6 +227,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		orders.setOrderType(OrderTypeEnum.SERVICE.code());
 		orders.setStatus(OrderStatusEnum.UNPAID.code());
 		orders.setCreateTime(createTime);
+		orders.setNonce(payDto.getNonce());
 		orders.setExpiredTime(getExpiredTime(createTime));
 		
 		Date appointment;

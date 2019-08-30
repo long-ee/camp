@@ -1,9 +1,9 @@
 package com.campgem.modules.trade.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.campgem.modules.order.vo.OrderInfoVo;
 import com.campgem.modules.trade.entity.Cart;
 import com.campgem.modules.trade.vo.CartGoodsVo;
-import com.campgem.modules.trade.vo.OrderInfoVo;
 
 import java.util.List;
 

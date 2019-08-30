@@ -107,7 +107,7 @@
 		limit 5
 	</select>
 	
-	<select id="queryOrderInfo" resultType="com.campgem.modules.trade.vo.OrderInfoTempVo">
+	<select id="queryOrderInfo" resultType="com.campgem.modules.order.vo.OrderInfoTempVo">
 		SELECT
 			g.member_name,
 		    g.uid AS seller_id,

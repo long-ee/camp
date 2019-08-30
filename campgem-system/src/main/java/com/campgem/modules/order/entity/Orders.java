@@ -1,4 +1,4 @@
-package com.campgem.modules.trade.entity;
+package com.campgem.modules.order.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -70,6 +70,9 @@ public class Orders {
 	@Excel(name = "税金", width = 15)
 	@ApiModelProperty(value = "税金")
 	private java.math.BigDecimal taxesAmount;
+	
+	@ApiModelProperty("Braintree支付使用")
+	private String nonce;
 	
 	@Excel(name = "支付金额，amount+freight_amount+taxes_amount", width = 15)
 	@ApiModelProperty(value = "支付金额，amount+freight_amount+taxes_amount")

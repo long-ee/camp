@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.campgem.modules.trade.mapper.OrderMapper">
+<mapper namespace="com.campgem.modules.order.mapper.OrderMapper">
 	
 	<update id="updatePayId">
 		UPDATE orders o
@@ -42,7 +42,7 @@
 	<resultMap id="expiredOrders" type="com.campgem.modules.common.vo.OrdersTaskVo" >
 		<id property="id" column="oid" />
 		<collection property="goods" ofType="com.campgem.modules.common.vo.OrdersGoodsTaskVo"
-		            select="com.campgem.modules.trade.mapper.OrderGoodsMapper.queryOrderGoodsTaskList" column="oid"/>
+		            select="com.campgem.modules.order.mapper.OrderGoodsMapper.queryOrderGoodsTaskList" column="oid"/>
 	</resultMap>
 	<select id="queryExpiredOrderList" resultMap="expiredOrders">
 		SELECT o.id         AS oid,
@@ -84,7 +84,7 @@
 	<resultMap id="userOrdersDetail" type="com.campgem.modules.user.vo.OrdersDetailVo">
 		<id column="oid" property="id" />
 		<collection property="goods" ofType="com.campgem.modules.user.vo.OrdersGoodsVo"
-		            select="com.campgem.modules.trade.mapper.OrderGoodsMapper.queryOrderGoods" column="oid"/>
+		            select="com.campgem.modules.order.mapper.OrderGoodsMapper.queryOrderGoods" column="oid"/>
 		
 		<collection property="services" ofType="com.campgem.modules.user.vo.OrdersServiceVo"
 		            select="com.campgem.modules.service.mapper.OrdersServiceMapper.queryOrdersService" column="oid"/>

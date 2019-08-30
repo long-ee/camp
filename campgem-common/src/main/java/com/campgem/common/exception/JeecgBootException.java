@@ -11,7 +11,7 @@ public class JeecgBootException extends RuntimeException {
 		super(message);
 	}
 	
-	public JeecgBootException(StatusEnum statusEnum, String... args) {
+	public JeecgBootException(StatusEnum statusEnum, Object... args) {
 		super(String.format(statusEnum.msg(), args));
 		this.statusEnum = statusEnum;
 	}

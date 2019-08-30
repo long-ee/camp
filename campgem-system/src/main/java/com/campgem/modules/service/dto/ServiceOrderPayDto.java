@@ -28,4 +28,7 @@ public class ServiceOrderPayDto extends BaseDto {
 	@ApiModelProperty("预约时间")
 	@NotBlank(message = "预约时间不能为空")
 	private String time;
+	
+	@ApiModelProperty("Braintree支付需要")
+	private String nonce;
 }
