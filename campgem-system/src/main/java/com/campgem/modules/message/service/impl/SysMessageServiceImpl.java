@@ -66,10 +66,10 @@ public class SysMessageServiceImpl extends ServiceImpl<SysMessageMapper, SysMess
 		// 发送指定对象
 		sysMessageMapper.insert(sysMessage);
 		if(CollectionUtils.isNotEmpty(receivers)){
-			receivers.forEach(userId ->{
+			receivers.forEach(receiver ->{
 				SysMessageSend announcementSend = new SysMessageSend();
 				announcementSend.setMsgId(sysMessage.getId());
-				announcementSend.setUserId(userId);
+				announcementSend.setMemberId(receiver);
 				announcementSend.setReadFlag(CommonConstant.NO_READ_FLAG);
 //				announcementSend.setReadTime(refDate);
 				sysMessageSendMapper.insert(announcementSend);
