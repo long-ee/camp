@@ -10,27 +10,27 @@ import java.util.List;
 public enum MsgTemplateEnum {
 
     // 注册消息
-    REGISTER_EMAIL_CODE("REGISTER_EMAIL_CODE", "Campgem新用户注册", "您的注册验证码为%s，请在操作页面中输入此验证码后完成注册。"),
-    RESET_PASSWORD_EMAIL_CODE("RESET_PASSWORD_EMAIL_CODE", "Campgem密码重置", "您的账户正在申请重置密码，验证码为%s，请在操作页面中输入此验证码后，重新设置新密码。"),
+    REGISTER_EMAIL_CODE("REGISTER_EMAIL_CODE", "Campgem new user registration", "Your registration verification code is %s. Please enter this verification code in the operation page and complete the registration."),
+    RESET_PASSWORD_EMAIL_CODE("RESET_PASSWORD_EMAIL_CODE", "Campgem password reset", "Your account is applying for a password reset. The password is %s. Please reset the new password after entering the password in the operation page."),
 
     // 订单相关消息
-    GOODS_LEAVE_MESSAGE("GOODS_LEAVE_MESSAGE", "您发布的商品有新留言", "%s: %s"),
-    SERVICE_LEAVE_MESSAGE("SERVICE_LEAVE_MESSAGE", "您发布的需求有新留言", "%s: %s"),
-    GOODS_ORDER_NOTIFY("GOODS_ORDER_NOTIFY", "收到一笔新的商品订单", "%s"),
-    SERVICE_ORDER_NOTIFY("SERVICE_ORDER_NOTIFY", "收到一笔新的服务订单", "%s"),
+    GOODS_LEAVE_MESSAGE("GOODS_LEAVE_MESSAGE", "There is a new message for your goods", "%s: %s"),
+    SERVICE_LEAVE_MESSAGE("SERVICE_LEAVE_MESSAGE", "New message for your requirement", "%s: %s"),
+    GOODS_ORDER_NOTIFY("GOODS_ORDER_NOTIFY", "Received a new goods order", "%s"),
+    SERVICE_ORDER_NOTIFY("SERVICE_ORDER_NOTIFY", "Received a new service order", "%s"),
 
     // 社团消息
-    TO_BE_CLUB_MANAGER_NOTIFY("TO_BE_CLUB_MANAGER_NOTIFY", "您成为了社团管理员", "%s"),
-    CLUB_DISMISS("CLUB_DISMISS", "您加入的社团已被解散", "%s"),
-    CLUB_ACTIVITY_NOTIFY("CLUB_ACTIVITY_NOTIFY", "您加入的社团发布了一个新的活动", "%s: %s"),
+    TO_BE_CLUB_MANAGER_NOTIFY("TO_BE_CLUB_MANAGER_NOTIFY", "You became a club administrator", "%s"),
+    CLUB_DISMISS("CLUB_DISMISS", "The club you joined has been disbanded", "%s"),
+    CLUB_ACTIVITY_NOTIFY("CLUB_ACTIVITY_NOTIFY", "The club you join has launched a new activity", "%s: %s"),
 
     // 站内信消息
-    TOPIC_LETTER("TOPIC_LETTER", "收到一条站内信", "%s:%s"),
+    TOPIC_LETTER("TOPIC_LETTER", "Received an in-station letter", "%s:%s"),
 
     // 系统通知、反馈回复、举报回复
     NOTICE("NOTICE", "", "%s"),
-    FEEDBACK_REPLY("FEEDBACK_REPLY", "平台回复了您反馈的意见", "%s"),
-    REPORT_REPLY("REPORT_REPLY", "平台回复了您的举报", "%s"),
+    FEEDBACK_REPLY("FEEDBACK_REPLY", "The platform responded to your feedback", "%s"),
+    REPORT_REPLY("REPORT_REPLY", "The platform responded to your report", "%s"),
     ;
     /**
      * 消息类型
