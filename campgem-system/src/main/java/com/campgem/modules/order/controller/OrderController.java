@@ -85,7 +85,7 @@ public class OrderController {
 		return new Result<List<OrderInfoVo>>().result(data);
 	}
 	
-	@ApiOperation(value = "订单支付，如果是PayPal支付，则返回URL，需要跳转到这个地址，如果是信用卡，返回的交易码，调用接口查询支付结果", notes = "C20")
+	@ApiOperation(value = "订单支付，如果是PayPal支付，则返回URL，需要跳转到这个地址，如果是信用卡，返回的success为true则交易成功", notes = "C20")
 	@PostMapping("/order/pay")
 	public Result<String> goodsOrderPay(@Valid @RequestBody OrderPayDto payDto) {
 		if (!CommonConstant.payments.containsKey(payDto.getPaymentMethod())) {
@@ -99,7 +99,7 @@ public class OrderController {
 		return new Result<String>().result(result);
 	}
 	
-	@ApiOperation(value = "商圈支付，如果是PayPal支付，则返回URL，需要跳转到这个地址，如果是信用卡，返回的交易码，调用接口查询支付结果", notes = "D16 确认下单")
+	@ApiOperation(value = "商圈支付，如果是PayPal支付，则返回URL，需要跳转到这个地址，如果是信用卡，返回的success为true则交易成功", notes = "D16 确认下单")
 	@PostMapping("/service/order/pay")
 	public Result<String> serviceOrderPay(@Valid @RequestBody ServiceOrderPayDto payDto) {
 		if (!CommonConstant.payments.containsKey(payDto.getPaymentMethod())) {
@@ -118,7 +118,7 @@ public class OrderController {
 	 * @param ordersList 订单列表
 	 * @param paymentMethod 支付方式
 	 * @param nonce Braintree信用卡支付要用到
-	 * @return 如果是PayPal，返回一个地址，前端需要重定向到这个地址，如果是Braintree
+	 * @return 如果是PayPal，返回一个地址，前端需要重定向到这个地址，如果是Braintree，抛出异常则失败，否则成功
 	 */
 	private String pay(List<Orders> ordersList, Integer paymentMethod, String nonce) {
 		if (CommonUtils.isPaypal(paymentMethod)) {

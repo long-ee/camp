@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -177,20 +178,38 @@ public class PaymentServiceImpl implements IPaymentService {
 		
 		Result<com.braintreegateway.Transaction> result = braintreeConfig.getGateway().transaction().sale(request);
 		
+		String transId;
 		if (result.isSuccess()) {
 			com.braintreegateway.Transaction transaction = result.getTarget();
-			return transaction.getId();
+			transId = transaction.getId();
 		} else if (result.getTransaction() != null) {
 			com.braintreegateway.Transaction transaction = result.getTransaction();
-			return transaction.getId();
+			transId = transaction.getId();
 		} else {
 			String errorString = "";
 			for (ValidationError error : result.getErrors().getAllDeepValidationErrors()) {
 				errorString += "Error: " + error.getCode() + ": " + error.getMessage() + "\n";
 			}
 			
-			return errorString;
+			throw new JeecgBootException(StatusEnum.GoodsIdAndCartIdBlankError);
 		}
+		
+		com.braintreegateway.Transaction braintreeTransaction;
+//		com.braintreegateway.CreditCard creditCard;
+//		Customer customer;
+		
+		try {
+			braintreeTransaction = braintreeConfig.getGateway().transaction().find(transId);
+//			creditCard = braintreeTransaction.getCreditCard();
+//			customer = braintreeTransaction.getCustomer();
+		} catch (Exception e) {
+			throw new JeecgBootException(StatusEnum.GoodsIdAndCartIdBlankError);
+		}
+		
+		if (!Arrays.asList(TRANSACTION_SUCCESS_STATUSES).contains(braintreeTransaction.getStatus())) {
+			throw new JeecgBootException(StatusEnum.GoodsIdAndCartIdBlankError);
+		}
+		return "success";
 	}
 	
 	@Override
