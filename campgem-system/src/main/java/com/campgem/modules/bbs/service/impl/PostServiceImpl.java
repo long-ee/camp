@@ -9,15 +9,12 @@ import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.DateUtils;
 import com.campgem.modules.bbs.dto.PostQueryDto;
 import com.campgem.modules.bbs.entity.Post;
-import com.campgem.modules.bbs.entity.PostModerator;
 import com.campgem.modules.bbs.entity.Reply;
 import com.campgem.modules.bbs.entity.Topic;
 import com.campgem.modules.bbs.mapper.PostMapper;
-import com.campgem.modules.bbs.service.IPostModeratorService;
 import com.campgem.modules.bbs.service.IPostService;
 import com.campgem.modules.bbs.service.IReplyService;
 import com.campgem.modules.bbs.service.ITopicService;
-import com.campgem.modules.bbs.vo.PostModeratorVo;
 import com.campgem.modules.bbs.vo.PostVo;
 import com.campgem.modules.user.service.IMemberService;
 import com.campgem.modules.user.vo.MemberVo;
@@ -44,8 +41,6 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
     private ITopicService topicService;
     @Resource
     private IReplyService replyService;
-    @Resource
-    private IPostModeratorService postModeratorService;
     @Resource
     private IMemberService memberService;
 

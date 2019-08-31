@@ -1,28 +1,24 @@
 package com.campgem.modules.user.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import com.campgem.modules.user.entity.SysPermission;
-import com.campgem.modules.user.entity.SysPermissionDataRule;
-import com.campgem.modules.user.mapper.SysPermissionMapper;
-import com.campgem.modules.user.vo.TreeModel;
-import com.campgem.modules.user.service.ISysPermissionDataRuleService;
-import com.campgem.modules.user.service.ISysPermissionService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.constant.CacheConstant;
 import com.campgem.common.constant.CommonConstant;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.oConvertUtils;
+import com.campgem.modules.user.entity.SysPermission;
+import com.campgem.modules.user.mapper.SysPermissionMapper;
+import com.campgem.modules.user.service.ISysPermissionService;
+import com.campgem.modules.user.vo.TreeModel;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -37,10 +33,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
 	@Resource
 	private SysPermissionMapper sysPermissionMapper;
-	
-	@Resource
-	private ISysPermissionDataRuleService permissionDataRuleService;
-	
+
 	@Override
 	public List<TreeModel> queryListByParentId(String parentId) {
 		return sysPermissionMapper.queryListByParentId(parentId);
@@ -182,19 +175,6 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	@Override
 	public List<SysPermission> queryByUser(String username) {
 		return this.sysPermissionMapper.queryByUser(username);
-	}
-
-	/**
-	 * 根据permissionId删除其关联的SysPermissionDataRule表中的数据
-	 */
-	@Override
-	public void deletePermRuleByPermId(String id) {
-		LambdaQueryWrapper<SysPermissionDataRule> query = new LambdaQueryWrapper<>();
-		query.eq(SysPermissionDataRule::getPermissionId, id);
-		int countValue = this.permissionDataRuleService.count(query);
-		if(countValue > 0) {
-			this.permissionDataRuleService.remove(query);	
-		}
 	}
 
 	/**

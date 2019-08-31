@@ -1,35 +1,28 @@
 package com.campgem.aspect;
 
-import java.lang.reflect.Method;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.campgem.common.api.vo.IdentifyInfo;
+import com.campgem.common.aspect.annotation.PermissionData;
+import com.campgem.common.system.util.JwtUtil;
+import com.campgem.common.util.SpringContextUtils;
+import com.campgem.common.util.oConvertUtils;
+import com.campgem.modules.user.entity.SysPermission;
+import com.campgem.modules.user.service.ISysPermissionService;
+import com.campgem.modules.user.service.ISysUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import com.campgem.common.aspect.annotation.PermissionData;
-import com.campgem.common.system.util.JeecgDataAutorUtils;
-import com.campgem.common.system.util.JwtUtil;
-import com.campgem.common.system.vo.SysUserCacheInfo;
-import com.campgem.common.util.SpringContextUtils;
-import com.campgem.common.util.oConvertUtils;
-import com.campgem.modules.user.entity.SysPermission;
-import com.campgem.modules.user.entity.SysPermissionDataRule;
-import com.campgem.modules.user.service.ISysPermissionDataRuleService;
-import com.campgem.modules.user.service.ISysPermissionService;
-import com.campgem.modules.user.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
   * 数据权限切面处理类
@@ -44,9 +37,6 @@ public class PermissionDataAspect {
 	
 	@Autowired
 	private ISysPermissionService sysPermissionService;
-	
-	@Autowired
-	private ISysPermissionDataRuleService sysPermissionDataRuleService;
 	
 	@Autowired
 	private ISysUserService sysUserService;
@@ -93,15 +83,6 @@ public class PermissionDataAspect {
 		if(currentSyspermission!=null) {
 			IdentifyInfo identifyInfo = JwtUtil.getIdentifierByToken(request);
 			String username = identifyInfo.getIdentifier();
-			List<SysPermissionDataRule> dataRules = sysPermissionDataRuleService.queryPermissionDataRules(username, currentSyspermission.getId());
-			if(dataRules!=null && dataRules.size()>0) {
-				//TODO 数据权限后续优化
-//				JeecgDataAutorUtils.installDataSearchConditon(request, dataRules);
-
-				//TODO 此处将用户信息查找出来放到request中实属无奈  可以优化
-				SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
-				JeecgDataAutorUtils.installUserInfo(request, userinfo);
-			}
 		}
 		
 		return  point.proceed();

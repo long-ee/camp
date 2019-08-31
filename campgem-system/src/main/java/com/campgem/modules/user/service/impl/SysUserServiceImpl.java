@@ -1,12 +1,9 @@
 package com.campgem.modules.user.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.campgem.modules.user.entity.enums.UserStatusEnum;
-import com.campgem.modules.user.service.ISysUserService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.campgem.common.api.vo.Result;
 import com.campgem.common.constant.CacheConstant;
 import com.campgem.common.constant.CommonConstant;
@@ -14,21 +11,25 @@ import com.campgem.common.system.api.ISysBaseAPI;
 import com.campgem.common.system.vo.LoginUser;
 import com.campgem.common.system.vo.SysUserCacheInfo;
 import com.campgem.common.util.oConvertUtils;
-import com.campgem.modules.user.entity.*;
-import com.campgem.modules.user.mapper.*;
+import com.campgem.modules.user.entity.SysPermission;
+import com.campgem.modules.user.entity.SysUser;
+import com.campgem.modules.user.entity.SysUserRole;
+import com.campgem.modules.user.entity.enums.UserStatusEnum;
+import com.campgem.modules.user.mapper.SysPermissionMapper;
+import com.campgem.modules.user.mapper.SysUserMapper;
+import com.campgem.modules.user.mapper.SysUserRoleMapper;
+import com.campgem.modules.user.service.ISysUserService;
 import com.campgem.modules.user.vo.SysUserVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -49,12 +50,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	@Autowired
 	private SysUserRoleMapper sysUserRoleMapper;
 	@Autowired
-	private SysUserDepartMapper sysUserDepartMapper;
-	@Autowired
 	private ISysBaseAPI sysBaseAPI;
-	@Autowired
-	private SysDepartMapper sysDepartMapper;
-	
+
 	@Override
 	public SysUser getUserByName(String username) {
 		return userMapper.getUserByName(username);
@@ -149,23 +146,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 			info.setSysUserName(user.getRealname());
 			info.setSysOrgCode(user.getOrgCode());
 		}
-		
-		//多部门支持in查询
-		List<SysDepart> list = sysDepartMapper.queryUserDeparts(user.getId());
-		List<String> sysMultiOrgCode = new ArrayList<String>();
-		if(list==null || list.size()==0) {
-			//当前用户无部门
-			//sysMultiOrgCode.add("0");
-		}else if(list.size()==1) {
-			sysMultiOrgCode.add(list.get(0).getOrgCode());
-		}else {
-			info.setOneDepart(false);
-			for (SysDepart dpt : list) {
-				sysMultiOrgCode.add(dpt.getOrgCode());
-			}
-		}
-		info.setSysMultiOrgCode(sysMultiOrgCode);
-		
 		return info;
 	}
 
@@ -199,37 +179,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	public SysUser getUserByEmail(String email) {
 		return userMapper.getUserByEmail(email);
 	}
-
-	@Override
-	@Transactional
-	public void addUserWithDepart(SysUser user, String selectedParts) {
-//		this.save(user);  //保存角色的时候已经添加过一次了
-		if(oConvertUtils.isNotEmpty(selectedParts)) {
-			String[] arr = selectedParts.split(",");
-			for (String deaprtId : arr) {
-				SysUserDepart userDeaprt = new SysUserDepart(user.getId(), deaprtId);
-				sysUserDepartMapper.insert(userDeaprt);
-			}
-		}
-	}
-
-
-	@Override
-	@Transactional
-	@CacheEvict(value="loginUser_cacheRules", allEntries=true)
-	public void editUserWithDepart(SysUser user, String departs) {
-		this.updateById(user);  //更新角色的时候已经更新了一次了，可以再跟新一次
-		//先删后加
-		sysUserDepartMapper.delete(new QueryWrapper<SysUserDepart>().lambda().eq(SysUserDepart::getUserId, user.getId()));
-		if(oConvertUtils.isNotEmpty(departs)) {
-			String[] arr = departs.split(",");
-			for (String departId : arr) {
-				SysUserDepart userDepart = new SysUserDepart(user.getId(), departId);
-				sysUserDepartMapper.insert(userDepart);
-			}
-		}
-	}
-
 
 	/**
 	   * 校验用户是否有效

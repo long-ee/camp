@@ -11,8 +11,6 @@ import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
 import com.campgem.modules.message.strategy.SendMsgStrategyFactory;
 import com.campgem.modules.university.dto.ClubQueryDto;
 import com.campgem.modules.university.entity.Club;
-import com.campgem.modules.university.entity.ClubMember;
-import com.campgem.modules.university.service.IClubMemberService;
 import com.campgem.modules.university.service.IClubService;
 import com.campgem.modules.university.vo.ClubVo;
 import io.swagger.annotations.Api;
@@ -21,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -33,8 +30,6 @@ import javax.validation.Valid;
 public class ManageClubController {
 	@Autowired
 	private IClubService clubService;
-	@Resource
-	private IClubMemberService clubMemberService;
 
 
 	/**

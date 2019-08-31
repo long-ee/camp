@@ -64,16 +64,12 @@ public class Member {
 	private String address;
 	/**营业开始时间*/
 	@Excel(name = "营业开始时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "营业开始时间")
-	private java.util.Date openingTime;
+	private String openingTime;
 	/**营业结束时间*/
 	@Excel(name = "营业结束时间", width = 20, format = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "营业结束时间")
-	private java.util.Date closingTime;
+	private String closingTime;
 	/**专业*/
 	@Excel(name = "专业", width = 15)
     @ApiModelProperty(value = "专业")
