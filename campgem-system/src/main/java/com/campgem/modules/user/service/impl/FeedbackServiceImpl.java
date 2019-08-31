@@ -55,6 +55,10 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
 		if(null == feedback) {
 			throw new JeecgBootException(StatusEnum.NotFound);
 		}
+		// 修改反馈状态
+		feedback.setStatus(1);
+		this.updateById(feedback);
+		// 发送消息
 		MsgDto msgDto = new MsgDto();
 		msgDto.setSender(CommonConstant.SYSTEM_ACCOUNT_NAME);
 		if("Suggestion".equalsIgnoreCase(feedback.getCategory())){
