@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
+import com.campgem.modules.message.dto.MsgDto;
+import com.campgem.modules.user.dto.FeedbackReplyDto;
 import com.campgem.modules.user.entity.Feedback;
 import com.campgem.modules.user.service.IFeedbackService;
 import io.swagger.annotations.Api;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.Arrays;
 
 @RestController
@@ -63,4 +66,14 @@ public class ManageFeedbackController {
             return Result.succ;
         }
     }
+
+    @PostMapping(value = "/feedback/reply")
+    @ApiOperation(value="反馈/举报-消息回复", notes="H21")
+    public Result messageReply(@Valid FeedbackReplyDto feedbackReplyDto) {
+        feedbackService.reply(feedbackReplyDto);
+        return Result.ok();
+    }
+
+
+
 }

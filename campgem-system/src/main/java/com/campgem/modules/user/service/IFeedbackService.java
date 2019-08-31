@@ -2,6 +2,7 @@ package com.campgem.modules.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.campgem.modules.user.dto.FeedbackDto;
+import com.campgem.modules.user.dto.FeedbackReplyDto;
 import com.campgem.modules.user.entity.Feedback;
 
 /**
@@ -13,4 +14,6 @@ import com.campgem.modules.user.entity.Feedback;
 public interface IFeedbackService extends IService<Feedback> {
 	
 	boolean userFeedbackReport(FeedbackDto feedbackDto);
+
+	void reply(FeedbackReplyDto replyDto);
 }

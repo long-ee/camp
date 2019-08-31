@@ -1,11 +1,18 @@
 package com.campgem.modules.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.constant.CommonConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.SecurityUtils;
+import com.campgem.modules.message.dto.MsgDto;
+import com.campgem.modules.message.entity.enums.MsgScopeTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgSendTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
+import com.campgem.modules.message.strategy.SendMsgStrategyFactory;
 import com.campgem.modules.user.dto.FeedbackDto;
+import com.campgem.modules.user.dto.FeedbackReplyDto;
 import com.campgem.modules.user.entity.Feedback;
 import com.campgem.modules.user.mapper.FeedbackMapper;
 import com.campgem.modules.user.service.IFeedbackService;
@@ -40,5 +47,25 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
 		feedback.setCreateTime(new Date());
 		
 		return save(feedback);
+	}
+
+	@Override
+	public void reply(FeedbackReplyDto replyDto) {
+		Feedback feedback = this.getById(replyDto.getId());
+		if(null == feedback) {
+			throw new JeecgBootException(StatusEnum.NotFound);
+		}
+		MsgDto msgDto = new MsgDto();
+		msgDto.setSender(CommonConstant.SYSTEM_ACCOUNT_NAME);
+		if("Suggestion".equalsIgnoreCase(feedback.getCategory())){
+			msgDto.setMsgType(MsgTemplateEnum.FEEDBACK_REPLY.msgType());
+		}else {
+			msgDto.setMsgType(MsgTemplateEnum.REPORT_REPLY.msgType());
+		}
+		msgDto.setReceiver(feedback.getReportedUid());
+		msgDto.setScope(MsgScopeTypeEnum.CUSTOM_ASSIGN_USER.code());
+		msgDto.setParams(new Object[]{replyDto.getReplyContent()});
+		SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.PLATFORM_MSG).send(msgDto);
+
 	}
 }
