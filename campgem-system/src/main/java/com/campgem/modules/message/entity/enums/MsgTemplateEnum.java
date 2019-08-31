@@ -8,11 +8,29 @@ import java.util.List;
  * @author: X.Tony
  */
 public enum MsgTemplateEnum {
-    NOTICE("NOTICE", "", "%s"),
-    TOPIC_LETTER("TOPIC_LETTER", "收到一条站内信", "%s:%s"),
-    REGISTER_EMAIL_CODE("REGISTER_EMAIL_CODE", "Campgem新用户注册", "您的注册验证码为%s，请在操作页面中输入此验证码后完成注册。"),
-    RESET_PASSWORD_EMAIL_CODE("RESET_PASSWORD_EMAIL_CODE", "Campgem密码重置", "您的账户正在申请重置密码，验证码为%s，请在操作页面中输入此验证码后，重新设置新密码。")
 
+    // 注册消息
+    REGISTER_EMAIL_CODE("REGISTER_EMAIL_CODE", "Campgem新用户注册", "您的注册验证码为%s，请在操作页面中输入此验证码后完成注册。"),
+    RESET_PASSWORD_EMAIL_CODE("RESET_PASSWORD_EMAIL_CODE", "Campgem密码重置", "您的账户正在申请重置密码，验证码为%s，请在操作页面中输入此验证码后，重新设置新密码。"),
+
+    // 订单相关消息
+    GOODS_LEAVE_MESSAGE("GOODS_LEAVE_MESSAGE", "您发布的商品有新留言", "%s: %s"),
+    SERVICE_LEAVE_MESSAGE("SERVICE_LEAVE_MESSAGE", "您发布的需求有新留言", "%s: %s"),
+    GOODS_ORDER_NOTIFY("GOODS_ORDER_NOTIFY", "收到一笔新的商品订单", "%s"),
+    SERVICE_ORDER_NOTIFY("SERVICE_ORDER_NOTIFY", "收到一笔新的服务订单", "%s"),
+
+    // 社团消息
+    TO_BE_CLUB_MANAGER_NOTIFY("TO_BE_CLUB_MANAGER_NOTIFY", "您成为了社团管理员", "%s"),
+    CLUB_DISMISS("CLUB_DISMISS", "您加入的社团已被解散", "%s"),
+    CLUB_ACTIVITY_NOTIFY("CLUB_ACTIVITY_NOTIFY", "您加入的社团发布了一个新的活动", "%s: %s"),
+
+    // 站内信消息
+    TOPIC_LETTER("TOPIC_LETTER", "收到一条站内信", "%s:%s"),
+
+    // 系统通知、反馈回复、举报回复
+    NOTICE("NOTICE", "", "%s"),
+    FEEDBACK_REPLY("FEEDBACK_REPLY", "平台回复了您反馈的意见", "%s"),
+    REPORT_REPLY("REPORT_REPLY", "平台回复了您的举报", "%s"),
     ;
     /**
      * 消息类型
