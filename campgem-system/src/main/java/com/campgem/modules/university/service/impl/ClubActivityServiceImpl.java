@@ -3,10 +3,16 @@ package com.campgem.modules.university.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.constant.CommonConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
 import com.campgem.common.util.DateUtils;
+import com.campgem.modules.message.dto.MsgDto;
+import com.campgem.modules.message.entity.enums.MsgScopeTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgSendTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
+import com.campgem.modules.message.strategy.SendMsgStrategyFactory;
 import com.campgem.modules.university.dto.ClubActivityDto;
 import com.campgem.modules.university.dto.ClubActivityQueryDto;
 import com.campgem.modules.university.entity.Club;
@@ -65,6 +71,15 @@ public class ClubActivityServiceImpl extends ServiceImpl<ClubActivityMapper, Clu
         ClubActivity clubActivity = BeanConvertUtils.convertBean(clubActivityDto, ClubActivity.class);
         clubActivity.setUniversityId(club.getUniversityId());
         this.save(clubActivity);
+
+        // 发送活动发布消息
+        MsgDto msgDto = new MsgDto();
+        msgDto.setSender(CommonConstant.SYSTEM_ACCOUNT_NAME);
+        msgDto.setScope(MsgScopeTypeEnum.CUSTOM_ASSIGN_USER.code());
+        msgDto.setReceiver(club.getMemberIds());
+        msgDto.setMsgType(MsgTemplateEnum.CLUB_ACTIVITY_NOTIFY.msgType());
+        msgDto.setParams(new Object[]{club.getClubName(), clubActivity.getActivityTitle()});
+        SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.PLATFORM_MSG).send(msgDto);
     }
 
     @Override

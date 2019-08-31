@@ -3,6 +3,12 @@ package com.campgem.modules.university.controller.manage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campgem.common.api.vo.Result;
+import com.campgem.common.constant.CommonConstant;
+import com.campgem.modules.message.dto.MsgDto;
+import com.campgem.modules.message.entity.enums.MsgScopeTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgSendTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
+import com.campgem.modules.message.strategy.SendMsgStrategyFactory;
 import com.campgem.modules.university.dto.ClubQueryDto;
 import com.campgem.modules.university.entity.Club;
 import com.campgem.modules.university.entity.ClubMember;
@@ -104,7 +110,19 @@ public class ManageClubController {
 	@PostMapping(value = "/club/delete")
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		try {
-			clubService.removeById(id);
+			Club clubEntity = clubService.getById(id);
+			if(clubEntity==null) {
+				Result.error("未找到对应实体");
+			}else {
+				clubService.removeById(id);
+				MsgDto msgDto = new MsgDto();
+				msgDto.setSender(CommonConstant.SYSTEM_ACCOUNT_NAME);
+				msgDto.setScope(MsgScopeTypeEnum.CUSTOM_ASSIGN_USER.code());
+				msgDto.setReceiver(clubEntity.getMemberIds());
+				msgDto.setMsgType(MsgTemplateEnum.CLUB_DISMISS.msgType());
+				msgDto.setParams(new Object[]{clubEntity.getClubName()});
+				SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.PLATFORM_MSG).send(msgDto);
+			}
 		} catch (Exception e) {
 			log.error("删除失败",e.getMessage());
 			return Result.error("删除失败!");

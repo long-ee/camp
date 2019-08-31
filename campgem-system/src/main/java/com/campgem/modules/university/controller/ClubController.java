@@ -93,6 +93,13 @@ public class ClubController {
 		return Result.ok();
 	}
 
+	@ApiOperation(value="社团信息管理接口-解散社团", notes="解散社团")
+	@PostMapping(value = "/university/club/dismiss")
+	public Result dismiss(String clubId) {
+		clubService.dismissClub(clubId);
+		return Result.ok();
+	}
+
 	@ApiOperation(value="社团信息管理接口-社团管理员列表", notes="G154 新增/编辑管理员-社团管理员列表")
 	@GetMapping(value = "/university/club/admin/list")
 	public Result<List<MemberVo>> adminList(String clubId, boolean includePrimaryAdmin) {

@@ -3,16 +3,21 @@ package com.campgem.modules.university.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.campgem.common.constant.CommonConstant;
 import com.campgem.common.enums.StatusEnum;
 import com.campgem.common.exception.JeecgBootException;
 import com.campgem.common.util.BeanConvertUtils;
+import com.campgem.modules.message.dto.MsgDto;
+import com.campgem.modules.message.entity.enums.MsgScopeTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgSendTypeEnum;
+import com.campgem.modules.message.entity.enums.MsgTemplateEnum;
+import com.campgem.modules.message.strategy.SendMsgStrategyFactory;
 import com.campgem.modules.university.dto.ClubAdminDto;
 import com.campgem.modules.university.dto.ClubCreateOrUpdateDto;
 import com.campgem.modules.university.dto.ClubDto;
 import com.campgem.modules.university.dto.ClubQueryDto;
 import com.campgem.modules.university.entity.Club;
 import com.campgem.modules.university.mapper.ClubMapper;
-import com.campgem.modules.university.service.IClubMemberService;
 import com.campgem.modules.university.service.IClubService;
 import com.campgem.modules.university.vo.ClubVo;
 import com.campgem.modules.user.service.IMemberService;
@@ -39,8 +44,6 @@ public class ClubServiceImpl extends ServiceImpl<ClubMapper, Club> implements IC
 
     @Resource
     private ClubMapper clubMapper;
-    @Resource
-    private IClubMemberService clubMemberService;
     @Resource
     private IMemberService memberService;
 
@@ -125,6 +128,22 @@ public class ClubServiceImpl extends ServiceImpl<ClubMapper, Club> implements IC
     }
 
     @Override
+    public void dismissClub(String clubId) {
+        Club club = this.getById(clubId);
+        if(null == club){
+            throw new JeecgBootException(StatusEnum.ClubNotExistError);
+        }
+        this.removeById(clubId);
+        MsgDto msgDto = new MsgDto();
+        msgDto.setSender(CommonConstant.SYSTEM_ACCOUNT_NAME);
+        msgDto.setScope(MsgScopeTypeEnum.CUSTOM_ASSIGN_USER.code());
+        msgDto.setReceiver(club.getMemberIds());
+        msgDto.setMsgType(MsgTemplateEnum.CLUB_DISMISS.msgType());
+        msgDto.setParams(new Object[]{club.getClubName()});
+        SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.PLATFORM_MSG).send(msgDto);
+    }
+
+    @Override
     public boolean isClubMember(String clubId, String memberId) {
         Club club = this.getById(clubId);
         if(null == club){
@@ -199,6 +218,15 @@ public class ClubServiceImpl extends ServiceImpl<ClubMapper, Club> implements IC
         String newAdminIds = joiner.toString();
         club.setAdminIds(newAdminIds);
         this.join(club);
+
+        // 成为管理员消息
+        MsgDto msgDto = new MsgDto();
+        msgDto.setSender(CommonConstant.SYSTEM_ACCOUNT_NAME);
+        msgDto.setScope(MsgScopeTypeEnum.CUSTOM_ASSIGN_USER.code());
+        msgDto.setReceiver(clubAdminDto.getMemberId());
+        msgDto.setMsgType(MsgTemplateEnum.TO_BE_CLUB_MANAGER_NOTIFY.msgType());
+        msgDto.setParams(new Object[]{club.getClubName()});
+        SendMsgStrategyFactory.getInstance(MsgSendTypeEnum.PLATFORM_MSG).send(msgDto);
     }
 
     @Override

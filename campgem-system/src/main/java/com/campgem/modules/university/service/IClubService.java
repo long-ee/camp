@@ -56,6 +56,12 @@ public interface IClubService extends IService<Club> {
     public void dropOutClub(ClubDto clubDto);
 
     /**
+     * 解散社团
+     * @param clubId
+     */
+    public void dismissClub(String clubId);
+
+    /**
      * 用户是否是社团成员
      * @param clubId
      * @param memberId
