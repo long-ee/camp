@@ -23,8 +23,7 @@ public enum StatusEnum {
     UnknownError(10600, "Unknown error", "未知错误"),
     TimeFormatError(10601, "Time format error", "时间格式错误"),
     UserIdBlankError(10602, "The user id can't empty", "用户ID不能为空"),
-	AmountFormatError(10603, "Amount format error", "金额格式错误"),
-    FeedbackCategoryUnknownError(10604, "Unknown feedback category", "未知的反馈分类"),
+    FeedbackCategoryUnknownError(10603, "Unknown feedback category", "未知的反馈分类"),
 
     // for login
     LoginFailed(20601, "Login failed", "登录信息无效"),

@@ -14,7 +14,7 @@ public interface IPaymentService {
 	/**
 	 * Braintree信用卡支付
 	 */
-	String payWithCreditCard(String nonce);
+	String payWithCreditCard(List<Orders> ordersList, String nonce);
 	
 	String getToken();
 }

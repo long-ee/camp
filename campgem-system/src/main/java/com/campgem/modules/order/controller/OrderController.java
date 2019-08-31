@@ -126,7 +126,7 @@ public class OrderController {
 			return paymentService.pay(ordersList);
 		} else {
 			// Visa/Masterd Card 支付
-			return paymentService.payWithCreditCard(nonce);
+			return paymentService.payWithCreditCard(ordersList, nonce);
 		}
 	}
 	

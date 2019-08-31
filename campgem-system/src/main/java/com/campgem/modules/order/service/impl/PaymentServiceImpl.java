@@ -162,12 +162,10 @@ public class PaymentServiceImpl implements IPaymentService {
 	}
 	
 	@Override
-	public String payWithCreditCard(String nonce) {
-		BigDecimal decimalAmount;
-		try {
-			decimalAmount = new BigDecimal("10.00");
-		} catch (NumberFormatException e) {
-			throw new JeecgBootException(StatusEnum.AmountFormatError);
+	public String payWithCreditCard(List<Orders> ordersList, String nonce) {
+		BigDecimal decimalAmount = new BigDecimal(0);
+		for (Orders orders : ordersList) {
+			decimalAmount = decimalAmount.add(orders.getPayAmount());
 		}
 		
 		TransactionRequest request = new TransactionRequest()
