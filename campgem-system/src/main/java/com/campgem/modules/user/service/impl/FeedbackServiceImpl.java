@@ -14,6 +14,7 @@ import com.campgem.modules.message.strategy.SendMsgStrategyFactory;
 import com.campgem.modules.user.dto.FeedbackDto;
 import com.campgem.modules.user.dto.FeedbackReplyDto;
 import com.campgem.modules.user.entity.Feedback;
+import com.campgem.modules.user.entity.enums.FeedbackStatusEnum;
 import com.campgem.modules.user.mapper.FeedbackMapper;
 import com.campgem.modules.user.service.IFeedbackService;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
 			throw new JeecgBootException(StatusEnum.NotFound);
 		}
 		// 修改反馈状态
-		feedback.setStatus(1);
+		feedback.setStatus(FeedbackStatusEnum.REPLIED.code());
 		this.updateById(feedback);
 		// 发送消息
 		MsgDto msgDto = new MsgDto();
