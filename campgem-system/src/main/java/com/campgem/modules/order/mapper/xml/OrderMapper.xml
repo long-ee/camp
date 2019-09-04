@@ -47,11 +47,21 @@
 	<select id="queryExpiredOrderList" resultMap="expiredOrders">
 		SELECT o.id         AS oid,
 		       o.status,
+		       o.order_type,
 		       m.member_type
 		FROM orders o
 		LEFT JOIN member m on m.user_base_id = o.seller_id
 		WHERE UNIX_TIMESTAMP(o.expired_time) &lt; UNIX_TIMESTAMP(NOW())
 		  AND o.status = #{status}
+	</select>
+	<select id="queryExpiredOrderById" resultMap="expiredOrders">
+		SELECT o.id         AS oid,
+		       o.status,
+		       o.order_type,
+		       m.member_type
+		FROM orders o
+			     LEFT JOIN member m on m.user_base_id = o.seller_id
+		WHERE o.id = #{orderId}
 	</select>
 	
 	<select id="queryUserOrders" resultType="com.campgem.modules.user.vo.OrdersListVo">

@@ -46,6 +46,11 @@ public interface IOrderService extends IService<Orders> {
 	void checkOrderStatus();
 	
 	/**
+	 * 处理过期未支付的订单
+	 */
+	void checkOrderStatusById(String orderId);
+	
+	/**
 	 * 查询用户订单
 	 */
 	IPage<OrdersListVo> queryUserOrders(String s, Page page);

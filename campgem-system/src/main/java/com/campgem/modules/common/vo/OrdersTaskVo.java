@@ -1,7 +1,5 @@
 package com.campgem.modules.common.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,9 +17,11 @@ import java.util.List;
 @ApiModel(value = "订单定时任务模型", description = "订单定时任务模型")
 public class OrdersTaskVo {
 	
-	@TableId(type = IdType.UUID)
 	@ApiModelProperty(value = "id")
 	private String id;
+	
+	@ApiModelProperty("订单类型")
+	private Integer orderType;
 	
 	@ApiModelProperty("商品ID")
 	private String goodsId;
@@ -30,7 +30,7 @@ public class OrdersTaskVo {
 	@ApiModelProperty(value = "状态，0Unpaid，1Paid，2Shipping，3Offline Trading")
 	private Integer status;
 	
-	@ApiModelProperty("用户类型")
+	@ApiModelProperty("卖家/商家类型，由此判断如何恢复库存")
 	private String memberType;
 	
 	@ApiModelProperty("订单商品列表")

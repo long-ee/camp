@@ -36,6 +36,8 @@ import com.campgem.modules.user.vo.OrdersDetailVo;
 import com.campgem.modules.user.vo.OrdersListVo;
 import com.campgem.modules.user.vo.ShippingMethodsVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description: 订单
@@ -74,8 +77,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	@Resource
 	private IServiceEvaluationService serviceEvaluationService;
 	
+	@Resource
+	private RedisTemplate<String, Object> redisTemplate;
+	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static SimpleDateFormat orderSdf = new SimpleDateFormat("yyyyMMddHHmmss");
+	
+	@Value("${jeecg.order.expired-interval}")
+	private Integer expiredInterval;
+	
+	private static TimeUnit expiredTimeUnit = TimeUnit.HOURS;
 	
 	@Override
 	@Transactional
@@ -184,6 +195,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 				ordersList.add(orders);
 			}
 		}
+		
+		// 添加Redis缓存，过期时间就是超时时间
+		for (Orders o : ordersList) {
+			redisTemplate.opsForValue().set(o.getId(), "", expiredInterval, expiredTimeUnit);
+		}
 
 		return ordersList;
 	}
@@ -202,8 +218,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		
-		// 过期时间 TODO 暂定2个小时
-		calendar.add(Calendar.HOUR, 2);
+		// 过期时间
+		calendar.add(Calendar.HOUR, expiredInterval);
 		return calendar.getTime();
 	}
 	
@@ -269,10 +285,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		if (serviceImages != null) {
 			ordersService.setServiceIcon(serviceImages.getServiceImage());
 		}
-		// 服务订单，固定数量为1
-		ordersService.setQuantity(1);
 		
 		ordersServiceService.save(ordersService);
+		
+		// 添加Redis缓存，过期时间就是超时时间
+		redisTemplate.opsForValue().set(ordersService.getId(), "", expiredInterval, expiredTimeUnit);
 		
 		return orders;
 	}
@@ -280,8 +297,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	@Override
 	@Transactional
 	public void checkOrderStatus() {
-		List<OrdersTaskVo> orderList = baseMapper.queryExpiredOrderList(OrderStatusEnum.UNPAID.code());
-		log.info("订单数量：" + orderList.size());
+		List<OrdersTaskVo> ordersList = baseMapper.queryExpiredOrderList(OrderStatusEnum.UNPAID.code());
+		log.info("过期订单数量：" + ordersList.size());
+		
+		expiredOrders(ordersList);
+	}
+	
+	@Override
+	public void checkOrderStatusById(String orderId) {
+		OrdersTaskVo ordersTaskVo = baseMapper.queryExpiredOrderById(orderId);
+		
+		expiredOrders(Collections.singletonList(ordersTaskVo));
+	}
+	
+	private void expiredOrders(List<OrdersTaskVo> ordersList) {
 		
 		// 修改订单状态
 		List<String> orderIds = new ArrayList<>();
@@ -290,8 +319,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		Map<String, Integer> businessMap = new HashMap<>();
 		// 学生/一般用户库存
 		Map<String, Integer> generalMap = new HashMap<>();
-		for (OrdersTaskVo orders : orderList) {
+		for (OrdersTaskVo orders : ordersList) {
 			orderIds.add(orders.getId());
+			
+			if (orders.getOrderType().equals(OrderTypeEnum.SERVICE.code())) {
+				// 如果是服务订单，则跳过，因为服务订单没有库存，但是还是要设置此订单为过期状态
+				continue;
+			}
 			
 			if (CommonUtils.isBusiness(orders.getMemberType())) {
 				for (OrdersGoodsTaskVo ordersGoods : orders.getGoods()) {

@@ -58,8 +58,4 @@ public class OrdersService {
 	@Excel(name = "单价", width = 15)
 	@ApiModelProperty(value = "单价")
 	private java.math.BigDecimal price;
-	
-	@Excel(name = "商品数量", width = 15)
-	@ApiModelProperty(value = "商品数量")
-	private java.lang.Integer quantity;
 }

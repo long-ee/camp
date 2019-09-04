@@ -37,4 +37,6 @@ public interface OrderMapper extends BaseMapper<Orders> {
 	boolean updateOrderStatusById(@Param("orderId") String orderId, @Param("status") Integer status);
 	
 	boolean updateTrackingNumber(@Param("orderId") String orderId, @Param("trackingNumber") String trackingNumber);
+	
+	OrdersTaskVo queryExpiredOrderById(@Param("orderId") String orderId);
 }

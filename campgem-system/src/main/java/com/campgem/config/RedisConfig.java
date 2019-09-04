@@ -1,11 +1,9 @@
 package com.campgem.config;
 
-import java.lang.reflect.Method;
-import java.time.Duration;
-import java.util.Arrays;
-
-import javax.annotation.Resource;
-
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -17,13 +15,16 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+
+import javax.annotation.Resource;
+import java.lang.reflect.Method;
+import java.time.Duration;
+import java.util.Arrays;
 
 import static java.util.Collections.singletonMap;
 
@@ -93,5 +94,25 @@ public class RedisConfig extends CachingConfigurerSupport {
 				.transactionAware().build();
 		return cacheManager;
 	}
+	
+	@Bean
+	public ChannelTopic expiredTopic() {
+		return new ChannelTopic("__keyevent@0__:expired");  // 选择0号数据库
+	}
+	
+	/**
+	 * 消息监听容器
+	 */
+	@Bean
+	RedisMessageListenerContainer container() {
+		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+		container.setConnectionFactory(lettuceConnectionFactory);
+		return container;
+	}
+	
+//	@Bean
+//	public KeyExpiredListener keyExpiredListener() {
+//		return new KeyExpiredListener(container());
+//	}
 
 }

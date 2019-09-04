@@ -23,10 +23,10 @@ public class TradeTask {
 	private IOrderService orderService;
 	
 	/**
-	 * 每3分钟执行一次，检查订单状态
+	 * 每6个小时执行一次，统一检查订单状态
 	 */
 	@Async
-	@Scheduled(cron = "0 */3 * * * ?")  //间隔1秒
+	@Scheduled(cron = "0 0 */6 * * ?")
 	public void checkOrderStatus() {
 		orderService.checkOrderStatus();
 	}
