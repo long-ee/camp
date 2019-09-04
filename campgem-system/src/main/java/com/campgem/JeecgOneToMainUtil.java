@@ -1,12 +1,5 @@
 package com.campgem;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jeecgframework.codegenerate.generate.impl.CodeGenerateOneToMany;
-import org.jeecgframework.codegenerate.generate.pojo.onetomany.MainTableVo;
-import org.jeecgframework.codegenerate.generate.pojo.onetomany.SubTableVo;
-
 /**
  * 代码生成器入口【一对多】
  * @Author: campgem
@@ -20,7 +13,7 @@ public class JeecgOneToMainUtil {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//第一步：设置主表配置
+		/*//第一步：设置主表配置
 		MainTableVo mainTable = new MainTableVo();
 		mainTable.setTableName("jeecg_order_main");//表名
 		mainTable.setEntityName("TestOrderMain");	 //实体名
@@ -36,11 +29,11 @@ public class JeecgOneToMainUtil {
 		po.setEntityPackage("test2");	        //包名
 		po.setFtlDescription("客户明细");       //描述
 		//子表外键参数配置
-		/*说明: 
+		*//*说明:
 		 * a) 子表引用主表主键ID作为外键，外键字段必须以_ID结尾;
 		 * b) 主表和子表的外键字段名字，必须相同（除主键ID外）;
 		 * c) 多个外键字段，采用逗号分隔;
-		*/
+		*//*
 		po.setForeignKeys(new String[]{"order_id"});
 		subTables.add(po);
 		//[2].子表二
@@ -50,11 +43,11 @@ public class JeecgOneToMainUtil {
 		po2.setEntityPackage("test2"); 				//包名
 		po2.setFtlDescription("产品明细");			//描述
 		//子表外键参数配置
-		/*说明: 
+		*//*说明:
 		 * a) 子表引用主表主键ID作为外键，外键字段必须以_ID结尾;
 		 * b) 主表和子表的外键字段名字，必须相同（除主键ID外）;
 		 * c) 多个外键字段，采用逗号分隔;
-		*/
+		*//*
 		po2.setForeignKeys(new String[]{"order_id"});
 		subTables.add(po2);
 		mainTable.setSubTables(subTables);
@@ -64,6 +57,6 @@ public class JeecgOneToMainUtil {
 			new CodeGenerateOneToMany(mainTable,subTables).generateCodeFile();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public enum MsgTemplateEnum {
 
     // 注册消息
-    REGISTER_EMAIL_CODE("REGISTER_EMAIL_CODE", "Campgem new user registration", "Your registration verification code is %s. Please enter this verification code in the operation page and complete the registration."),
+    REGISTER_EMAIL_CODE("REGISTER_EMAIL_CODE", "Campgem new user register", "Your registration verification code is %s. Please enter this verification code in the operation page and complete the registration."),
     RESET_PASSWORD_EMAIL_CODE("RESET_PASSWORD_EMAIL_CODE", "Campgem password reset", "Your account is applying for a password reset. The password is %s. Please reset the new password after entering the password in the operation page."),
 
     // 订单相关消息
