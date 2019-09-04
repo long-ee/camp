@@ -214,6 +214,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 		baseMapper.paypalSuccessByPayId(paymentId, OrderStatusEnum.PAID.code());
 	}
 	
+	@Override
+	public void creditCardPaySuccess(List<Orders> ordersList) {
+		List<String> ids = new ArrayList<>();
+		for (Orders o : ordersList) {
+			ids.add(o.getId());
+		}
+		
+		// 更新为已支付
+		baseMapper.updateOrderStatusByIds(ids, OrderStatusEnum.PAID.code());
+	}
+	
 	private Date getExpiredTime(Date date) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -305,9 +316,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	
 	@Override
 	public void checkOrderStatusById(String orderId) {
-		OrdersTaskVo ordersTaskVo = baseMapper.queryExpiredOrderById(orderId);
+		// 按照ID查找，如果订单已支付，则查询为空，这种情况下，添加了Redis缓存就不同管了
+		OrdersTaskVo ordersTaskVo = baseMapper.queryExpiredOrderById(orderId, OrderStatusEnum.UNPAID.code());
 		
-		expiredOrders(Collections.singletonList(ordersTaskVo));
+		if (ordersTaskVo != null) {
+			expiredOrders(Collections.singletonList(ordersTaskVo));
+		}
 	}
 	
 	private void expiredOrders(List<OrdersTaskVo> ordersList) {

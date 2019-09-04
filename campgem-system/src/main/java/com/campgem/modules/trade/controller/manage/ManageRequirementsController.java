@@ -46,7 +46,7 @@ import java.util.Map;
  * @Version: V1.0
  */
 @Slf4j
-@Api(tags = "需求")
+@Api(tags = "【管理端】需求信息管理接口")
 @RestController
 @RequestMapping("/api/manage/v1")
 public class ManageRequirementsController {

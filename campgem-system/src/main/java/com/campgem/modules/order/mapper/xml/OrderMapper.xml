@@ -62,6 +62,7 @@
 		FROM orders o
 			     LEFT JOIN member m on m.user_base_id = o.seller_id
 		WHERE o.id = #{orderId}
+		  AND o.status = #{status}
 	</select>
 	
 	<select id="queryUserOrders" resultType="com.campgem.modules.user.vo.OrdersListVo">

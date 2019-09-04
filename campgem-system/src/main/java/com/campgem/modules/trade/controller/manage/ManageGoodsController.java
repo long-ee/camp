@@ -32,7 +32,7 @@ import java.util.List;
  * @Version: V1.0
  */
 @Slf4j
-@Api(tags = "商品")
+@Api(tags = "【管理端】商品信息管理接口")
 @RestController
 @RequestMapping("/api/manage/v1")
 public class ManageGoodsController {

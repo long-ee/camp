@@ -25,7 +25,7 @@ import java.util.Arrays;
  * @Version: V1.0
  */
 @Slf4j
-@Api(tags = "活动管理")
+@Api(tags = "【管理端】活动信息管理接口")
 @RestController
 @RequestMapping("/api/manage/v1/")
 public class ManageActivityController {

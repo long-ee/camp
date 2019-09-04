@@ -32,6 +32,7 @@ public interface IOrderService extends IService<Orders> {
 	
 	/**
 	 * 支付成功，修改订单数据
+	 * PayPal支付，通过pay-id修改订单状态
 	 */
 	void paypalSuccess(String paymentId);
 	
@@ -67,4 +68,9 @@ public interface IOrderService extends IService<Orders> {
 	boolean finished(String orderId);
 	
 	boolean updateTrackingNumber(String orderId, String trackingNumber);
+	
+	/**
+	 * 信用卡支付成功
+	 */
+	void creditCardPaySuccess(List<Orders> ordersList);
 }

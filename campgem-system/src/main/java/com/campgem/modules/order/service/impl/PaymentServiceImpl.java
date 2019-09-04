@@ -209,6 +209,9 @@ public class PaymentServiceImpl implements IPaymentService {
 		if (!Arrays.asList(TRANSACTION_SUCCESS_STATUSES).contains(braintreeTransaction.getStatus())) {
 			throw new JeecgBootException(StatusEnum.GoodsIdAndCartIdBlankError);
 		}
+		
+		// 支付成功处理
+		
 		return "success";
 	}
 	
