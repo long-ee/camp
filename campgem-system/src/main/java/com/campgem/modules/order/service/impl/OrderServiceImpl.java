@@ -315,6 +315,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 	}
 	
 	@Override
+	@Transactional
 	public void checkOrderStatusById(String orderId) {
 		// 按照ID查找，如果订单已支付，则查询为空，这种情况下，添加了Redis缓存就不同管了
 		OrdersTaskVo ordersTaskVo = baseMapper.queryExpiredOrderById(orderId, OrderStatusEnum.UNPAID.code());
